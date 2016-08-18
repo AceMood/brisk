@@ -26,6 +26,26 @@ function inline_static_resource($name, $source_name = 'brisk') {
     return $response->inlineResource($name, $source_name);
 }
 
+//动态设置cdn
+function set_cdn($cdn) {
+    $response = BriskAPI::getStaticResourceResponse();
+    $response->setCDN($cdn);
+}
+
+function get_cdn() {
+    $response = BriskAPI::getStaticResourceResponse();
+    $response->getCDN();
+}
+
+//
+function render_css() {
+
+}
+
+function render_js() {
+
+}
+
 /**
  * Generate a node ID which is guaranteed to be unique for the current page,
  * even across Ajax requests. You should use this method to generate IDs for

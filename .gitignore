@@ -62,10 +62,8 @@ xcuserdata/
 
 # User-specific stuff:
 .idea
-.idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
-.idea/vcs.xml
 .idea/jsLibraryMappings.xml
 
 # Sensitive or high-churn files:

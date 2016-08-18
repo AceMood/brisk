@@ -6,10 +6,10 @@
  */
 abstract class BriskPhysicalResources extends BriskResources {
 
-    // resource.json represented in php
+    //resource.json转换来的资源表
     private $map;
 
-    // get the filepath of resource.json
+    //获取resource.json所在位置
     abstract public function getPathToMap();
 
     //
@@ -18,43 +18,13 @@ abstract class BriskPhysicalResources extends BriskResources {
     //
     abstract public function findTextResources();
 
-    /**
-     * load resource.json
-     * @return mixed
-     */
+    //加载resource.json并转化成php数组
     public function loadMap() {
         if ($this->map === null) {
-            $this->map = include $this->getPathToMap();
+            $mapPath = $this->getPathToMap();
+            $data = Filesystem::readFile($mapPath);
+            $this->map = json_decode($data);
         }
         return $this->map;
     }
-
-    // todo
-    public static function getAll() {
-        static $resources_map;
-
-        if ($resources_map === null) {
-            $resources_list = id(new PhutilClassMapQuery())
-                ->setAncestorClass(__CLASS__)
-                ->setUniqueMethod('getName')
-                ->execute();
-
-            foreach ($resources_list as $resources) {
-                $name = $resources->getName();
-
-                if (!preg_match('/^[a-z0-9]+/', $name)) {
-                    throw new Exception(
-                        pht(
-                            'Resources name "%s" is not valid; it must contain only '.
-                            'lowercase latin letters and digits.',
-                            $name));
-                }
-            }
-
-            $resources_map = $resources_list;
-        }
-
-        return $resources_map;
-    }
-
 }

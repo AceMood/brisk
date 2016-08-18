@@ -3,7 +3,7 @@
 /**
  * Defines the location of static resources.
  */
-abstract class BriskResources extends Brisk {
+abstract class BriskResources extends Phobject {
     // get project's name
     abstract public function getName();
 

@@ -31,13 +31,13 @@ final class BriskResourceMap extends Phobject {
     // symbol => package symbol
     private $componentMap;
 
-    public function __construct(BriskResources $resources) {
-        $this->resources = $resources;
-        $map = $resources->loadMap();
+    public function __construct() {
+        $this->resources = new SantaResources();
+        $map = $this->resources->loadMap();
         $this->symbolMap = idx($map, 'symbols', array());
         $this->requiresMap = idx($map, 'requires', array());
         $this->packageMap = idx($map, 'packages', array());
-        $this->nameMap = idx($map, 'names', array());
+        $this->nameMap = idx($map, 'paths', array());
         // We derive these reverse maps at runtime.
         $this->hashMap = array_flip($this->nameMap);
         $this->componentMap = array();
@@ -47,20 +47,14 @@ final class BriskResourceMap extends Phobject {
             }
         }
     }
+    
     /**
      * get and return resourceMap instance through unique name
      * @static
      */
     public static function getNamedInstance($name) {
         if (empty(self::$instances[$name])) {
-            $resources_list = BriskPhysicalResources::getAll();
-            if (empty($resources_list[$name])) {
-                throw new Exception(
-                    pht(
-                        'No resource source exists with name "%s"!',
-                        $name));
-            }
-            $instance = new BriskResourceMap($resources_list[$name]);
+            $instance = new BriskResourceMap();
             self::$instances[$name] = $instance;
         }
         return self::$instances[$name];
@@ -87,6 +81,7 @@ final class BriskResourceMap extends Phobject {
         $resolved = $this->resolveResources($symbols);
         return $this->packageResources($resolved);
     }
+
     // give a symbol collection, return all the resources needed (include all dependency)
     private function resolveResources(array $symbols) {
         $map = array();

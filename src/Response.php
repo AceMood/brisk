@@ -6,6 +6,12 @@
  * Ajax responses.
  */
 final class BriskStaticResourceResponse extends Brisk {
+    //当前请求的渲染模式
+    private $mode;
+
+    //动态设置cdn
+    private $cdn = '';
+
     //收集所有打印的外链资源唯一id
     private $symbols = array();
 
@@ -14,12 +20,11 @@ final class BriskStaticResourceResponse extends Brisk {
 
     private $needsResolve = true;
 
-    // split by source_name, store all resources
+    //命名空间划分,记录引用的资源
     private $packaged;
 
     private $metadata = array();
 
-    // a unique counter
     private $metadataBlock = 0;
 
     // all initial js need to be loaded
@@ -29,9 +34,18 @@ final class BriskStaticResourceResponse extends Brisk {
 
     private $postprocessorKey;
 
-    public function __construct() {
+    public function __construct($mode = null) {
         if (isset($_REQUEST['__metablock__'])) {
             $this->metadataBlock = (int)$_REQUEST['__metablock__'];
+        }
+
+        $this->mode = BriskEnv::$mode_normal;
+        if (isset($mode)) {
+            $this->mode = $mode;
+        }
+        
+        if (BriskUtils::isAjaxify()) {
+            $this->mode = BriskEnv::$mode_quickling;
         }
     }
 
@@ -52,6 +66,14 @@ final class BriskStaticResourceResponse extends Brisk {
 
     public function getPostprocessorKey() {
         return $this->postprocessorKey;
+    }
+
+    public function setCDN($cdn) {
+        $this->cdn = $cdn;
+    }
+
+    public function getCDN() {
+        return $this->cdn;
     }
 
     /**
@@ -103,7 +125,7 @@ final class BriskStaticResourceResponse extends Brisk {
         return $this;
     }
 
-    //将资源内联方式输出到页面
+    //记录资源内联
     public function inlineResource($name, $source_name) {
         //首先确认资源存在
         $map = BriskResourceMap::getNamedInstance($source_name);
@@ -118,21 +140,19 @@ final class BriskStaticResourceResponse extends Brisk {
 
         //之前已经内联渲染过
         if (isset($this->inlined[$source_name][$symbol])) {
-            return '';
+            return $this;
         }
 
         $fileContent = $map->getResourceDataForName($name, $source_name);
+        $this->inlined[$source_name][$symbol] = $fileContent;
+//        $type = $map->getResourceTypeForName($name);
+//        if ($type === 'js') {
+//            return self::renderInlineScript($fileContent);
+//        } else if ($type === 'css') {
+//            return self::renderInlineStyle($fileContent);
+//        }
 
-        $this->inlined[$source_name][$symbol] = true;
-        $type = $map->getResourceTypeForName($name);
-        if ($type === 'js') {
-            return self::renderInlineScript($fileContent);
-        } else if ($type === 'css') {
-            return self::renderInlineStyle($fileContent);
-        }
-
-        //todo
-        return $fileContent;
+        return $this;
     }
 
     //单独渲染一个外链资源
@@ -178,10 +198,12 @@ final class BriskStaticResourceResponse extends Brisk {
         } else {
             $json_metadata = '{}';
         }
+
         // Even if there is no metadata on the page, Javelin uses the mergeData()
         // call to start dispatching the event queue.
         $data[] = 'JX.Stratcom.mergeData('.$this->metadataBlock.', '.
             $json_metadata.');';
+
         $onload = array();
         if ($this->behaviors) {
             $behaviors = $this->behaviors;
