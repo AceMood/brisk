@@ -32,6 +32,7 @@ function set_cdn($cdn) {
     $response->setCDN($cdn);
 }
 
+//获取cdn
 function get_cdn() {
     $response = BriskAPI::getStaticResourceResponse();
     $response->getCDN();
@@ -42,6 +43,7 @@ function render_css() {
 
 }
 
+//
 function render_js() {
 
 }

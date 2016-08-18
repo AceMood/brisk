@@ -12,12 +12,6 @@ abstract class BriskPhysicalResources extends BriskResources {
     //获取resource.json所在位置
     abstract public function getPathToMap();
 
-    //
-    abstract public function findBinaryResources();
-
-    //
-    abstract public function findTextResources();
-
     //加载resource.json并转化成php数组
     public function loadMap() {
         if ($this->map === null) {

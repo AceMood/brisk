@@ -1,33 +1,27 @@
 <?php
 
 /**
- * Defines tpldev's static resources.
+ * @class Santa项目的静态资源
  */
 final class SantaResources extends BriskResourcesOnDisk {
 
-  // return project name
-  public function getName() {
-    return 'santa';
-  }
+    //项目名用作命名空间
+    public function getName() {
+        return 'santa';
+    }
 
-  // get the top-level directory of all static resources
-  public function getPathToResources() {
-    return $this->getPhabricatorPath('webroot/');
-  }
+    //获取所有构建好的静态文件目录
+    public function getPathToResources() {
+        return $this->getProjectPath('webroot/');
+    }
 
-  // get map.php path
-  public function getPathToMap() {
-    return $this->getPhabricatorPath('map/resource.json');
-  }
+    //获取resource.json
+    public function getPathToMap() {
+        return $this->getProjectPath('dist/resource.json');
+    }
 
-  // get file in current 'phabricator' directory
-  private function getPhabricatorPath($to_file) {
-    return dirname(phutil_get_library_root('phabricator')) . '/' . $to_file;
-  }
-
-  // get all packages info
-  public function getResourcePackages() {
-    return include $this->getPhabricatorPath('resources/celerity/packages.php');
-  }
-
+    //获取工程目录下文件的路径
+    private function getProjectPath($to_file) {
+        return dirname(dirname(__FILE__)) . '/' . $to_file;
+    }
 }

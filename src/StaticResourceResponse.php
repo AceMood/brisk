@@ -27,7 +27,7 @@ final class BriskStaticResourceResponse extends Brisk {
 
     private $metadataBlock = 0;
 
-    // all initial js need to be loaded
+    //页面初始化需要加载的框架
     private $behaviors = array();
 
     private $hasRendered = array();
@@ -150,6 +150,10 @@ final class BriskStaticResourceResponse extends Brisk {
         return $this;
     }
 
+    public function inlineImage($name, $source_name) {
+        // todo
+    }
+
     //单独渲染一个外链资源
     public function renderSingleResource($name, $source_name) {
         $map = BriskResourceMap::getNamedInstance($source_name);
@@ -167,7 +171,7 @@ final class BriskStaticResourceResponse extends Brisk {
 
     //渲染输出一种资源类型的html片段
     public function renderResourcesOfType($type) {
-        // update $this->packaged
+        //更新$this->packaged
         $this->resolveResources();
         $result = array();
         foreach ($this->packaged as $source_name => $resource_names) {
@@ -184,6 +188,7 @@ final class BriskStaticResourceResponse extends Brisk {
         return phutil_implode_html('', $result);
     }
 
+    //
     public function renderHTMLFooter() {
         $data = array();
         if ($this->metadata) {
@@ -247,50 +252,6 @@ final class BriskStaticResourceResponse extends Brisk {
         }
     }
 
-    //根据内容渲染内联style
-    public static function renderInlineStyle($data) {
-        if (stripos($data, '</style>') !== false) {
-            throw new Exception(
-                pht(
-                    'Literal %s is not allowed inside inline style.',
-                    '</style>'));
-        }
-        if (strpos($data, '<!') !== false) {
-            throw new Exception(
-                pht(
-                    'Literal %s is not allowed inside inline style.',
-                    '<!'));
-        }
-        // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
-        // would need to send the document with XHTML content type.
-        return phutil_tag(
-            'style',
-            array(),
-            phutil_safe_html($data));
-    }
-
-    //根据内容渲染内联script
-    public static function renderInlineScript($data) {
-        if (stripos($data, '</script>') !== false) {
-            throw new Exception(
-                pht(
-                    'Literal %s is not allowed inside inline script.',
-                    '</script>'));
-        }
-        if (strpos($data, '<!') !== false) {
-            throw new Exception(
-                pht(
-                    'Literal %s is not allowed inside inline script.',
-                    '<!'));
-        }
-        // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
-        // would need to send the document with XHTML content type.
-        return phutil_tag(
-            'script',
-            array('type' => 'text/javascript'),
-            phutil_safe_html($data));
-    }
-
     //
     public function buildAjaxResponse($payload, $error = null) {
         $response = array(
@@ -342,6 +303,7 @@ final class BriskStaticResourceResponse extends Brisk {
             $mtime = $map->getModifiedTimeForName($name);
             $uri = preg_replace('@^/res/@', '/res/' . $mtime . 'T/', $uri);
         }
+
         if ($use_primary_domain) {
             return PhabricatorEnv::getURI($uri);
         } else {
@@ -411,5 +373,45 @@ final class BriskStaticResourceResponse extends Brisk {
             $name,
             $type
         ));
+    }
+
+    //根据内容渲染内联style
+    private static function renderInlineStyle($data) {
+        if (stripos($data, '</style>') !== false) {
+            throw new Exception(pht(
+                'Literal %s is not allowed inside inline style.',
+                '</style>'));
+        }
+        if (strpos($data, '<!') !== false) {
+            throw new Exception(pht(
+                'Literal %s is not allowed inside inline style.',
+                '<!'));
+        }
+        // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
+        // would need to send the document with XHTML content type.
+        return phutil_tag(
+            'style',
+            array(),
+            phutil_safe_html($data));
+    }
+
+    //根据内容渲染内联script
+    private static function renderInlineScript($data) {
+        if (stripos($data, '</script>') !== false) {
+            throw new Exception(pht(
+                'Literal %s is not allowed inside inline script.',
+                '</script>'));
+        }
+        if (strpos($data, '<!') !== false) {
+            throw new Exception(pht(
+                'Literal %s is not allowed inside inline script.',
+                '<!'));
+        }
+        // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
+        // would need to send the document with XHTML content type.
+        return phutil_tag(
+            'script',
+            array('type' => 'text/javascript'),
+            phutil_safe_html($data));
     }
 }

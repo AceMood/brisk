@@ -93,10 +93,9 @@ final class BriskResourceMap extends Phobject {
     // into the map structure
     private function resolveResource(array &$map, $symbol) {
         if (empty($this->symbolMap[$symbol])) {
-            throw new Exception(
-                pht(
-                    'Attempting to resolve unknown resource, "%s".',
-                    $symbol));
+            throw new Exception(pht(
+                'Attempting to resolve unknown resource, "%s".',
+                $symbol));
         }
         $hash = $this->symbolMap[$symbol];
         $map[$symbol] = $hash;
@@ -144,10 +143,12 @@ final class BriskResourceMap extends Phobject {
         if (!$package_symbols) {
             return null;
         }
+
         $resource_names = array();
         foreach ($package_symbols as $symbol) {
             $resource_names[] = $this->hashMap[$this->symbolMap[$symbol]];
         }
+
         return $resource_names;
     }
 

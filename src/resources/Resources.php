@@ -4,27 +4,20 @@
  * Defines the location of static resources.
  */
 abstract class BriskResources extends Phobject {
-    // get project's name
+    //项目名称作为命名空间
     abstract public function getName();
 
-    // get file content
+    //获取文件内容
     abstract public function getResourceData($name);
 
-    // get file's mtime, default is 0
+    //获取mtime
     public function getResourceModifiedTime($name) {
         return 0;
     }
 
-    // get hash of a resource
-    public function getBriskHash($data) {
-        $tail = PhabricatorEnv::getEnvConfig('celerity.resource-hash');
-        $hash = PhabricatorHash::digest($data, $tail);
-        return substr($hash, 0, 8);
-    }
-
-    // get suffix name
+    //获取资源类型 如js,css
     public function getResourceType($path) {
-        return BriskResourceTransformer::getResourceType($path);
+        return last(explode('.', $path));
     }
 
     // get the online url
@@ -34,12 +27,7 @@ abstract class BriskResources extends Phobject {
         return "/res/{$resources}/{$hash}/{$name}";
     }
 
-    // get the whole package infos
-    public function getResourcePackages() {
-        return array();
-    }
-
-    // load resource map
+    //加载资源表
     public function loadMap() {
         return array();
     }
