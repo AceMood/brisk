@@ -171,14 +171,6 @@ final class BriskResourceTransformer extends Phobject {
     return 'url('.$uri.$tail.')';
   }
 
-  private function replaceCSSVariables($path, $data) {
-    $this->currentPath = $path;
-    return preg_replace_callback(
-      '/{\$([^}]+)}/',
-      array($this, 'replaceCSSVariable'),
-      $data);
-  }
-
   private function replaceCSSPrintRules($path, $data) {
     $this->currentPath = $path;
     return preg_replace_callback(
@@ -198,24 +190,6 @@ final class BriskResourceTransformer extends Phobject {
     }
 
     return $postprocessor->getVariables();
-  }
-
-  public function replaceCSSVariable($matches) {
-    if (!$this->variableMap) {
-      $this->variableMap = $this->getCSSVariableMap();
-    }
-
-    $var_name = $matches[1];
-    if (empty($this->variableMap[$var_name])) {
-      $path = $this->currentPath;
-      throw new Exception(
-        pht(
-          "CSS file '%s' has unknown variable '%s'.",
-          $path,
-          $var_name));
-    }
-
-    return $this->variableMap[$var_name];
   }
 
   public function replaceCSSPrintRule($matches) {

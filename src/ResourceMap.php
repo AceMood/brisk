@@ -182,8 +182,8 @@ final class BriskResourceMap extends Phobject {
      * @return string|null Resource URI, or null if the symbol is unknown.
      */
     public function getURIForSymbol($symbol) {
-        $hash = idx($this->symbolMap, $symbol);
-        return $this->getURIForHash($hash);
+        $resource = idx($this->symbolMap, $symbol);
+        return $resource['uri'];
     }
 
     /**
@@ -194,23 +194,8 @@ final class BriskResourceMap extends Phobject {
      * @return string|null  Resource URI, or null if the name is unknown.
      */
     public function getURIForName($name) {
-        $hash = idx($this->nameMap, $name);
-        return $this->getURIForHash($hash);
-    }
-
-    /**
-     * Return the absolute URI for a resource, identified by hash.
-     * This method is fairly low-level and ignores packaging.
-     *
-     * @param string Resource hash to lookup.
-     * @return string|null Resource URI, or null if the hash is unknown.
-     */
-    private function getURIForHash($hash) {
-        if ($hash === null) {
-            return null;
-        }
-        // todo the 2nd parameter looks like a rsrc/static/a.js
-        return $this->resources->getResourceURI($hash, $this->hashMap[$hash]);
+        $symbol = idx($this->nameMap, $name);
+        return $this->getURIForSymbol($symbol);
     }
 
     /**

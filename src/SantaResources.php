@@ -12,7 +12,7 @@ final class SantaResources extends BriskResourcesOnDisk {
 
     //获取所有构建好的静态文件目录
     public function getPathToResources() {
-        return $this->getProjectPath('webroot/');
+        return $this->getProjectPath('dist/');
     }
 
     //获取resource.json

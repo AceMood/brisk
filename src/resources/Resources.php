@@ -20,13 +20,6 @@ abstract class BriskResources extends Phobject {
         return last(explode('.', $path));
     }
 
-    // get the online url
-    public function getResourceURI($hash, $name) {
-        // return 'phabricator'
-        $resources = $this->getName();
-        return "/res/{$resources}/{$hash}/{$name}";
-    }
-
     //加载资源表
     public function loadMap() {
         return array();
