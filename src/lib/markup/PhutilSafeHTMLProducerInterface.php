@@ -7,6 +7,6 @@
  */
 interface PhutilSafeHTMLProducerInterface {
 
-  public function producePhutilSafeHTML();
+    public function producePhutilSafeHTML();
 
 }

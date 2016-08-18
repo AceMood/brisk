@@ -17,7 +17,7 @@
  * @return  wild Unmodified argument.
  */
 function id($x) {
-  return $x;
+    return $x;
 }
 
 
@@ -34,17 +34,17 @@ function id($x) {
  *                 $default is returned without raising a warning.
  */
 function idx(array $array, $key, $default = null) {
-  // isset() is a micro-optimization - it is fast but fails for null values.
-  if (isset($array[$key])) {
-    return $array[$key];
-  }
+    // isset() is a micro-optimization - it is fast but fails for null values.
+    if (isset($array[$key])) {
+        return $array[$key];
+    }
 
-  // Comparing $default is also a micro-optimization.
-  if ($default === null || array_key_exists($key, $array)) {
-    return null;
-  }
+    // Comparing $default is also a micro-optimization.
+    if ($default === null || array_key_exists($key, $array)) {
+        return null;
+    }
 
-  return $default;
+    return $default;
 }
 
 
@@ -62,22 +62,22 @@ function idx(array $array, $key, $default = null) {
  * @return wild Accessed value, or default if the value is not accessible.
  */
 function idxv(array $map, array $path, $default = null) {
-  if (!$path) {
-    return $default;
-  }
-
-  $last = last($path);
-  $path = array_slice($path, 0, -1);
-
-  $cursor = $map;
-  foreach ($path as $key) {
-    $cursor = idx($cursor, $key);
-    if (!is_array($cursor)) {
-      return $default;
+    if (!$path) {
+        return $default;
     }
-  }
 
-  return idx($cursor, $last, $default);
+    $last = last($path);
+    $path = array_slice($path, 0, -1);
+
+    $cursor = $map;
+    foreach ($path as $key) {
+        $cursor = idx($cursor, $key);
+        if (!is_array($cursor)) {
+            return $default;
+        }
+    }
+
+    return idx($cursor, $last, $default);
 }
 
 
@@ -138,19 +138,19 @@ function idxv(array $map, array $path, $default = null) {
  *                        to whatever you passed as `$method` and `$key_method`.
  */
 function mpull(array $list, $method, $key_method = null) {
-  $result = array();
-  foreach ($list as $key => $object) {
-    if ($key_method !== null) {
-      $key = $object->$key_method();
+    $result = array();
+    foreach ($list as $key => $object) {
+        if ($key_method !== null) {
+            $key = $object->$key_method();
+        }
+        if ($method !== null) {
+            $value = $object->$method();
+        } else {
+            $value = $object;
+        }
+        $result[$key] = $value;
     }
-    if ($method !== null) {
-      $value = $object->$method();
-    } else {
-      $value = $object;
-    }
-    $result[$key] = $value;
-  }
-  return $result;
+    return $result;
 }
 
 
@@ -212,19 +212,19 @@ function mpull(array $list, $method, $key_method = null) {
  *                        `$key_property`.
  */
 function ppull(array $list, $property, $key_property = null) {
-  $result = array();
-  foreach ($list as $key => $object) {
-    if ($key_property !== null) {
-      $key = $object->$key_property;
+    $result = array();
+    foreach ($list as $key => $object) {
+        if ($key_property !== null) {
+            $key = $object->$key_property;
+        }
+        if ($property !== null) {
+            $value = $object->$property;
+        } else {
+            $value = $object;
+        }
+        $result[$key] = $value;
     }
-    if ($property !== null) {
-      $value = $object->$property;
-    } else {
-      $value = $object;
-    }
-    $result[$key] = $value;
-  }
-  return $result;
+    return $result;
 }
 
 
@@ -260,19 +260,19 @@ function ppull(array $list, $property, $key_property = null) {
  *                        to whatever you passed for `$index` and `$key_index`.
  */
 function ipull(array $list, $index, $key_index = null) {
-  $result = array();
-  foreach ($list as $key => $array) {
-    if ($key_index !== null) {
-      $key = $array[$key_index];
+    $result = array();
+    foreach ($list as $key => $array) {
+        if ($key_index !== null) {
+            $key = $array[$key_index];
+        }
+        if ($index !== null) {
+            $value = $array[$index];
+        } else {
+            $value = $array;
+        }
+        $result[$key] = $value;
     }
-    if ($index !== null) {
-      $value = $array[$index];
-    } else {
-      $value = $array;
-    }
-    $result[$key] = $value;
-  }
-  return $result;
+    return $result;
 }
 
 
@@ -308,29 +308,29 @@ function ipull(array $list, $index, $key_index = null) {
  *                  all objects which returned that value.
  */
 function mgroup(array $list, $by /* , ... */) {
-  $map = mpull($list, $by);
+    $map = mpull($list, $by);
 
-  $groups = array();
-  foreach ($map as $group) {
-    // Can't array_fill_keys() here because 'false' gets encoded wrong.
-    $groups[$group] = array();
-  }
-
-  foreach ($map as $key => $group) {
-    $groups[$group][$key] = $list[$key];
-  }
-
-  $args = func_get_args();
-  $args = array_slice($args, 2);
-  if ($args) {
-    array_unshift($args, null);
-    foreach ($groups as $group_key => $grouped) {
-      $args[0] = $grouped;
-      $groups[$group_key] = call_user_func_array('mgroup', $args);
+    $groups = array();
+    foreach ($map as $group) {
+        // Can't array_fill_keys() here because 'false' gets encoded wrong.
+        $groups[$group] = array();
     }
-  }
 
-  return $groups;
+    foreach ($map as $key => $group) {
+        $groups[$group][$key] = $list[$key];
+    }
+
+    $args = func_get_args();
+    $args = array_slice($args, 2);
+    if ($args) {
+        array_unshift($args, null);
+        foreach ($groups as $group_key => $grouped) {
+            $args[0] = $grouped;
+            $groups[$group_key] = call_user_func_array('mgroup', $args);
+        }
+    }
+
+    return $groups;
 }
 
 
@@ -348,28 +348,28 @@ function mgroup(array $list, $by /* , ... */) {
  *                  all objects which had that value at the index.
  */
 function igroup(array $list, $by /* , ... */) {
-  $map = ipull($list, $by);
+    $map = ipull($list, $by);
 
-  $groups = array();
-  foreach ($map as $group) {
-    $groups[$group] = array();
-  }
-
-  foreach ($map as $key => $group) {
-    $groups[$group][$key] = $list[$key];
-  }
-
-  $args = func_get_args();
-  $args = array_slice($args, 2);
-  if ($args) {
-    array_unshift($args, null);
-    foreach ($groups as $group_key => $grouped) {
-      $args[0] = $grouped;
-      $groups[$group_key] = call_user_func_array('igroup', $args);
+    $groups = array();
+    foreach ($map as $group) {
+        $groups[$group] = array();
     }
-  }
 
-  return $groups;
+    foreach ($map as $key => $group) {
+        $groups[$group][$key] = $list[$key];
+    }
+
+    $args = func_get_args();
+    $args = array_slice($args, 2);
+    if ($args) {
+        array_unshift($args, null);
+        foreach ($groups as $group_key => $grouped) {
+            $args[0] = $grouped;
+            $groups[$group_key] = call_user_func_array('igroup', $args);
+        }
+    }
+
+    return $groups;
 }
 
 
@@ -392,16 +392,16 @@ function igroup(array $list, $by /* , ... */) {
  * @return  list    Objects ordered by the return values of the method calls.
  */
 function msort(array $list, $method) {
-  $surrogate = mpull($list, $method);
+    $surrogate = mpull($list, $method);
 
-  asort($surrogate);
+    asort($surrogate);
 
-  $result = array();
-  foreach ($surrogate as $key => $value) {
-    $result[$key] = $list[$key];
-  }
+    $result = array();
+    foreach ($surrogate as $key => $value) {
+        $result[$key] = $list[$key];
+    }
 
-  return $result;
+    return $result;
 }
 
 
@@ -416,36 +416,36 @@ function msort(array $list, $method) {
  * @return list Objects ordered by the vectors.
  */
 function msortv(array $list, $method) {
-  $surrogate = mpull($list, $method);
+    $surrogate = mpull($list, $method);
 
-  $index = 0;
-  foreach ($surrogate as $key => $value) {
-    if (!($value instanceof PhutilSortVector)) {
-      throw new Exception(
-        pht(
-          'Objects passed to "%s" must return sort vectors (objects of '.
-          'class "%s") from the specified method ("%s"). One object (with '.
-          'key "%s") did not.',
-          'msortv()',
-          'PhutilSortVector',
-          $method,
-          $key));
+    $index = 0;
+    foreach ($surrogate as $key => $value) {
+        if (!($value instanceof PhutilSortVector)) {
+            throw new Exception(
+                pht(
+                    'Objects passed to "%s" must return sort vectors (objects of '.
+                    'class "%s") from the specified method ("%s"). One object (with '.
+                    'key "%s") did not.',
+                    'msortv()',
+                    'PhutilSortVector',
+                    $method,
+                    $key));
+        }
+
+        // Add the original index to keep the sort stable.
+        $value->addInt($index++);
+
+        $surrogate[$key] = (string)$value;
     }
 
-    // Add the original index to keep the sort stable.
-    $value->addInt($index++);
+    asort($surrogate, SORT_STRING);
 
-    $surrogate[$key] = (string)$value;
-  }
+    $result = array();
+    foreach ($surrogate as $key => $value) {
+        $result[$key] = $list[$key];
+    }
 
-  asort($surrogate, SORT_STRING);
-
-  $result = array();
-  foreach ($surrogate as $key => $value) {
-    $result[$key] = $list[$key];
-  }
-
-  return $result;
+    return $result;
 }
 
 
@@ -460,16 +460,16 @@ function msortv(array $list, $method) {
  * @return  list    Arrays ordered by the index values.
  */
 function isort(array $list, $index) {
-  $surrogate = ipull($list, $index);
+    $surrogate = ipull($list, $index);
 
-  asort($surrogate);
+    asort($surrogate);
 
-  $result = array();
-  foreach ($surrogate as $key => $value) {
-    $result[$key] = $list[$key];
-  }
+    $result = array();
+    foreach ($surrogate as $key => $value) {
+        $result[$key] = $list[$key];
+    }
 
-  return $result;
+    return $result;
 }
 
 
@@ -496,26 +496,26 @@ function isort(array $list, $index) {
  * @return array        List of objects which pass the filter.
  */
 function mfilter(array $list, $method, $negate = false) {
-  if (!is_string($method)) {
-    throw new InvalidArgumentException(pht('Argument method is not a string.'));
-  }
-
-  $result = array();
-  foreach ($list as $key => $object) {
-    $value = $object->$method();
-
-    if (!$negate) {
-      if (!empty($value)) {
-        $result[$key] = $object;
-      }
-    } else {
-      if (empty($value)) {
-        $result[$key] = $object;
-      }
+    if (!is_string($method)) {
+        throw new InvalidArgumentException(pht('Argument method is not a string.'));
     }
-  }
 
-  return $result;
+    $result = array();
+    foreach ($list as $key => $object) {
+        $value = $object->$method();
+
+        if (!$negate) {
+            if (!empty($value)) {
+                $result[$key] = $object;
+            }
+        } else {
+            if (empty($value)) {
+                $result[$key] = $object;
+            }
+        }
+    }
+
+    return $result;
 }
 
 
@@ -541,26 +541,26 @@ function mfilter(array $list, $method, $negate = false) {
  * @return array        List of arrays which pass the filter.
  */
 function ifilter(array $list, $index, $negate = false) {
-  if (!is_scalar($index)) {
-    throw new InvalidArgumentException(pht('Argument index is not a scalar.'));
-  }
-
-  $result = array();
-  if (!$negate) {
-    foreach ($list as $key => $array) {
-      if (!empty($array[$index])) {
-        $result[$key] = $array;
-      }
+    if (!is_scalar($index)) {
+        throw new InvalidArgumentException(pht('Argument index is not a scalar.'));
     }
-  } else {
-    foreach ($list as $key => $array) {
-      if (empty($array[$index])) {
-        $result[$key] = $array;
-      }
-    }
-  }
 
-  return $result;
+    $result = array();
+    if (!$negate) {
+        foreach ($list as $key => $array) {
+            if (!empty($array[$index])) {
+                $result[$key] = $array;
+            }
+        }
+    } else {
+        foreach ($list as $key => $array) {
+            if (empty($array[$index])) {
+                $result[$key] = $array;
+            }
+        }
+    }
+
+    return $result;
 }
 
 
@@ -580,13 +580,13 @@ function ifilter(array $list, $index, $negate = false) {
  *                 determined by the list order.
  */
 function array_select_keys(array $dict, array $keys) {
-  $result = array();
-  foreach ($keys as $key) {
-    if (array_key_exists($key, $dict)) {
-      $result[$key] = $dict[$key];
+    $result = array();
+    foreach ($keys as $key) {
+        if (array_key_exists($key, $dict)) {
+            $result[$key] = $dict[$key];
+        }
     }
-  }
-  return $result;
+    return $result;
 }
 
 
@@ -599,34 +599,34 @@ function array_select_keys(array $dict, array $keys) {
  * @return array   Returns passed array.
  */
 function assert_instances_of(array $arr, $class) {
-  $is_array = !strcasecmp($class, 'array');
+    $is_array = !strcasecmp($class, 'array');
 
-  foreach ($arr as $key => $object) {
-    if ($is_array) {
-      if (!is_array($object)) {
-        $given = gettype($object);
-        throw new InvalidArgumentException(
-          pht(
-            "Array item with key '%s' must be of type array, %s given.",
-            $key,
-            $given));
-      }
+    foreach ($arr as $key => $object) {
+        if ($is_array) {
+            if (!is_array($object)) {
+                $given = gettype($object);
+                throw new InvalidArgumentException(
+                    pht(
+                        "Array item with key '%s' must be of type array, %s given.",
+                        $key,
+                        $given));
+            }
 
-    } else if (!($object instanceof $class)) {
-      $given = gettype($object);
-      if (is_object($object)) {
-        $given = pht('instance of %s', get_class($object));
-      }
-      throw new InvalidArgumentException(
-        pht(
-          "Array item with key '%s' must be an instance of %s, %s given.",
-          $key,
-          $class,
-          $given));
+        } else if (!($object instanceof $class)) {
+            $given = gettype($object);
+            if (is_object($object)) {
+                $given = pht('instance of %s', get_class($object));
+            }
+            throw new InvalidArgumentException(
+                pht(
+                    "Array item with key '%s' must be an instance of %s, %s given.",
+                    $key,
+                    $class,
+                    $given));
+        }
     }
-  }
 
-  return $arr;
+    return $arr;
 }
 
 /**
@@ -638,29 +638,29 @@ function assert_instances_of(array $arr, $class) {
  * @task   assert
  */
 function assert_stringlike($parameter) {
-  switch (gettype($parameter)) {
-    case 'string':
-    case 'NULL':
-    case 'boolean':
-    case 'double':
-    case 'integer':
-      return;
-    case 'object':
-      if (method_exists($parameter, '__toString')) {
-        return;
-      }
-      break;
-    case 'array':
-    case 'resource':
-    case 'unknown type':
-    default:
-      break;
-  }
+    switch (gettype($parameter)) {
+        case 'string':
+        case 'NULL':
+        case 'boolean':
+        case 'double':
+        case 'integer':
+            return;
+        case 'object':
+            if (method_exists($parameter, '__toString')) {
+                return;
+            }
+            break;
+        case 'array':
+        case 'resource':
+        case 'unknown type':
+        default:
+            break;
+    }
 
-  throw new InvalidArgumentException(
-    pht(
-      'Argument must be scalar or object which implements %s!',
-      '__toString()'));
+    throw new InvalidArgumentException(
+        pht(
+            'Argument must be scalar or object which implements %s!',
+            '__toString()'));
 }
 
 /**
@@ -671,13 +671,13 @@ function assert_stringlike($parameter) {
  * @return mixed       First non-`null` arg, or null if no such arg exists.
  */
 function coalesce(/* ... */) {
-  $args = func_get_args();
-  foreach ($args as $arg) {
-    if ($arg !== null) {
-      return $arg;
+    $args = func_get_args();
+    foreach ($args as $arg) {
+        if ($arg !== null) {
+            return $arg;
+        }
     }
-  }
-  return null;
+    return null;
 }
 
 
@@ -694,15 +694,15 @@ function coalesce(/* ... */) {
  *                     exists, or null if you passed in zero args.
  */
 function nonempty(/* ... */) {
-  $args = func_get_args();
-  $result = null;
-  foreach ($args as $arg) {
-    $result = $arg;
-    if ($arg) {
-      break;
+    $args = func_get_args();
+    $result = null;
+    foreach ($args as $arg) {
+        $result = $arg;
+        if ($arg) {
+            break;
+        }
     }
-  }
-  return $result;
+    return $result;
 }
 
 
@@ -741,12 +741,12 @@ function nonempty(/* ... */) {
  *                 the argument vector to its constructor.
  */
 function newv($class_name, array $argv) {
-  $reflector = new ReflectionClass($class_name);
-  if ($argv) {
-    return $reflector->newInstanceArgs($argv);
-  } else {
-    return $reflector->newInstance();
-  }
+    $reflector = new ReflectionClass($class_name);
+    if ($argv) {
+        return $reflector->newInstanceArgs($argv);
+    } else {
+        return $reflector->newInstance();
+    }
 }
 
 
@@ -759,7 +759,7 @@ function newv($class_name, array $argv) {
  * @return   wild  The first value of the array.
  */
 function head(array $arr) {
-  return reset($arr);
+    return reset($arr);
 }
 
 /**
@@ -771,7 +771,7 @@ function head(array $arr) {
  * @return   wild  The last value of the array.
  */
 function last(array $arr) {
-  return end($arr);
+    return end($arr);
 }
 
 /**
@@ -781,8 +781,8 @@ function last(array $arr) {
  * @return   int|string  The first key of the array.
  */
 function head_key(array $arr) {
-  reset($arr);
-  return key($arr);
+    reset($arr);
+    return key($arr);
 }
 
 /**
@@ -792,8 +792,8 @@ function head_key(array $arr) {
  * @return   int|string  The last key of the array.
  */
 function last_key(array $arr) {
-  end($arr);
-  return key($arr);
+    end($arr);
+    return key($arr);
 }
 
 /**
@@ -811,23 +811,23 @@ function last_key(array $arr) {
  * @return list Arrays, merged with array_merge() semantics.
  */
 function array_mergev(array $arrayv) {
-  if (!$arrayv) {
-    return array();
-  }
-
-  foreach ($arrayv as $key => $item) {
-    if (!is_array($item)) {
-      throw new InvalidArgumentException(
-        pht(
-          'Expected all items passed to `%s` to be arrays, but '.
-          'argument with key "%s" has type "%s".',
-          __FUNCTION__.'()',
-          $key,
-          gettype($item)));
+    if (!$arrayv) {
+        return array();
     }
-  }
 
-  return call_user_func_array('array_merge', $arrayv);
+    foreach ($arrayv as $key => $item) {
+        if (!is_array($item)) {
+            throw new InvalidArgumentException(
+                pht(
+                    'Expected all items passed to `%s` to be arrays, but '.
+                    'argument with key "%s" has type "%s".',
+                    __FUNCTION__.'()',
+                    $key,
+                    gettype($item)));
+        }
+    }
+
+    return call_user_func_array('array_merge', $arrayv);
 }
 
 
@@ -843,28 +843,28 @@ function array_mergev(array $arrayv) {
  * @return list List of lines.
  */
 function phutil_split_lines($corpus, $retain_endings = true) {
-  if (!strlen($corpus)) {
-    return array('');
-  }
+    if (!strlen($corpus)) {
+        return array('');
+    }
 
-  // Split on "\r\n" or "\n".
-  if ($retain_endings) {
-    $lines = preg_split('/(?<=\n)/', $corpus);
-  } else {
-    $lines = preg_split('/\r?\n/', $corpus);
-  }
+    // Split on "\r\n" or "\n".
+    if ($retain_endings) {
+        $lines = preg_split('/(?<=\n)/', $corpus);
+    } else {
+        $lines = preg_split('/\r?\n/', $corpus);
+    }
 
-  // If the text ends with "\n" or similar, we'll end up with an empty string
-  // at the end; discard it.
-  if (end($lines) == '') {
-    array_pop($lines);
-  }
+    // If the text ends with "\n" or similar, we'll end up with an empty string
+    // at the end; discard it.
+    if (end($lines) == '') {
+        array_pop($lines);
+    }
 
-  if ($corpus instanceof PhutilSafeHTML) {
-    return array_map('phutil_safe_html', $lines);
-  }
+    if ($corpus instanceof PhutilSafeHTML) {
+        return array_map('phutil_safe_html', $lines);
+    }
 
-  return $lines;
+    return $lines;
 }
 
 
@@ -887,10 +887,10 @@ function phutil_split_lines($corpus, $retain_endings = true) {
  * @return  dict  Dictionary with inputs mapped to themselves.
  */
 function array_fuse(array $list) {
-  if ($list) {
-    return array_combine($list, $list);
-  }
-  return array();
+    if ($list) {
+        return array_combine($list, $list);
+    }
+    return array();
 }
 
 
@@ -913,24 +913,24 @@ function array_fuse(array $list) {
  * @return list Original list with the new element interleaved.
  */
 function array_interleave($interleave, array $array) {
-  $result = array();
-  foreach ($array as $item) {
-    $result[] = $item;
-    $result[] = $interleave;
-  }
-  array_pop($result);
-  return $result;
+    $result = array();
+    foreach ($array as $item) {
+        $result[] = $item;
+        $result[] = $interleave;
+    }
+    array_pop($result);
+    return $result;
 }
 
 function phutil_is_windows() {
-  // We can also use PHP_OS, but that's kind of sketchy because it returns
-  // "WINNT" for Windows 7 and "Darwin" for Mac OS X. Practically, testing for
-  // DIRECTORY_SEPARATOR is more straightforward.
-  return (DIRECTORY_SEPARATOR != '/');
+    // We can also use PHP_OS, but that's kind of sketchy because it returns
+    // "WINNT" for Windows 7 and "Darwin" for Mac OS X. Practically, testing for
+    // DIRECTORY_SEPARATOR is more straightforward.
+    return (DIRECTORY_SEPARATOR != '/');
 }
 
 function phutil_is_hiphop_runtime() {
-  return (array_key_exists('HPHP', $_ENV) && $_ENV['HPHP'] === 1);
+    return (array_key_exists('HPHP', $_ENV) && $_ENV['HPHP'] === 1);
 }
 
 /**
@@ -941,35 +941,35 @@ function phutil_is_hiphop_runtime() {
  *                for printing on a single log line.
  */
 function phutil_loggable_string($string) {
-  if (preg_match('/^[\x20-\x7E]+$/', $string)) {
-    return $string;
-  }
-
-  $result = '';
-
-  static $c_map = array(
-    '\\' => '\\\\',
-    "\n" => '\\n',
-    "\r" => '\\r',
-    "\t" => '\\t',
-  );
-
-  $len = strlen($string);
-  for ($ii = 0; $ii < $len; $ii++) {
-    $c = $string[$ii];
-    if (isset($c_map[$c])) {
-      $result .= $c_map[$c];
-    } else {
-      $o = ord($c);
-      if ($o < 0x20 || $o == 0x7F) {
-        $result .= '\\x'.sprintf('%02X', $o);
-      } else {
-        $result .= $c;
-      }
+    if (preg_match('/^[\x20-\x7E]+$/', $string)) {
+        return $string;
     }
-  }
 
-  return $result;
+    $result = '';
+
+    static $c_map = array(
+        '\\' => '\\\\',
+        "\n" => '\\n',
+        "\r" => '\\r',
+        "\t" => '\\t',
+    );
+
+    $len = strlen($string);
+    for ($ii = 0; $ii < $len; $ii++) {
+        $c = $string[$ii];
+        if (isset($c_map[$c])) {
+            $result .= $c_map[$c];
+        } else {
+            $o = ord($c);
+            if ($o < 0x20 || $o == 0x7F) {
+                $result .= '\\x'.sprintf('%02X', $o);
+            } else {
+                $result .= $c;
+            }
+        }
+    }
+
+    return $result;
 }
 
 
@@ -993,49 +993,49 @@ function phutil_loggable_string($string) {
  *                  errors which `fwrite()` can not detect, like a broken pipe).
  */
 function phutil_fwrite_nonblocking_stream($stream, $bytes) {
-  if (!strlen($bytes)) {
-    return 0;
-  }
+    if (!strlen($bytes)) {
+        return 0;
+    }
 
-  $result = @fwrite($stream, $bytes);
-  if ($result !== 0) {
-    // In cases where some bytes are witten (`$result > 0`) or
-    // an error occurs (`$result === false`), the behavior of fwrite() is
-    // correct. We can return the value as-is.
-    return $result;
-  }
+    $result = @fwrite($stream, $bytes);
+    if ($result !== 0) {
+        // In cases where some bytes are witten (`$result > 0`) or
+        // an error occurs (`$result === false`), the behavior of fwrite() is
+        // correct. We can return the value as-is.
+        return $result;
+    }
 
-  // If we make it here, we performed a 0-length write. Try to distinguish
-  // between EAGAIN and EPIPE. To do this, we're going to `stream_select()`
-  // the stream, write to it again if PHP claims that it's writable, and
-  // consider the pipe broken if the write fails.
+    // If we make it here, we performed a 0-length write. Try to distinguish
+    // between EAGAIN and EPIPE. To do this, we're going to `stream_select()`
+    // the stream, write to it again if PHP claims that it's writable, and
+    // consider the pipe broken if the write fails.
 
-  $read = array();
-  $write = array($stream);
-  $except = array();
+    $read = array();
+    $write = array($stream);
+    $except = array();
 
-  @stream_select($read, $write, $except, 0);
+    @stream_select($read, $write, $except, 0);
 
-  if (!$write) {
-    // The stream isn't writable, so we conclude that it probably really is
-    // blocked and the underlying error was EAGAIN. Return 0 to indicate that
-    // no data could be written yet.
-    return 0;
-  }
+    if (!$write) {
+        // The stream isn't writable, so we conclude that it probably really is
+        // blocked and the underlying error was EAGAIN. Return 0 to indicate that
+        // no data could be written yet.
+        return 0;
+    }
 
-  // If we make it here, PHP **just** claimed that this stream is writable, so
-  // perform a write. If the write also fails, conclude that these failures are
-  // EPIPE or some other permanent failure.
-  $result = @fwrite($stream, $bytes);
-  if ($result !== 0) {
-    // The write worked or failed explicitly. This value is fine to return.
-    return $result;
-  }
+    // If we make it here, PHP **just** claimed that this stream is writable, so
+    // perform a write. If the write also fails, conclude that these failures are
+    // EPIPE or some other permanent failure.
+    $result = @fwrite($stream, $bytes);
+    if ($result !== 0) {
+        // The write worked or failed explicitly. This value is fine to return.
+        return $result;
+    }
 
-  // We performed a 0-length write, were told that the stream was writable, and
-  // then immediately performed another 0-length write. Conclude that the pipe
-  // is broken and return `false`.
-  return false;
+    // We performed a 0-length write, were told that the stream was writable, and
+    // then immediately performed another 0-length write. Conclude that the pipe
+    // is broken and return `false`.
+    return false;
 }
 
 
@@ -1056,84 +1056,84 @@ function phutil_fwrite_nonblocking_stream($stream, $bytes) {
  * @return  int     Quantity of specified unit.
  */
 function phutil_units($description) {
-  $matches = null;
-  if (!preg_match('/^(\d+) (\w+) in (\w+)$/', $description, $matches)) {
-    throw new InvalidArgumentException(
-      pht(
-        'Unable to parse unit specification (expected a specification in the '.
-        'form "%s"): %s',
-        '5 days in seconds',
-        $description));
-  }
-
-  $quantity = (int)$matches[1];
-  $src_unit = $matches[2];
-  $dst_unit = $matches[3];
-
-  $is_divisor = false;
-
-  switch ($dst_unit) {
-    case 'seconds':
-      switch ($src_unit) {
-        case 'second':
-        case 'seconds':
-          $factor = 1;
-          break;
-        case 'minute':
-        case 'minutes':
-          $factor = 60;
-          break;
-        case 'hour':
-        case 'hours':
-          $factor = 60 * 60;
-          break;
-        case 'day':
-        case 'days':
-          $factor = 60 * 60 * 24;
-          break;
-        default:
-          throw new InvalidArgumentException(
+    $matches = null;
+    if (!preg_match('/^(\d+) (\w+) in (\w+)$/', $description, $matches)) {
+        throw new InvalidArgumentException(
             pht(
-              'This function can not convert from the unit "%s".',
-              $src_unit));
-      }
-      break;
-    case 'bytes':
-      switch ($src_unit) {
-        case 'byte':
-        case 'bytes':
-          $factor = 1;
-          break;
-        case 'bit':
-        case 'bits':
-          $factor = 8;
-          $is_divisor = true;
-          break;
-        default:
-          throw new InvalidArgumentException(
-            pht(
-              'This function can not convert from the unit "%s".',
-              $src_unit));
-      }
-      break;
-    default:
-      throw new InvalidArgumentException(
-        pht(
-          'This function can not convert into the unit "%s".',
-          $dst_unit));
-  }
-
-  if ($is_divisor) {
-    if ($quantity % $factor) {
-      throw new InvalidArgumentException(
-        pht(
-          '"%s" is not an exact quantity.',
-          $description));
+                'Unable to parse unit specification (expected a specification in the '.
+                'form "%s"): %s',
+                '5 days in seconds',
+                $description));
     }
-    return (int)($quantity / $factor);
-  } else {
-    return $quantity * $factor;
-  }
+
+    $quantity = (int)$matches[1];
+    $src_unit = $matches[2];
+    $dst_unit = $matches[3];
+
+    $is_divisor = false;
+
+    switch ($dst_unit) {
+        case 'seconds':
+            switch ($src_unit) {
+                case 'second':
+                case 'seconds':
+                    $factor = 1;
+                    break;
+                case 'minute':
+                case 'minutes':
+                    $factor = 60;
+                    break;
+                case 'hour':
+                case 'hours':
+                    $factor = 60 * 60;
+                    break;
+                case 'day':
+                case 'days':
+                    $factor = 60 * 60 * 24;
+                    break;
+                default:
+                    throw new InvalidArgumentException(
+                        pht(
+                            'This function can not convert from the unit "%s".',
+                            $src_unit));
+            }
+            break;
+        case 'bytes':
+            switch ($src_unit) {
+                case 'byte':
+                case 'bytes':
+                    $factor = 1;
+                    break;
+                case 'bit':
+                case 'bits':
+                    $factor = 8;
+                    $is_divisor = true;
+                    break;
+                default:
+                    throw new InvalidArgumentException(
+                        pht(
+                            'This function can not convert from the unit "%s".',
+                            $src_unit));
+            }
+            break;
+        default:
+            throw new InvalidArgumentException(
+                pht(
+                    'This function can not convert into the unit "%s".',
+                    $dst_unit));
+    }
+
+    if ($is_divisor) {
+        if ($quantity % $factor) {
+            throw new InvalidArgumentException(
+                pht(
+                    '"%s" is not an exact quantity.',
+                    $description));
+        }
+        return (int)($quantity / $factor);
+    } else {
+        return $quantity * $factor;
+    }
 }
 
 
@@ -1145,16 +1145,16 @@ function phutil_units($description) {
  * @return  mixed     Decoded list/dictionary.
  */
 function phutil_json_decode($string) {
-  $result = @json_decode($string, true);
+    $result = @json_decode($string, true);
 
-  if (!is_array($result)) {
-    // Failed to decode the JSON. Try to use @{class:PhutilJSONParser} instead.
-    // This will probably fail, but will throw a useful exception.
-    $parser = new PhutilJSONParser();
-    $result = $parser->parse($string);
-  }
+    if (!is_array($result)) {
+        // Failed to decode the JSON. Try to use @{class:PhutilJSONParser} instead.
+        // This will probably fail, but will throw a useful exception.
+        $parser = new PhutilJSONParser();
+        $result = $parser->parse($string);
+    }
 
-  return $result;
+    return $result;
 }
 
 
@@ -1165,36 +1165,36 @@ function phutil_json_decode($string) {
  * @return string JSON representation of the value.
  */
 function phutil_json_encode($value) {
-  $result = @json_encode($value);
-  if ($result === false) {
-    $reason = phutil_validate_json($value);
-    if (function_exists('json_last_error')) {
-      $err = json_last_error();
-      if (function_exists('json_last_error_msg')) {
-        $msg = json_last_error_msg();
-        $extra = pht('#%d: %s', $err, $msg);
-      } else {
-        $extra = pht('#%d', $err);
-      }
-    } else {
-      $extra = null;
+    $result = @json_encode($value);
+    if ($result === false) {
+        $reason = phutil_validate_json($value);
+        if (function_exists('json_last_error')) {
+            $err = json_last_error();
+            if (function_exists('json_last_error_msg')) {
+                $msg = json_last_error_msg();
+                $extra = pht('#%d: %s', $err, $msg);
+            } else {
+                $extra = pht('#%d', $err);
+            }
+        } else {
+            $extra = null;
+        }
+
+        if ($extra) {
+            $message = pht(
+                'Failed to JSON encode value (%s): %s.',
+                $extra,
+                $reason);
+        } else {
+            $message = pht(
+                'Failed to JSON encode value: %s.',
+                $reason);
+        }
+
+        throw new Exception($message);
     }
 
-    if ($extra) {
-      $message = pht(
-        'Failed to JSON encode value (%s): %s.',
-        $extra,
-        $reason);
-    } else {
-      $message = pht(
-        'Failed to JSON encode value: %s.',
-        $reason);
-    }
-
-    throw new Exception($message);
-  }
-
-  return $result;
+    return $result;
 }
 
 
@@ -1206,68 +1206,68 @@ function phutil_json_encode($value) {
  * @return string|null Explanation of why it can't be encoded, or null.
  */
 function phutil_validate_json($value, $path = '') {
-  if ($value === null) {
-    return;
-  }
-
-  if ($value === true) {
-    return;
-  }
-
-  if ($value === false) {
-    return;
-  }
-
-  if (is_int($value)) {
-    return;
-  }
-
-  if (is_float($value)) {
-    return;
-  }
-
-  if (is_array($value)) {
-    foreach ($value as $key => $subvalue) {
-      if (strlen($path)) {
-        $full_key = $path.' > ';
-      } else {
-        $full_key = '';
-      }
-
-      if (!phutil_is_utf8($key)) {
-        $full_key = $full_key.phutil_utf8ize($key);
-        return pht(
-          'Dictionary key "%s" is not valid UTF8, and cannot be JSON encoded.',
-          $full_key);
-      }
-
-      $full_key .= $key;
-      $result = phutil_validate_json($subvalue, $full_key);
-      if ($result !== null) {
-        return $result;
-      }
+    if ($value === null) {
+        return;
     }
-  }
 
-  if (is_string($value)) {
-    if (!phutil_is_utf8($value)) {
-      $display = substr($value, 0, 256);
-      $display = phutil_utf8ize($display);
-      if (!strlen($path)) {
-        return pht(
-          'String value is not valid UTF8, and can not be JSON encoded: %s',
-          $display);
-      } else {
-        return pht(
-          'Dictionary value at key "%s" is not valid UTF8, and cannot be '.
-          'JSON encoded: %s',
-          $path,
-          $display);
-      }
+    if ($value === true) {
+        return;
     }
-  }
 
-  return;
+    if ($value === false) {
+        return;
+    }
+
+    if (is_int($value)) {
+        return;
+    }
+
+    if (is_float($value)) {
+        return;
+    }
+
+    if (is_array($value)) {
+        foreach ($value as $key => $subvalue) {
+            if (strlen($path)) {
+                $full_key = $path.' > ';
+            } else {
+                $full_key = '';
+            }
+
+            if (!phutil_is_utf8($key)) {
+                $full_key = $full_key.phutil_utf8ize($key);
+                return pht(
+                    'Dictionary key "%s" is not valid UTF8, and cannot be JSON encoded.',
+                    $full_key);
+            }
+
+            $full_key .= $key;
+            $result = phutil_validate_json($subvalue, $full_key);
+            if ($result !== null) {
+                return $result;
+            }
+        }
+    }
+
+    if (is_string($value)) {
+        if (!phutil_is_utf8($value)) {
+            $display = substr($value, 0, 256);
+            $display = phutil_utf8ize($display);
+            if (!strlen($path)) {
+                return pht(
+                    'String value is not valid UTF8, and can not be JSON encoded: %s',
+                    $display);
+            } else {
+                return pht(
+                    'Dictionary value at key "%s" is not valid UTF8, and cannot be '.
+                    'JSON encoded: %s',
+                    $path,
+                    $display);
+            }
+        }
+    }
+
+    return;
 }
 
 
@@ -1278,59 +1278,59 @@ function phutil_validate_json($value, $path = '') {
  * @return mixed
  */
 function phutil_ini_decode($string) {
-  $results = null;
-  $trap = new PhutilErrorTrap();
+    $results = null;
+    $trap = new PhutilErrorTrap();
 
-  try {
-    if (!function_exists('parse_ini_string')) {
-      throw new PhutilMethodNotImplementedException(
-        pht(
-          '%s is not compatible with your version of PHP (%s). This function '.
-          'is only supported on PHP versions newer than 5.3.0.',
-          __FUNCTION__,
-          phpversion()));
-    }
-
-    $results = @parse_ini_string($string, true, INI_SCANNER_RAW);
-
-    if ($results === false) {
-      throw new PhutilINIParserException(trim($trap->getErrorsAsString()));
-    }
-
-    foreach ($results as $section => $result) {
-      if (!is_array($result)) {
-        // We JSON decode the value in ordering to perform the following
-        // conversions:
-        //
-        //   - `'true'` => `true`
-        //   - `'false'` => `false`
-        //   - `'123'` => `123`
-        //   - `'1.234'` => `1.234`
-        //
-        $result = json_decode($result, true);
-
-        if ($result !== null && !is_array($result)) {
-          $results[$section] = $result;
+    try {
+        if (!function_exists('parse_ini_string')) {
+            throw new PhutilMethodNotImplementedException(
+                pht(
+                    '%s is not compatible with your version of PHP (%s). This function '.
+                    'is only supported on PHP versions newer than 5.3.0.',
+                    __FUNCTION__,
+                    phpversion()));
         }
 
-        continue;
-      }
+        $results = @parse_ini_string($string, true, INI_SCANNER_RAW);
 
-      foreach ($result as $key => $value) {
-        $value = json_decode($value, true);
-
-        if ($value !== null && !is_array($value)) {
-          $results[$section][$key] = $value;
+        if ($results === false) {
+            throw new PhutilINIParserException(trim($trap->getErrorsAsString()));
         }
-      }
+
+        foreach ($results as $section => $result) {
+            if (!is_array($result)) {
+                // We JSON decode the value in ordering to perform the following
+                // conversions:
+                //
+                //   - `'true'` => `true`
+                //   - `'false'` => `false`
+                //   - `'123'` => `123`
+                //   - `'1.234'` => `1.234`
+                //
+                $result = json_decode($result, true);
+
+                if ($result !== null && !is_array($result)) {
+                    $results[$section] = $result;
+                }
+
+                continue;
+            }
+
+            foreach ($result as $key => $value) {
+                $value = json_decode($value, true);
+
+                if ($value !== null && !is_array($value)) {
+                    $results[$section][$key] = $value;
+                }
+            }
+        }
+    } catch (Exception $ex) {
+        $trap->destroy();
+        throw $ex;
     }
-  } catch (Exception $ex) {
+
     $trap->destroy();
-    throw $ex;
-  }
-
-  $trap->destroy();
-  return $results;
+    return $results;
 }
 
 
@@ -1346,7 +1346,7 @@ function phutil_ini_decode($string) {
  *                  be identified censored.
  */
 function phutil_censor_credentials($string) {
-  return preg_replace(',(?<=://)([^/@\s]+)(?=@|$),', '********', $string);
+    return preg_replace(',(?<=://)([^/@\s]+)(?=@|$),', '********', $string);
 }
 
 
@@ -1360,43 +1360,43 @@ function phutil_censor_credentials($string) {
  * @return string
  */
 function phutil_var_export($var) {
-  // `var_export(null, true)` returns `"NULL"` (in uppercase).
-  if ($var === null) {
-    return 'null';
-  }
-
-  // PHP's `var_export` doesn't format arrays very nicely. In particular:
-  //
-  //   - An empty array is split over two lines (`"array (\n)"`).
-  //   - A space separates "array" and the first opening brace.
-  //   - Non-associative arrays are returned as associative arrays with an
-  //     integer key.
-  //
-  if (is_array($var)) {
-    if (count($var) === 0) {
-      return 'array()';
+    // `var_export(null, true)` returns `"NULL"` (in uppercase).
+    if ($var === null) {
+        return 'null';
     }
 
-    // Don't show keys for non-associative arrays.
-    $show_keys = (array_keys($var) !== range(0, count($var) - 1));
+    // PHP's `var_export` doesn't format arrays very nicely. In particular:
+    //
+    //   - An empty array is split over two lines (`"array (\n)"`).
+    //   - A space separates "array" and the first opening brace.
+    //   - Non-associative arrays are returned as associative arrays with an
+    //     integer key.
+    //
+    if (is_array($var)) {
+        if (count($var) === 0) {
+            return 'array()';
+        }
 
-    $output = array();
-    $output[] = 'array(';
+        // Don't show keys for non-associative arrays.
+        $show_keys = (array_keys($var) !== range(0, count($var) - 1));
 
-    foreach ($var as $key => $value) {
-      // Adjust the indentation of the value.
-      $value = str_replace("\n", "\n  ", phutil_var_export($value));
-      $output[] = '  '.
-        ($show_keys ? var_export($key, true).' => ' : '').
-        $value.',';
+        $output = array();
+        $output[] = 'array(';
+
+        foreach ($var as $key => $value) {
+            // Adjust the indentation of the value.
+            $value = str_replace("\n", "\n  ", phutil_var_export($value));
+            $output[] = '  '.
+                ($show_keys ? var_export($key, true).' => ' : '').
+                $value.',';
+        }
+
+        $output[] = ')';
+        return implode("\n", $output);
     }
 
-    $output[] = ')';
-    return implode("\n", $output);
-  }
-
-  // Let PHP handle everything else.
-  return var_export($var, true);
+    // Let PHP handle everything else.
+    return var_export($var, true);
 }
 
 
@@ -1408,64 +1408,64 @@ function phutil_var_export($var) {
  * @return bool
  */
 function phutil_fnmatch($glob, $path) {
-  // Modify the glob to allow `**/` to match files in the root directory.
-  $glob = preg_replace('@(?:(?<!\\\\)\\*){2}/@', '{,*/,**/}', $glob);
-
-  $escaping = false;
-  $in_curlies = 0;
-  $regex = '';
-
-  for ($i = 0; $i < strlen($glob); $i++) {
-    $char = $glob[$i];
-    $next_char = ($i < strlen($glob) - 1) ? $glob[$i + 1] : null;
-
-    $escape = array('$', '(', ')', '+', '.', '^', '|');
-    $mapping = array();
-
-    if ($escaping) {
-      $escape[] = '*';
-      $escape[] = '?';
-      $escape[] = '{';
-    } else {
-      $mapping['*'] = $next_char === '*' ? '.*' : '[^/]*';
-      $mapping['?'] = '[^/]';
-      $mapping['{'] = '(';
-
-      if ($in_curlies) {
-        $mapping[','] = '|';
-        $mapping['}'] = ')';
-      }
-    }
-
-    if (in_array($char, $escape)) {
-      $regex .= "\\{$char}";
-    } else if ($replacement = idx($mapping, $char)) {
-      $regex .= $replacement;
-    } else if ($char === '\\') {
-      if ($escaping) {
-        $regex .= '\\\\';
-      }
-      $escaping = !$escaping;
-      continue;
-    } else {
-      $regex .= $char;
-    }
-
-    if ($char === '{' && !$escaping) {
-      $in_curlies++;
-    } else if ($char === '}' && $in_curlies && !$escaping) {
-      $in_curlies--;
-    }
+    // Modify the glob to allow `**/` to match files in the root directory.
+    $glob = preg_replace('@(?:(?<!\\\\)\\*){2}/@', '{,*/,**/}', $glob);
 
     $escaping = false;
-  }
+    $in_curlies = 0;
+    $regex = '';
 
-  if ($in_curlies || $escaping) {
-    throw new InvalidArgumentException(pht('Invalid glob pattern.'));
-  }
+    for ($i = 0; $i < strlen($glob); $i++) {
+        $char = $glob[$i];
+        $next_char = ($i < strlen($glob) - 1) ? $glob[$i + 1] : null;
 
-  $regex = '(\A'.$regex.'\z)';
-  return (bool)preg_match($regex, $path);
+        $escape = array('$', '(', ')', '+', '.', '^', '|');
+        $mapping = array();
+
+        if ($escaping) {
+            $escape[] = '*';
+            $escape[] = '?';
+            $escape[] = '{';
+        } else {
+            $mapping['*'] = $next_char === '*' ? '.*' : '[^/]*';
+            $mapping['?'] = '[^/]';
+            $mapping['{'] = '(';
+
+            if ($in_curlies) {
+                $mapping[','] = '|';
+                $mapping['}'] = ')';
+            }
+        }
+
+        if (in_array($char, $escape)) {
+            $regex .= "\\{$char}";
+        } else if ($replacement = idx($mapping, $char)) {
+            $regex .= $replacement;
+        } else if ($char === '\\') {
+            if ($escaping) {
+                $regex .= '\\\\';
+            }
+            $escaping = !$escaping;
+            continue;
+        } else {
+            $regex .= $char;
+        }
+
+        if ($char === '{' && !$escaping) {
+            $in_curlies++;
+        } else if ($char === '}' && $in_curlies && !$escaping) {
+            $in_curlies--;
+        }
+
+        $escaping = false;
+    }
+
+    if ($in_curlies || $escaping) {
+        throw new InvalidArgumentException(pht('Invalid glob pattern.'));
+    }
+
+    $regex = '(\A'.$regex.'\z)';
+    return (bool)preg_match($regex, $path);
 }
 
 
@@ -1493,24 +1493,24 @@ function phutil_fnmatch($glob, $path) {
  * @return bool True if hashes are identical.
  */
 function phutil_hashes_are_identical($u, $v) {
-  if (!is_string($u)) {
-    throw new Exception(pht('First hash argument must be a string.'));
-  }
+    if (!is_string($u)) {
+        throw new Exception(pht('First hash argument must be a string.'));
+    }
 
-  if (!is_string($v)) {
-    throw new Exception(pht('Second hash argument must be a string.'));
-  }
+    if (!is_string($v)) {
+        throw new Exception(pht('Second hash argument must be a string.'));
+    }
 
-  if (strlen($u) !== strlen($v)) {
-    return false;
-  }
+    if (strlen($u) !== strlen($v)) {
+        return false;
+    }
 
-  $len = strlen($v);
+    $len = strlen($v);
 
-  $bits = 0;
-  for ($ii = 0; $ii < $len; $ii++) {
-    $bits |= (ord($u[$ii]) ^ ord($v[$ii]));
-  }
+    $bits = 0;
+    for ($ii = 0; $ii < $len; $ii++) {
+        $bits |= (ord($u[$ii]) ^ ord($v[$ii]));
+    }
 
-  return ($bits === 0);
+    return ($bits === 0);
 }
