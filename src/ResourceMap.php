@@ -25,9 +25,6 @@ final class BriskResourceMap extends Phobject {
     // path => symbol
     private $nameMap;
 
-    // flip of $this->nameMap
-    private $hashMap;
-
     // symbol => package symbol
     private $componentMap;
 
@@ -38,8 +35,6 @@ final class BriskResourceMap extends Phobject {
         $this->requiresMap = idx($map, 'requires', array());
         $this->packageMap = idx($map, 'packages', array());
         $this->nameMap = idx($map, 'paths', array());
-        // We derive these reverse maps at runtime.
-        $this->hashMap = array_flip($this->nameMap);
         $this->componentMap = array();
         foreach ($this->packageMap as $package_name => $symbols) {
             foreach ($symbols as $symbol) {

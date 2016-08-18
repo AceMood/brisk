@@ -143,14 +143,9 @@ final class BriskStaticResourceResponse extends Brisk {
             return $this;
         }
 
+        //并不立即渲染,优化输出位置
         $fileContent = $map->getResourceDataForName($name, $source_name);
         $this->inlined[$source_name][$symbol] = $fileContent;
-//        $type = $map->getResourceTypeForName($name);
-//        if ($type === 'js') {
-//            return self::renderInlineScript($fileContent);
-//        } else if ($type === 'css') {
-//            return self::renderInlineStyle($fileContent);
-//        }
 
         return $this;
     }

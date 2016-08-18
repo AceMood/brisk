@@ -25,9 +25,9 @@ final class Filesystem extends Phobject {
      * Read a file in a manner similar to file_get_contents(), but throw detailed
      * exceptions on failure.
      *
-     * @param  string  File path to read. This file must exist and be readable,
-     *                 or an exception will be thrown.
-     * @return string  Contents of the specified file.
+     * @param string $path File path to read. This file must exist and be readable,
+     *                     or an exception will be thrown.
+     * @return string Contents of the specified file.
      *
      * @task   file
      */
@@ -836,8 +836,8 @@ final class Filesystem extends Phobject {
      * default PWD), following parent symlinks and removing artifacts. If the
      * path is itself a symlink it is left unresolved.
      *
-     * @param  string    Path, absolute or relative to PWD.
-     * @return string    Canonical, absolute path.
+     * @param  string $path Path, absolute or relative to PWD.
+     * @return string Canonical, absolute path.
      *
      * @task   path
      */

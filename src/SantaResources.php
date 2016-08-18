@@ -7,7 +7,7 @@ final class SantaResources extends BriskResourcesOnDisk {
 
   // return project name
   public function getName() {
-    return 'brisk';
+    return 'santa';
   }
 
   // get the top-level directory of all static resources
@@ -17,7 +17,7 @@ final class SantaResources extends BriskResourcesOnDisk {
 
   // get map.php path
   public function getPathToMap() {
-    return $this->getPhabricatorPath('resources/celerity/map.php');
+    return $this->getPhabricatorPath('map/resource.json');
   }
 
   // get file in current 'phabricator' directory
