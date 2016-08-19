@@ -193,23 +193,25 @@ final class BriskResourceMap extends Phobject {
     private function resolveResources(array $symbols) {
         $map = array();
         foreach ($symbols as $symbol) {
-            if (!empty($map[$symbol])) {
+            $name = $this->getResourceNameForSymbol($symbol);
+            if (!empty($map[$name])) {
                 continue;
             }
-            $this->resolveResource($map, $symbol);
+            $this->resolveResource($map, $name);
         }
         return $map;
     }
 
     //给一个资源id,查询所有依赖并存入一个map结构
-    private function resolveResource(array &$map, $symbol) {
-        if (empty($this->symbolMap[$symbol])) {
+    private function resolveResource(array &$map, $name) {
+        if (empty($this->nameMap[$name])) {
             throw new Exception(pht(
                 'Attempting to resolve unknown resource, "%s".',
-                $symbol
+                $name
             ));
         }
 
+        $symbol = $this->nameMap[$name];
         $resource = $this->symbolMap[$symbol];
         if (isset($resource['deps'])) {
             $requires = $resource['deps'];
@@ -217,12 +219,14 @@ final class BriskResourceMap extends Phobject {
             $requires = array();
         }
 
-        $map[$symbol] = $requires;
+        $map[$name] = array();
         foreach ($requires as $required_symbol) {
-            if (!empty($map[$required_symbol])) {
+            $required_name = $this->getResourceNameForSymbol($required_symbol);
+            $map[$name][] = $required_name;
+            if (!empty($map[$required_name])) {
                 continue;
             }
-            $this->resolveResource($map, $required_symbol);
+            $this->resolveResource($map, $required_name);
         }
     }
 
@@ -231,19 +235,21 @@ final class BriskResourceMap extends Phobject {
         $packaged = array();
         $handled = array();
 
-        foreach ($resolved_map as $symbol => $requires) {
-            if (isset($handled[$symbol])) {
+        foreach ($resolved_map as $name => $requires) {
+            if (isset($handled[$name])) {
                 continue;
             }
 
+            $symbol = $this->nameMap[$name];
             if (empty($this->componentMap[$symbol])) {
-                $packaged[] = $symbol;
+                $packaged[] = $name;
             } else {
                 $package_name = $this->componentMap[$symbol];
                 $packaged[] = $package_name;
                 $package_symbols = $this->packageMap[$package_name];
-                foreach ($package_symbols as $package_symbol) {
-                    $handled[$package_symbol] = true;
+                foreach ($package_symbols as $resource_symbol) {
+                    $resource_name = $this->getResourceNameForSymbol($resource_symbol);
+                    $handled[$resource_name] = true;
                 }
             }
         }
@@ -251,18 +257,14 @@ final class BriskResourceMap extends Phobject {
         return $packaged;
     }
 
+    //根据图片资源名获取内联dateUri数据
     /**
-     * Attempt to generate a data URI for a resource. We'll generate a data URI
-     * if the resource is a valid resource of an appropriate type, and is
-     * small enough. Otherwise, this method will return `null` and we'll end up
-     * using a normal URI instead.
-     *
      * @param string  Resource name to attempt to generate a data URI for.
      * @return string|null Data URI, or null if we declined to generate one.
      */
     private function generateDataURI($resource_name) {
-        $ext = last(explode('.', $resource_name));
-        switch ($ext) {
+        $type = $this->getResourceTypeForName($resource_name);
+        switch ($type) {
             case 'png':
                 $type = 'image/png';
                 break;
@@ -279,14 +281,14 @@ final class BriskResourceMap extends Phobject {
         // In IE8, 32KB is the maximum supported URI length.
         $maximum_data_size = (1024 * 32);
 
-        $data = $this->celerityMap->getResourceDataForName($resource_name);
+        $data = $this->getResourceDataForName($resource_name);
         if (strlen($data) >= $maximum_data_size) {
             // If the data is already too large on its own, just bail before
             // encoding it.
             return null;
         }
 
-        $uri = 'data:'.$type.';base64,'.base64_encode($data);
+        $uri = 'data:' . $type . ';base64,' . base64_encode($data);
         if (strlen($uri) >= $maximum_data_size) {
             return null;
         }

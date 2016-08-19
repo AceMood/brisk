@@ -46,9 +46,20 @@ function render_js_block() {
     $response->renderResourcesOfType('js');
 }
 
-//
-function require_widget($path) {
+//todo
+function require_widget($path, $mode) {
+    switch ($mode) {
+        case BriskEnv::$mode_normal:
+        case BriskEnv::$mode_bigpipe:
+            include $path;
+            break;
+        case BriskEnv::$mode_bigrender:
 
+            break;
+        case BriskEnv::$mode_quickling:
+
+            break;
+    }
 }
 
 /**

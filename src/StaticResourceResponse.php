@@ -294,7 +294,8 @@ final class BriskStaticResourceResponse extends Brisk {
         return $response;
     }
 
-    public function getURI(BriskResourceMap $map, $name, $use_primary_domain = false) {
+    //根据资源名获取线上路径
+    public function getURI(BriskResourceMap $map, $name) {
         $uri = $map->getURIForName($name);
         // If we have a postprocessor selected, add it to the URI.
         $postprocessor_key = $this->getPostprocessorKey();
@@ -307,16 +308,12 @@ final class BriskStaticResourceResponse extends Brisk {
         // changes to Ajaxed-in CSS to work (you must clear your cache or rerun
         // the map script). In production, we can assume the map script gets run
         // after changes, and safely skip this.
-        if (PhabricatorEnv::getEnvConfig('phabricator.developer-mode')) {
+        if (BriskEnv::$devmode) {
             $mtime = $map->getModifiedTimeForName($name);
             $uri = preg_replace('@^/res/@', '/res/' . $mtime . 'T/', $uri);
         }
 
-        if ($use_primary_domain) {
-            return PhabricatorEnv::getURI($uri);
-        } else {
-            return PhabricatorEnv::getCDNURI($uri);
-        }
+        return $this->cdn . $uri;
     }
 
     //更新$this->packaged,$this->needsResolve标示false
@@ -351,7 +348,7 @@ final class BriskStaticResourceResponse extends Brisk {
         return $output;
     }
 
-    //
+    //渲染单个资源
     private function renderResource(BriskResourceMap $map, $name) {
         $uri = $this->getURI($map, $name);
         $type = $map->getResourceTypeForName($name);
