@@ -1,7 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: baidu
- * Date: 16/8/19
- * Time: 下午4:19
- */
+
+require_once 'src/SantaResources.php';
+
+class SantaResourcesTest extends PHPUnit_Framework_TestCase
+{
+
+}

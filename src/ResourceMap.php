@@ -13,10 +13,10 @@ final class BriskResourceMap extends Phobject {
     // resources array
     private $resources;
 
-    // id => resource
+    // symbol => resource
     private $symbolMap;
 
-    // package symbol => array(symbols)
+    // package symbol => resource
     private $packageMap;
 
     // path => symbol
@@ -43,12 +43,12 @@ final class BriskResourceMap extends Phobject {
      * get and return resourceMap instance through unique name
      * @static
      */
-    public static function getNamedInstance($name) {
-        if (empty(self::$instances[$name])) {
+    public static function getNamedInstance($source_name) {
+        if (empty(self::$instances[$source_name])) {
             $instance = new BriskResourceMap();
-            self::$instances[$name] = $instance;
+            self::$instances[$source_name] = $instance;
         }
-        return self::$instances[$name];
+        return self::$instances[$source_name];
     }
 
     public function getNameMap() {
@@ -69,78 +69,27 @@ final class BriskResourceMap extends Phobject {
         return $this->packageResources($resolved);
     }
 
-    //给一组资源id,返回所有需要打包的资源数组
-    private function resolveResources(array $symbols) {
-        $map = array();
-        foreach ($symbols as $symbol) {
-            if (!empty($map[$symbol])) {
-                continue;
-            }
-            $this->resolveResource($map, $symbol);
-        }
-        return $map;
-    }
-
-    //给一个资源id,查询所有依赖并存入一个map结构
-    private function resolveResource(array &$map, $symbol) {
-        if (empty($this->symbolMap[$symbol])) {
-            throw new Exception(pht(
-                'Attempting to resolve unknown resource, "%s".',
-                $symbol
-            ));
-        }
-
-        $resource = $this->symbolMap[$symbol];
-        if (isset($resource['deps'])) {
-            $requires = $resource['deps'];
-        } else {
-            $requires = array();
-        }
-
-        $map[$symbol] = $requires;
-        foreach ($requires as $required_symbol) {
-            if (!empty($map[$required_symbol])) {
-                continue;
-            }
-            $this->resolveResource($map, $required_symbol);
-        }
-    }
-
-    // include all resources and packages they live in
-    private function packageResources(array $resolved_map) {
-        $packaged = array();
-        $handled = array();
-        foreach ($resolved_map as $symbol => $hash) {
-            if (isset($handled[$symbol])) {
-                continue;
-            }
-            if (empty($this->componentMap[$symbol])) {
-                $packaged[] = $this->hashMap[$hash];
-            } else {
-                $package_name = $this->componentMap[$symbol];
-                $packaged[] = $package_name;
-                $package_symbols = $this->packageMap[$package_name];
-                foreach ($package_symbols as $package_symbol) {
-                    $handled[$package_symbol] = true;
-                }
-            }
-        }
-        return $packaged;
-    }
-
+    //根据资源名取得资源内容
     public function getResourceDataForName($name) {
         return $this->resources->getResourceData($name);
     }
 
+    //给一个包资源名,获取包含的所有资源名
     public function getResourceNamesForPackageName($package_name) {
         $package_symbols = idx($this->packageMap, $package_name);
         if (!$package_symbols) {
             return null;
         }
 
+        if (isset($package_symbols['has'])) {
+            $resource_symbols = $package_symbols['has'];
+        } else {
+            $resource_symbols = array();
+        }
+
         $resource_names = array();
-        foreach ($package_symbols as $symbol) {
-            $resource_names[] = $this->hashMap[$this->symbolMap[$symbol]];
+        foreach ($resource_symbols as $symbol) {
+            $resource_names[] = $this->getResourceNameForSymbol($symbol);
         }
 
         return $resource_names;
@@ -230,5 +179,67 @@ final class BriskResourceMap extends Phobject {
     //获取资源类型
     public function getResourceTypeForName($name) {
         return $this->resources->getResourceType($name);
+    }
+
+    //给一组资源id,返回所有需要打包的资源数组
+    private function resolveResources(array $symbols) {
+        $map = array();
+        foreach ($symbols as $symbol) {
+            if (!empty($map[$symbol])) {
+                continue;
+            }
+            $this->resolveResource($map, $symbol);
+        }
+        return $map;
+    }
+
+    //给一个资源id,查询所有依赖并存入一个map结构
+    private function resolveResource(array &$map, $symbol) {
+        if (empty($this->symbolMap[$symbol])) {
+            throw new Exception(pht(
+                'Attempting to resolve unknown resource, "%s".',
+                $symbol
+            ));
+        }
+
+        $resource = $this->symbolMap[$symbol];
+        if (isset($resource['deps'])) {
+            $requires = $resource['deps'];
+        } else {
+            $requires = array();
+        }
+
+        $map[$symbol] = $requires;
+        foreach ($requires as $required_symbol) {
+            if (!empty($map[$required_symbol])) {
+                continue;
+            }
+            $this->resolveResource($map, $required_symbol);
+        }
+    }
+
+    // include all resources and packages they live in
+    private function packageResources(array $resolved_map) {
+        $packaged = array();
+        $handled = array();
+
+        foreach ($resolved_map as $symbol => $requires) {
+            if (isset($handled[$symbol])) {
+                continue;
+            }
+
+            if (empty($this->componentMap[$symbol])) {
+                $packaged[] = $symbol;
+            } else {
+                $package_name = $this->componentMap[$symbol];
+                $packaged[] = $package_name;
+                $package_symbols = $this->packageMap[$package_name];
+                foreach ($package_symbols as $package_symbol) {
+                    $handled[$package_symbol] = true;
+                }
+            }
+        }
+
+        return $packaged;
     }
 }

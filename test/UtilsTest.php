@@ -11,11 +11,6 @@ class UtilsTest extends PHPUnit_Framework_TestCase
 {
     public function testAjaxify()
     {
-
-
-        $this->assertClassHasAttribute('mode_normal', 'BriskEnv');
-        $this->assertClassHasAttribute('mode_quickling', 'BriskEnv');
-        $this->assertClassHasAttribute('mode_bigpipe', 'BriskEnv');
-        $this->assertClassHasAttribute('mode_bigrender', 'BriskEnv');
+        BriskUtils::isAjaxify();
     }
 }
