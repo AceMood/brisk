@@ -123,6 +123,45 @@ final class BriskResourceMap extends Phobject {
         return isset($this->packageMap[$name]);
     }
 
+    //根据图片资源名获取内联dateUri数据
+    /**
+     * @param string  Resource name to attempt to generate a data URI for.
+     * @return string|null Data URI, or null if we declined to generate one.
+     */
+    public function generateDataURI($resource_name) {
+        $type = $this->getResourceTypeForName($resource_name);
+        switch ($type) {
+            case 'png':
+                $type = 'image/png';
+                break;
+            case 'gif':
+                $type = 'image/gif';
+                break;
+            case 'jpg':
+                $type = 'image/jpeg';
+                break;
+            default:
+                return null;
+        }
+
+        // In IE8, 32KB is the maximum supported URI length.
+        $maximum_data_size = (1024 * 32);
+
+        $data = $this->getResourceDataForName($resource_name);
+        if (strlen($data) >= $maximum_data_size) {
+            // If the data is already too large on its own, just bail before
+            // encoding it.
+            return null;
+        }
+
+        $uri = 'data:' . $type . ';base64,' . base64_encode($data);
+        if (strlen($uri) >= $maximum_data_size) {
+            return null;
+        }
+
+        return $uri;
+    }
+
     //获取资源类型
     public function getResourceTypeForName($name) {
         return $this->resources->getResourceType($name);
@@ -255,44 +294,5 @@ final class BriskResourceMap extends Phobject {
         }
 
         return $packaged;
-    }
-
-    //根据图片资源名获取内联dateUri数据
-    /**
-     * @param string  Resource name to attempt to generate a data URI for.
-     * @return string|null Data URI, or null if we declined to generate one.
-     */
-    private function generateDataURI($resource_name) {
-        $type = $this->getResourceTypeForName($resource_name);
-        switch ($type) {
-            case 'png':
-                $type = 'image/png';
-                break;
-            case 'gif':
-                $type = 'image/gif';
-                break;
-            case 'jpg':
-                $type = 'image/jpeg';
-                break;
-            default:
-                return null;
-        }
-
-        // In IE8, 32KB is the maximum supported URI length.
-        $maximum_data_size = (1024 * 32);
-
-        $data = $this->getResourceDataForName($resource_name);
-        if (strlen($data) >= $maximum_data_size) {
-            // If the data is already too large on its own, just bail before
-            // encoding it.
-            return null;
-        }
-
-        $uri = 'data:' . $type . ';base64,' . base64_encode($data);
-        if (strlen($uri) >= $maximum_data_size) {
-            return null;
-        }
-
-        return $uri;
     }
 }

@@ -125,7 +125,7 @@ final class BriskStaticResourceResponse extends Brisk {
         return $this;
     }
 
-    //记录资源内联
+    //资源内联
     public function inlineResource($name, $source_name) {
         //首先确认资源存在
         $map = BriskResourceMap::getNamedInstance($source_name);
@@ -157,9 +157,19 @@ final class BriskStaticResourceResponse extends Brisk {
         return '';
     }
 
-    // todoooo
+    //资源内联
     public function inlineImage($name, $source_name) {
-        // todo
+        $map = BriskResourceMap::getNamedInstance($source_name);
+        $symbol = $map->getNameMap()[$name];
+        if ($symbol === null) {
+            throw new Exception(pht(
+                'No resource with name "%s" exists in source "%s"!',
+                $name,
+                $source_name
+            ));
+        }
+
+        return $map->generateDataURI($name);
     }
 
     //单独渲染一个外链资源
