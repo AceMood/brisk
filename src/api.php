@@ -16,11 +16,7 @@ function require_static_resource($name, $source_name = 'brisk') {
     $response->requireResource($name, $source_name);
 }
 
-/**
- * Inline a resource
- * @param string $name Name of the module to include. Default is path.
- * @param string $source_name Namespace of resource map.
- */
+//将一个资源数据内联式立即输出
 function inline_static_resource($name, $source_name = 'brisk') {
     $response = BriskAPI::getStaticResourceResponse();
     return $response->inlineResource($name, $source_name);
@@ -38,13 +34,20 @@ function get_cdn() {
     $response->getCDN();
 }
 
-//
-function render_css() {
+//输出所有外链css
+function render_css_block() {
+    $response = BriskAPI::getStaticResourceResponse();
+    $response->renderResourcesOfType('css');
+}
 
+//输出所有外链js
+function render_js_block() {
+    $response = BriskAPI::getStaticResourceResponse();
+    $response->renderResourcesOfType('js');
 }
 
 //
-function render_js() {
+function require_widget($path) {
 
 }
 

@@ -15,8 +15,6 @@ final class BriskResourceTransformer extends Phobject {
 
   private $postprocessorKey;
 
-  private $variableMap;
-
   public function setPostprocessorKey($postprocessor_key) {
     $this->postprocessorKey = $postprocessor_key;
     return $this;
@@ -170,80 +168,4 @@ final class BriskResourceTransformer extends Phobject {
 
     return 'url('.$uri.$tail.')';
   }
-
-  private function replaceCSSPrintRules($path, $data) {
-    $this->currentPath = $path;
-    return preg_replace_callback(
-      '/!print\s+(.+?{.+?})/s',
-      array($this, 'replaceCSSPrintRule'),
-      $data);
-  }
-
-  public function getCSSVariableMap() {
-    $postprocessor_key = $this->getPostprocessorKey();
-    $postprocessor = CelerityPostprocessor::getPostprocessor(
-      $postprocessor_key);
-
-    if (!$postprocessor) {
-      $postprocessor = CelerityPostprocessor::getPostprocessor(
-        CelerityDefaultPostprocessor::POSTPROCESSOR_KEY);
-    }
-
-    return $postprocessor->getVariables();
-  }
-
-  public function replaceCSSPrintRule($matches) {
-    $rule = $matches[1];
-
-    $rules = array();
-    $rules[] = '.printable '.$rule;
-    $rules[] = "@media print {\n  ".str_replace("\n", "\n  ", $rule)."\n}\n";
-
-    return implode("\n\n", $rules);
-  }
-
-
-  /**
-   * Attempt to generate a data URI for a resource. We'll generate a data URI
-   * if the resource is a valid resource of an appropriate type, and is
-   * small enough. Otherwise, this method will return `null` and we'll end up
-   * using a normal URI instead.
-   *
-   * @param string  Resource name to attempt to generate a data URI for.
-   * @return string|null Data URI, or null if we declined to generate one.
-   */
-  private function generateDataURI($resource_name) {
-    $ext = last(explode('.', $resource_name));
-    switch ($ext) {
-      case 'png':
-        $type = 'image/png';
-        break;
-      case 'gif':
-        $type = 'image/gif';
-        break;
-      case 'jpg':
-        $type = 'image/jpeg';
-        break;
-      default:
-        return null;
-    }
-
-    // In IE8, 32KB is the maximum supported URI length.
-    $maximum_data_size = (1024 * 32);
-
-    $data = $this->celerityMap->getResourceDataForName($resource_name);
-    if (strlen($data) >= $maximum_data_size) {
-      // If the data is already too large on its own, just bail before
-      // encoding it.
-      return null;
-    }
-
-    $uri = 'data:'.$type.';base64,'.base64_encode($data);
-    if (strlen($uri) >= $maximum_data_size) {
-      return null;
-    }
-
-    return $uri;
-  }
-
 }

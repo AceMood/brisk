@@ -39,10 +39,7 @@ final class BriskResourceMap extends Phobject {
         }
     }
     
-    /**
-     * get and return resourceMap instance through unique name
-     * @static
-     */
+    //获取指定名称的资源表
     public static function getNamedInstance($source_name) {
         if (empty(self::$instances[$source_name])) {
             $instance = new BriskResourceMap();
@@ -63,15 +60,37 @@ final class BriskResourceMap extends Phobject {
         return $this->packageMap;
     }
 
-    //给一个资源id返回所在的包资源id
+    //===========================//
+    //======= 以下方法传id =======//
+    //===========================//
+
+    /**
+     * Return the resource name for a given symbol.
+     *
+     * @param string Resource symbol to lookup.
+     * @return string|null Resource name, or null if the symbol is unknown.
+     */
+    public function getResourceNameForSymbol($symbol) {
+        $name = array_search($symbol, $this->nameMap, true);
+        return $name;
+    }
+
+    /**
+     * Return the absolute URI for the resource associated with a symbol. This
+     * method is fairly low-level and ignores packaging.
+     *
+     * @param string Resource symbol to lookup.
+     * @return string|null Resource URI, or null if the symbol is unknown.
+     */
+    public function getURIForSymbol($symbol) {
+        $resource = idx($this->symbolMap, $symbol);
+        return $resource['uri'];
+    }
+
+    //给一个资源id返回所在的包资源名
     public function getPackagedNamesForSymbols(array $symbols) {
         $resolved = $this->resolveResources($symbols);
         return $this->packageResources($resolved);
-    }
-
-    //根据资源名取得资源内容
-    public function getResourceDataForName($name) {
-        return $this->resources->getResourceData($name);
     }
 
     //给一个包资源名,获取包含的所有资源名
@@ -93,6 +112,25 @@ final class BriskResourceMap extends Phobject {
         }
 
         return $resource_names;
+    }
+
+    //============================//
+    //======= 以下方法传路径 =======//
+    //============================//
+
+    //是否该资源名的资源为包资源
+    public function isPackageResource($name) {
+        return isset($this->packageMap[$name]);
+    }
+
+    //获取资源类型
+    public function getResourceTypeForName($name) {
+        return $this->resources->getResourceType($name);
+    }
+
+    //根据资源名取得资源内容
+    public function getResourceDataForName($name) {
+        return $this->resources->getResourceData($name);
     }
 
     /**
@@ -118,18 +156,6 @@ final class BriskResourceMap extends Phobject {
     }
 
     /**
-     * Return the absolute URI for the resource associated with a symbol. This
-     * method is fairly low-level and ignores packaging.
-     *
-     * @param string Resource symbol to lookup.
-     * @return string|null Resource URI, or null if the symbol is unknown.
-     */
-    public function getURIForSymbol($symbol) {
-        $resource = idx($this->symbolMap, $symbol);
-        return $resource['uri'];
-    }
-
-    /**
      * Return the absolute URI for the resource associated with a resource name.
      * This method is fairly low-level and ignores packaging.
      *
@@ -141,9 +167,8 @@ final class BriskResourceMap extends Phobject {
         return $this->getURIForSymbol($symbol);
     }
 
+    //传一个资源名返回依赖的所有资源id
     /**
-     * Return the resource symbols required by a named resource.
-     *
      * @param string Resource name to lookup.
      * @return array<array>|null  List of required symbols, or null if the name
      *                            is unknown.
@@ -160,26 +185,9 @@ final class BriskResourceMap extends Phobject {
         );
     }
 
-    /**
-     * Return the resource name for a given symbol.
-     *
-     * @param string Resource symbol to lookup.
-     * @return string|null Resource name, or null if the symbol is unknown.
-     */
-    public function getResourceNameForSymbol($symbol) {
-        $name = array_search($symbol, $this->nameMap, true);
-        return $name;
-    }
-
-    //是否该资源名的资源为包资源
-    public function isPackageResource($name) {
-        return isset($this->packageMap[$name]);
-    }
-
-    //获取资源类型
-    public function getResourceTypeForName($name) {
-        return $this->resources->getResourceType($name);
-    }
+    //==========================//
+    //======= 以下私有方法 =======//
+    //==========================//
 
     //给一组资源id,返回所有需要打包的资源数组
     private function resolveResources(array $symbols) {
@@ -241,5 +249,48 @@ final class BriskResourceMap extends Phobject {
         }
 
         return $packaged;
+    }
+
+    /**
+     * Attempt to generate a data URI for a resource. We'll generate a data URI
+     * if the resource is a valid resource of an appropriate type, and is
+     * small enough. Otherwise, this method will return `null` and we'll end up
+     * using a normal URI instead.
+     *
+     * @param string  Resource name to attempt to generate a data URI for.
+     * @return string|null Data URI, or null if we declined to generate one.
+     */
+    private function generateDataURI($resource_name) {
+        $ext = last(explode('.', $resource_name));
+        switch ($ext) {
+            case 'png':
+                $type = 'image/png';
+                break;
+            case 'gif':
+                $type = 'image/gif';
+                break;
+            case 'jpg':
+                $type = 'image/jpeg';
+                break;
+            default:
+                return null;
+        }
+
+        // In IE8, 32KB is the maximum supported URI length.
+        $maximum_data_size = (1024 * 32);
+
+        $data = $this->celerityMap->getResourceDataForName($resource_name);
+        if (strlen($data) >= $maximum_data_size) {
+            // If the data is already too large on its own, just bail before
+            // encoding it.
+            return null;
+        }
+
+        $uri = 'data:'.$type.';base64,'.base64_encode($data);
+        if (strlen($uri) >= $maximum_data_size) {
+            return null;
+        }
+
+        return $uri;
     }
 }

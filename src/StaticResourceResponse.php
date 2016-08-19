@@ -338,6 +338,7 @@ final class BriskStaticResourceResponse extends Brisk {
         return $this;
     }
 
+    //
     private function renderPackagedResources(BriskResourceMap $map, array $resources) {
         $output = array();
         foreach ($resources as $name) {
@@ -350,6 +351,7 @@ final class BriskStaticResourceResponse extends Brisk {
         return $output;
     }
 
+    //
     private function renderResource(BriskResourceMap $map, $name) {
         $uri = $this->getURI($map, $name);
         $type = $map->getResourceTypeForName($name);
