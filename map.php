@@ -12,7 +12,7 @@
 //
 //echo __FILE__;
 
-$path = __DIR__ . DIRECTORY_SEPARATOR . 'resource.json';
+$path = __DIR__ . DIRECTORY_SEPARATOR . 'example/resource.json';
 $content = file_get_contents($path);
 
 $arr = json_decode($content);

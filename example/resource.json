@@ -226,7 +226,7 @@
     "src/less/shop_list.less": "Dez3f",
     "src/less/verify_list.less": "xI2wM"
   },
-  "pkgs": {
+  "packages": {
     "p0": {
       "uri": "https://fbstatic.com/static/pkg/T1UyQRXHo.pkg.build.css",
       "has": [

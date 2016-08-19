@@ -13,11 +13,8 @@ final class BriskResourceMap extends Phobject {
     // resources array
     private $resources;
 
-    // id => short symbol
+    // id => resource
     private $symbolMap;
-
-    // symbol => array(symbols)
-    private $requiresMap;
 
     // package symbol => array(symbols)
     private $packageMap;
@@ -32,7 +29,6 @@ final class BriskResourceMap extends Phobject {
         $this->resources = new SantaResources();
         $map = $this->resources->loadMap();
         $this->symbolMap = idx($map, 'symbols', array());
-        $this->requiresMap = idx($map, 'requires', array());
         $this->packageMap = idx($map, 'packages', array());
         $this->nameMap = idx($map, 'paths', array());
         $this->componentMap = array();
@@ -61,10 +57,6 @@ final class BriskResourceMap extends Phobject {
 
     public function getSymbolMap() {
         return $this->symbolMap;
-    }
-
-    public function getRequiresMap() {
-        return $this->requiresMap;
     }
 
     public function getPackageMap() {
@@ -202,15 +194,19 @@ final class BriskResourceMap extends Phobject {
      * Return the resource symbols required by a named resource.
      *
      * @param string Resource name to lookup.
-     * @return list<string>|null  List of required symbols, or null if the name
+     * @return array<array>|null  List of required symbols, or null if the name
      *                            is unknown.
      */
     public function getRequiredSymbolsForName($name) {
-        $hash = idx($this->nameMap, $name);
-        if ($hash === null) {
+        $symbol = idx($this->nameMap, $name);
+        if ($symbol === null) {
             return null;
         }
-        return idx($this->requiresMap, $hash, array());
+        $resource = idx($this->symbolMap, $symbol, array());
+        return array(
+            'js' => $resource['deps'],
+            'css' => $resource['css']
+        );
     }
 
     /**
@@ -220,15 +216,16 @@ final class BriskResourceMap extends Phobject {
      * @return string|null Resource name, or null if the symbol is unknown.
      */
     public function getResourceNameForSymbol($symbol) {
-        $hash = idx($this->symbolMap, $symbol);
-        return idx($this->hashMap, $hash);
+        $name = array_search($symbol, $this->nameMap, true);
+        return $name;
     }
 
-    // whether a resource short symbol is a package resource
+    //是否该资源名的资源为包资源
     public function isPackageResource($name) {
         return isset($this->packageMap[$name]);
     }
 
+    //获取资源类型
     public function getResourceTypeForName($name) {
         return $this->resources->getResourceType($name);
     }
