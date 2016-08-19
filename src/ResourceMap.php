@@ -63,13 +63,13 @@ final class BriskResourceMap extends Phobject {
         return $this->packageMap;
     }
 
-    // give a symbol and get the package it lived in
+    //给一个资源id返回所在的包资源id
     public function getPackagedNamesForSymbols(array $symbols) {
         $resolved = $this->resolveResources($symbols);
         return $this->packageResources($resolved);
     }
 
-    // give a symbol collection, return all the resources needed (include all dependency)
+    //给一组资源id,返回所有需要打包的资源数组
     private function resolveResources(array $symbols) {
         $map = array();
         foreach ($symbols as $symbol) {
@@ -81,21 +81,23 @@ final class BriskResourceMap extends Phobject {
         return $map;
     }
 
-    // give a symbol, then query the resourceMap and put all its dependencies (recursively)
-    // into the map structure
+    //给一个资源id,查询所有依赖并存入一个map结构
     private function resolveResource(array &$map, $symbol) {
         if (empty($this->symbolMap[$symbol])) {
             throw new Exception(pht(
                 'Attempting to resolve unknown resource, "%s".',
-                $symbol));
+                $symbol
+            ));
         }
-        $hash = $this->symbolMap[$symbol];
-        $map[$symbol] = $hash;
-        if (isset($this->requiresMap[$hash])) {
-            $requires = $this->requiresMap[$hash];
+
+        $resource = $this->symbolMap[$symbol];
+        if (isset($resource['deps'])) {
+            $requires = $resource['deps'];
         } else {
             $requires = array();
         }
+
+        $map[$symbol] = $requires;
         foreach ($requires as $required_symbol) {
             if (!empty($map[$required_symbol])) {
                 continue;
