@@ -50,13 +50,9 @@ function render_js_block() {
 function load_widget($path, $mode) {
     switch ($mode) {
         case BriskEnv::$mode_normal:
-        case BriskEnv::$mode_bigpipe:
             include $path;
             break;
         case BriskEnv::$mode_bigrender:
-
-            break;
-        case BriskEnv::$mode_quickling:
 
             break;
     }

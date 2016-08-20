@@ -23,6 +23,12 @@ abstract class BriskPhysicalResources extends BriskResources {
     }
 
     public static function getAll() {
-        
+        static $resource_map;
+
+        if ($resource_map === null) {
+
+        }
+
+        return $resource_map;
     }
 }
