@@ -5,7 +5,7 @@
  * @{function:require_static_resource}, and then builds appropriate HTML or
  * Ajax responses.
  */
-final class BriskStaticResourceResponse extends Brisk {
+final class BriskStaticResourceResponse extends Phobject {
     //当前请求的渲染模式
     private $mode;
 

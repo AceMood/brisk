@@ -21,4 +21,8 @@ abstract class BriskPhysicalResources extends BriskResources {
         }
         return $this->map;
     }
+
+    public static function getAll() {
+        
+    }
 }

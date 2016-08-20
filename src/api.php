@@ -47,7 +47,7 @@ function render_js_block() {
 }
 
 //todo
-function require_widget($path, $mode) {
+function load_widget($path, $mode) {
     switch ($mode) {
         case BriskEnv::$mode_normal:
         case BriskEnv::$mode_bigpipe:
