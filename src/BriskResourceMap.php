@@ -25,10 +25,8 @@ final class BriskResourceMap extends Phobject {
     // symbol => package symbol
     private $componentMap;
 
-    public function __construct(BriskPhysicalResources $resources) {
-        // todo remove santa reference
-        //$this->resources = new SantaResources();
-        $this->resources = $resources;
+    public function __construct() {
+        $this->resources = new BriskSantaResources();
         $map = $this->resources->loadMap();
         $this->symbolMap = idx($map, 'symbols', array());
         $this->packageMap = idx($map, 'packages', array());
@@ -44,15 +42,7 @@ final class BriskResourceMap extends Phobject {
     //获取指定名称的资源表
     public static function getNamedInstance($source_name) {
         if (empty(self::$instances[$source_name])) {
-            $resource_list = BriskPhysicalResources::getAll();
-            if (empty($resource_list[$source_name])) {
-                throw new Exception(pht(
-                   'No resource exists with name "%s"!',
-                    $source_name
-                ));
-            }
-
-            $instance = new BriskResourceMap($resource_list);
+            $instance = new BriskResourceMap();
             self::$instances[$source_name] = $instance;
         }
 

@@ -108,3 +108,5 @@ Network Trash Folder
 Temporary Items
 .apdisk
 # Created by .ignore support plugin (hsz.mobi)
+
+/vendor/

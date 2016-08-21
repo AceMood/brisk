@@ -3,7 +3,7 @@
 /**
  * @class Santa项目的静态资源
  */
-final class SantaResources extends BriskResourcesOnDisk {
+final class BriskSantaResources extends BriskResourcesOnDisk {
 
     private $webdir = 'dist/';
     private $mapPath = 'dist/resource.json';
