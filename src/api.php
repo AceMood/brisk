@@ -1,6 +1,19 @@
 <?php
 
-require '../vendor/autoload.php';
+function __autoload($className) {
+    $path = '';
+    if (file_exists('./lib/' . $className . '.php')) {
+        $path = './lib/' . $className . '.php';
+    } else if (file_exists('./' . $className . '.php')) {
+        $path = './' . $className . '.php';
+    } else if (file_exists('./resources/' . $className . '.php')) {
+        $path = './resources/' . $className . '.php';
+    }
+
+    require $path;
+}
+
+spl_autoload_register('__autoload');
 
 /**
  * Include a CSS or JS static resource by name. This function records a

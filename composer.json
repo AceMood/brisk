@@ -3,7 +3,7 @@
     "description": "PHP static resource loader framework",
     "type": "project",
     "require": {
-        "php": "5.5"
+        "php": ">=5.5.13"
     },
     "license": "MIT",
     "authors": [
