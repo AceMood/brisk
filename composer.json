@@ -1,5 +1,8 @@
 {
+  "classmap": [
+    "src/"
+  ],
   "files": [
-    "src/**"
+    "src/api.php"
   ]
 }
