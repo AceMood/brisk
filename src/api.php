@@ -1,5 +1,7 @@
 <?php
 
+require 'vendor/autoload.php';
+
 /**
  * Include a CSS or JS static resource by name. This function records a
  * dependency for the current page, so when a response is generated it can be
