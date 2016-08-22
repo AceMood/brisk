@@ -17,9 +17,7 @@
  */
 final class Filesystem extends Phobject {
 
-
     /* -(  Files  )-------------------------------------------------------------- */
-
 
     /**
      * Read a file in a manner similar to file_get_contents(), but throw detailed
@@ -149,133 +147,6 @@ final class Filesystem extends Phobject {
         return true;
     }
 
-
-    /**
-     * Write data to unique file, without overwriting existing files. This is
-     * useful if you want to write a ".bak" file or something similar, but want
-     * to make sure you don't overwrite something already on disk.
-     *
-     * This function will add a number to the filename if the base name already
-     * exists, e.g. "example.bak", "example.bak.1", "example.bak.2", etc. (Don't
-     * rely on this exact behavior, of course.)
-     *
-     * @param   string  Suggested filename, like "example.bak". This name will
-     *                  be used if it does not exist, or some similar name will
-     *                  be chosen if it does.
-     * @param   string  Data to write to the file.
-     * @return  string  Path to a newly created and written file which did not
-     *                  previously exist, like "example.bak.3".
-     * @task file
-     */
-    public static function writeUniqueFile($base, $data) {
-        $full_path = self::resolvePath($base);
-        $sequence = 0;
-        assert_stringlike($data);
-        // Try 'file', 'file.1', 'file.2', etc., until something doesn't exist.
-
-        while (true) {
-            $try_path = $full_path;
-            if ($sequence) {
-                $try_path .= '.'.$sequence;
-            }
-
-            $handle = @fopen($try_path, 'x');
-            if ($handle) {
-                $ok = fwrite($handle, $data);
-                if ($ok === false) {
-                    throw new FilesystemException(
-                        $try_path,
-                        pht('Failed to write file data.'));
-                }
-
-                $ok = fclose($handle);
-                if (!$ok) {
-                    throw new FilesystemException(
-                        $try_path,
-                        pht('Failed to close file handle.'));
-                }
-
-                return $try_path;
-            }
-
-            $sequence++;
-        }
-    }
-
-
-    /**
-     * Append to a file without having to deal with file handles, with
-     * detailed exceptions on failure.
-     *
-     * @param  string  File path to write. This file must be writable or its
-     *                 parent directory must exist and be writable.
-     * @param  string  Data to write.
-     *
-     * @task   file
-     */
-    public static function appendFile($path, $data) {
-        $path = self::resolvePath($path);
-
-        // Use self::writeFile() if the file doesn't already exist
-        try {
-            self::assertExists($path);
-        } catch (FilesystemException $ex) {
-            self::writeFile($path, $data);
-            return;
-        }
-
-        // File needs to exist or the directory needs to be writable
-        $dir = dirname($path);
-        self::assertExists($dir);
-        self::assertIsDirectory($dir);
-        self::assertWritable($dir);
-        assert_stringlike($data);
-
-        if (($fh = fopen($path, 'a')) === false) {
-            throw new FilesystemException(
-                $path,
-                pht("Failed to open file '%s'.", $path));
-        }
-        $dlen = strlen($data);
-        if (fwrite($fh, $data) !== $dlen) {
-            throw new FilesystemException(
-                $path,
-                pht("Failed to write %d bytes to '%s'.", $dlen, $path));
-        }
-        if (!fflush($fh) || !fclose($fh)) {
-            throw new FilesystemException(
-                $path,
-                pht("Failed closing file '%s' after write.", $path));
-        }
-    }
-
-
-    /**
-     * Copy a file, preserving file attributes (if relevant for the OS).
-     *
-     * @param string  File path to copy from.  This file must exist and be
-     *                readable, or an exception will be thrown.
-     * @param string  File path to copy to.  If a file exists at this path
-     *                already, it wll be overwritten.
-     *
-     * @task  file
-     */
-    public static function copyFile($from, $to) {
-        $from = self::resolvePath($from);
-        $to   = self::resolvePath($to);
-
-        self::assertExists($from);
-        self::assertIsFile($from);
-        self::assertReadable($from);
-
-        if (phutil_is_windows()) {
-            execx('copy /Y %s %s', $from, $to);
-        } else {
-            execx('cp -p %s %s', $from, $to);
-        }
-    }
-
-
     /**
      * Remove a file or directory.
      *
@@ -324,7 +195,6 @@ final class Filesystem extends Phobject {
         }
     }
 
-
     /**
      * Internal. Recursively remove a file or an entire directory. Implements
      * the core function of @{method:remove} in a way that works on Windows.
@@ -355,7 +225,6 @@ final class Filesystem extends Phobject {
         }
     }
 
-
     /**
      * Change the permissions of a file or directory.
      *
@@ -378,7 +247,6 @@ final class Filesystem extends Phobject {
                 pht("Failed to chmod '%s' to '%s'.", $path, $readable_umask));
         }
     }
-
 
     /**
      * Get the last modified time of a file
@@ -404,7 +272,6 @@ final class Filesystem extends Phobject {
 
         return $modified_time;
     }
-
 
     /**
      * Read random bytes from /dev/urandom or equivalent. See also
@@ -527,84 +394,6 @@ final class Filesystem extends Phobject {
         }
 
         return $result;
-    }
-
-
-    /**
-     * Identify the MIME type of a file. This returns only the MIME type (like
-     * text/plain), not the encoding (like charset=utf-8).
-     *
-     * @param string Path to the file to examine.
-     * @param string Optional default mime type to return if the file's mime
-     *               type can not be identified.
-     * @return string File mime type.
-     *
-     * @task file
-     *
-     * @phutil-external-symbol function mime_content_type
-     * @phutil-external-symbol function finfo_open
-     * @phutil-external-symbol function finfo_file
-     */
-    public static function getMimeType(
-        $path,
-        $default = 'application/octet-stream') {
-
-        $path = self::resolvePath($path);
-
-        self::assertExists($path);
-        self::assertIsFile($path);
-        self::assertReadable($path);
-
-        $mime_type = null;
-
-        // Fileinfo is the best approach since it doesn't rely on `file`, but
-        // it isn't builtin for older versions of PHP.
-
-        if (function_exists('finfo_open')) {
-            $finfo = finfo_open(FILEINFO_MIME);
-            if ($finfo) {
-                $result = finfo_file($finfo, $path);
-                if ($result !== false) {
-                    $mime_type = $result;
-                }
-            }
-        }
-
-        // If we failed Fileinfo, try `file`. This works well but not all systems
-        // have the binary.
-
-        if ($mime_type === null) {
-            list($err, $stdout) = exec_manual(
-                'file --brief --mime %s',
-                $path);
-            if (!$err) {
-                $mime_type = trim($stdout);
-            }
-        }
-
-        // If we didn't get anywhere, try the deprecated mime_content_type()
-        // function.
-
-        if ($mime_type === null) {
-            if (function_exists('mime_content_type')) {
-                $result = mime_content_type($path);
-                if ($result !== false) {
-                    $mime_type = $result;
-                }
-            }
-        }
-
-        // If we come back with an encoding, strip it off.
-        if (strpos($mime_type, ';') !== false) {
-            list($type, $encoding) = explode(';', $mime_type, 2);
-            $mime_type = $type;
-        }
-
-        if ($mime_type === null) {
-            $mime_type = $default;
-        }
-
-        return $mime_type;
     }
 
 
@@ -960,36 +749,6 @@ final class Filesystem extends Phobject {
      */
     public static function binaryExists($binary) {
         return self::resolveBinary($binary) !== null;
-    }
-
-
-    /**
-     * Locates the full path that an executable binary (like `git` or `svn`) is at
-     * the configured `$PATH`.
-     *
-     * @param   string  Binary name, like `'git'` or `'svn'`.
-     * @return  string  The full binary path if it is present, or null.
-     * @task    exec
-     */
-    public static function resolveBinary($binary) {
-        if (phutil_is_windows()) {
-            list($err, $stdout) = exec_manual('where %s', $binary);
-            $stdout = phutil_split_lines($stdout);
-
-            // If `where %s` could not find anything, check for relative binary
-            if ($err) {
-                $path = self::resolvePath($binary);
-                if (self::pathExists($path)) {
-                    return $path;
-                }
-                return null;
-            }
-            $stdout = head($stdout);
-        } else {
-            list($err, $stdout) = exec_manual('which %s', $binary);
-        }
-
-        return $err === 0 ? trim($stdout) : null;
     }
 
 
