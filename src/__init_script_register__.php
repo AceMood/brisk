@@ -2,16 +2,15 @@
 
 function __autoload($className) {
     $dir = dirname(__FILE__);
+    $subdirs = ['/lib/', '/', 'resources', 'response'];
     $path = '';
-    if (file_exists($dir . '/lib/' . $className . '.php')) {
-        $path = $dir . '/lib/' . $className . '.php';
-    } else if (file_exists($dir . '/' . $className . '.php')) {
-        $path = $dir . '/' . $className . '.php';
-    } else if (file_exists($dir . '/resources/' . $className . '.php')) {
-        $path = $dir . '/resources/' . $className . '.php';
+    foreach ($subdirs as $subdir) {
+        if (file_exists($dir . $subdir . $className . '.php')) {
+            $path = $dir . $subdir . $className . '.php';
+            require $path;
+            return;
+        }
     }
-
-    require $path;
 }
 
 spl_autoload_register('__autoload');
