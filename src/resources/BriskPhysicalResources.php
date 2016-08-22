@@ -17,18 +17,8 @@ abstract class BriskPhysicalResources extends BriskResources {
         if ($this->map === null) {
             $mapPath = $this->getPathToMap();
             $data = Filesystem::readFile($mapPath);
-            $this->map = json_decode($data);
+            $this->map = json_decode($data, true);
         }
         return $this->map;
-    }
-
-    public static function getAll() {
-        static $resource_map;
-
-        if ($resource_map === null) {
-
-        }
-
-        return $resource_map;
     }
 }
