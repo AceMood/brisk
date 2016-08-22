@@ -83,8 +83,8 @@ final class BriskResourceMap extends Phobject {
      * @param string Resource symbol to lookup.
      * @return string|null Resource URI, or null if the symbol is unknown.
      */
-    public function getURIForSymbol($symbol) {
-        $resource = idx($this->symbolMap, $symbol);
+    public function getURIForSymbol($type, $symbol) {
+        $resource = idx($this->symbolMap[$type], $symbol);
         return $resource['uri'];
     }
 
@@ -203,8 +203,9 @@ final class BriskResourceMap extends Phobject {
      * @return string|null  Resource URI, or null if the name is unknown.
      */
     public function getURIForName($name) {
+        $type = $this->getResourceTypeForName($name);
         $symbol = idx($this->nameMap, $name);
-        return $this->getURIForSymbol($symbol);
+        return $this->getURIForSymbol($type, $symbol);
     }
 
     //传一个资源名返回依赖的所有资源id

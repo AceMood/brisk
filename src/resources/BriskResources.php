@@ -17,7 +17,8 @@ abstract class BriskResources extends Phobject {
 
     //获取资源类型 如js,css
     public function getResourceType($path) {
-        return last(explode('.', $path));
+        $suffix = last(explode('.', $path));
+        return BriskEnv::$typeMap[$suffix];
     }
 
     //加载资源表
