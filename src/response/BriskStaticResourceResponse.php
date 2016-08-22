@@ -105,6 +105,7 @@ final class BriskStaticResourceResponse extends Phobject {
         //首先确认资源存在
         $map = BriskResourceMap::getNamedInstance($source_name);
         $symbol = $map->getNameMap()[$name];
+
         if ($symbol === null) {
             throw new Exception(pht(
                 'No resource with name "%s" exists in source "%s"!',
@@ -114,12 +115,12 @@ final class BriskStaticResourceResponse extends Phobject {
         }
 
         //之前渲染过,不区分外链还是内联
-        if (isset($this->symbols[$source_name][$symbol]) ||
+        if (array_search($symbol, $this->symbols[$source_name], true) > -1 ||
             isset($this->inlined[$source_name][$symbol])) {
             return $this;
         }
 
-        $this->symbols[$source_name][$symbol] = true;
+        $this->symbols[$source_name][] = $symbol;
         $this->needsResolve = true;
 
         return $this;
@@ -192,6 +193,7 @@ final class BriskStaticResourceResponse extends Phobject {
         //更新$this->packaged
         $this->resolveResources();
         $result = array();
+
         foreach ($this->packaged as $source_name => $resource_names) {
             $map = BriskResourceMap::getNamedInstance($source_name);
             $resources_of_type = array();
@@ -201,6 +203,7 @@ final class BriskStaticResourceResponse extends Phobject {
                     $resources_of_type[] = $resource_name;
                 }
             }
+
             $result[] = $this->renderPackagedResources($map, $resources_of_type);
         }
         return phutil_implode_html('', $result);
@@ -307,6 +310,7 @@ final class BriskStaticResourceResponse extends Phobject {
     //根据资源名获取线上路径
     public function getURI(BriskResourceMap $map, $name) {
         $uri = $map->getURIForName($name);
+
         // If we have a postprocessor selected, add it to the URI.
         $postprocessor_key = $this->getPostprocessorKey();
         if ($postprocessor_key) {
@@ -318,7 +322,7 @@ final class BriskStaticResourceResponse extends Phobject {
         // changes to Ajaxed-in CSS to work (you must clear your cache or rerun
         // the map script). In production, we can assume the map script gets run
         // after changes, and safely skip this.
-        if (BriskEnv::$devmode) {
+        if (isset(BriskEnv::$devmode)) {
             $mtime = $map->getModifiedTimeForName($name);
             $uri = preg_replace('@^/res/@', '/res/' . $mtime . 'T/', $uri);
         }
@@ -334,8 +338,7 @@ final class BriskStaticResourceResponse extends Phobject {
     private function resolveResources() {
         if ($this->needsResolve) {
             $this->packaged = array();
-            foreach ($this->symbols as $source_name => $symbols_map) {
-                $symbols = array_keys($symbols_map);
+            foreach ($this->symbols as $source_name => $symbols) {
                 $map = BriskResourceMap::getNamedInstance($source_name);
                 $packaged = $map->getPackagedNamesForSymbols($symbols);
                 $this->packaged[$source_name] = $packaged;
@@ -345,7 +348,7 @@ final class BriskStaticResourceResponse extends Phobject {
         return $this;
     }
 
-    //
+    //渲染整个包资源
     private function renderPackagedResources(BriskResourceMap $map, array $resources) {
         $output = array();
         foreach ($resources as $name) {
