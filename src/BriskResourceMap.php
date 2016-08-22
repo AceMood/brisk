@@ -51,14 +51,17 @@ final class BriskResourceMap extends Phobject {
         return self::$instances[$source_name];
     }
 
+    //path为主键的资源表
     public function getNameMap() {
         return $this->nameMap;
     }
 
+    //id为主键的资源表
     public function getSymbolMap() {
         return $this->symbolMap;
     }
 
+    //打包资源信息
     public function getPackageMap() {
         return $this->packageMap;
     }
@@ -68,14 +71,24 @@ final class BriskResourceMap extends Phobject {
     //===========================//
 
     /**
-     * Return the resource name for a given symbol.
-     *
-     * @param string Resource symbol to lookup.
+     * 根据资源id获取资源名, 否则返回null
+     * @param string $type
+     * @param string $symbol Resource symbol to lookup.
      * @return string|null Resource name, or null if the symbol is unknown.
      */
-    public function getResourceNameForSymbol($symbol) {
-        $name = array_search($symbol, $this->nameMap, true);
-        return $name;
+    public function getResourceNameForSymbol($type, $symbol) {
+        $resource = $this->nameMap[$type][$symbol];
+        if (!isset($resource)) {
+            throw new Exception(pht(
+                'No resource with type "%s" exists symbol is "%s"!',
+                $type,
+                $symbol
+            ));
+        }
+        if (!isset($resource['path'])) {
+            return null;
+        }
+        return $resource['path'];
     }
 
     /**
@@ -88,15 +101,6 @@ final class BriskResourceMap extends Phobject {
     public function getURIForSymbol($type, $symbol) {
         $resource = idx($this->symbolMap[$type], $symbol);
         return $resource['uri'];
-    }
-
-    //给资源id数组返回所在的包资源名数组
-    public function getPackagedNamesForSymbols(array $symbols) {
-        $resolved = $this->resolveResources($symbols);
-
-        var_dump($resolved);
-
-        return $this->packageResources($resolved);
     }
 
     //给一个包资源名,获取包含的所有资源名
@@ -129,8 +133,8 @@ final class BriskResourceMap extends Phobject {
         return isset($this->packageMap[$name]);
     }
 
-    //根据图片资源名获取内联dateUri数据
     /**
+     * 根据图片资源名获取内联dateUri数据
      * @param string  Resource name to attempt to generate a data URI for.
      * @return string|null Data URI, or null if we declined to generate one.
      */
@@ -178,28 +182,6 @@ final class BriskResourceMap extends Phobject {
         return $this->resources->getResourceData($name);
     }
 
-    /**
-     * Get the epoch timestamp of the last modification time of a symbol.
-     *
-     * @param string Resource symbol to lookup.
-     * @return int Epoch timestamp of last resource modification.
-     */
-    public function getModifiedTimeForName($name) {
-        if ($this->isPackageResource($name)) {
-            $names = array();
-            foreach ($this->packageMap[$name] as $symbol) {
-                $names[] = $this->getResourceNameForSymbol($symbol);
-            }
-        } else {
-            $names = array($name);
-        }
-        $mtime = 0;
-        foreach ($names as $name) {
-            $mtime = max($mtime, $this->resources->getResourceModifiedTime($name));
-        }
-        return $mtime;
-    }
-
     //给定资源名,返回线上路径
     public function getURIForName($name) {
         $type = $this->getResourceTypeForName($name);
@@ -224,15 +206,23 @@ final class BriskResourceMap extends Phobject {
         );
     }
 
+    //给资源路径数组,返回所在的包资源名数组
+    public function getPackagedNamesForNames(array $names) {
+        $resolved = $this->resolveResources($names);
+
+        var_dump($resolved);
+
+        return $this->packageResources($resolved);
+    }
+
     //==========================//
     //======= 以下私有方法 =======//
     //==========================//
 
-    //给一组有顺序的资源id,返回所有需要打包的有序资源数组
-    private function resolveResources(array $symbols) {
+    //给一组有顺序的资源路径, 返回所有需要打包的有序资源数组
+    private function resolveResources(array $names) {
         $map = array();
-        foreach ($symbols as $symbol) {
-            $name = $this->getResourceNameForSymbol($symbol);
+        foreach ($names as $name) {
             if (isset($map[$name])) {
                 continue;
             }
@@ -250,20 +240,12 @@ final class BriskResourceMap extends Phobject {
             ));
         }
 
-        $symbol = $this->nameMap[$name];
-        $type = $this->getResourceTypeForName($name);
-        //取得资源对象
-        $resource = $this->symbolMap[$type][$symbol];
-
-        if (isset($resource['deps'])) {
-            $requires = $resource['deps'];
-        } else {
-            $requires = array();
-        }
+        // array(deps => array(), css => array());
+        $requires = $this->getRequiredSymbolsForName($name);
 
         $map[$name] = array();
-        foreach ($requires as $required_symbol) {
-            $required_name = $this->getResourceNameForSymbol($required_symbol);
+        foreach ($requires as $type => $required_symbol) {
+            $required_name = $this->getResourceNameForSymbol($type, $required_symbol);
             $map[$name][] = $required_name;
             if (isset($map[$required_name])) {
                 continue;
