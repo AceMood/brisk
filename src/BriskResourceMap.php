@@ -92,9 +92,7 @@ final class BriskResourceMap extends Phobject {
     }
 
     /**
-     * Return the absolute URI for the resource associated with a symbol. This
-     * method is fairly low-level and ignores packaging.
-     *
+     * 根据资源类型和id获取线上uri
      * @param string Resource symbol to lookup.
      * @return string|null Resource URI, or null if the symbol is unknown.
      */
@@ -105,20 +103,20 @@ final class BriskResourceMap extends Phobject {
 
     //给一个包资源名,获取包含的所有资源名
     public function getResourceNamesForPackageName($package_name) {
-        $package_symbols = idx($this->packageMap, $package_name);
-        if (!$package_symbols) {
+        $package = idx($this->packageMap, $package_name);
+        if (!$package) {
             return null;
         }
 
-        if (isset($package_symbols['has'])) {
-            $resource_symbols = $package_symbols['has'];
+        if (isset($package['has'])) {
+            $resource_symbols = $package['has'];
         } else {
             $resource_symbols = array();
         }
 
         $resource_names = array();
         foreach ($resource_symbols as $symbol) {
-            $resource_names[] = $this->getResourceNameForSymbol($symbol);
+            $resource_names[] = $this->getResourceNameForSymbol($package['type'], $symbol);
         }
 
         return $resource_names;
@@ -212,7 +210,7 @@ final class BriskResourceMap extends Phobject {
 
         var_dump($resolved);
 
-        return $this->packageResources($resolved);
+        return $this->packageResources($resolved, last($names));
     }
 
     //==========================//
@@ -255,30 +253,35 @@ final class BriskResourceMap extends Phobject {
     }
 
     // include all resources and packages they live in
-    private function packageResources(array $resolved_map) {
+    private function packageResources(array $resolved_map, $entry) {
         $packaged = array();
         $handled = array();
 
+        $this->loop($packaged, $handled, $entry);
         foreach ($resolved_map as $name => $requires) {
             if (isset($handled[$name])) {
                 continue;
             }
-
-            $symbol = $this->nameMap[$name];
-            //并未打包
-            if (empty($this->componentMap[$symbol])) {
-                $packaged[] = $name;
-            } else {
-                $package_name = $this->componentMap[$symbol];
-                $packaged[] = $package_name;
-                $package_symbols = $this->packageMap[$package_name];
-                foreach ($package_symbols as $resource_symbol) {
-                    $resource_name = $this->getResourceNameForSymbol($resource_symbol);
-                    $handled[$resource_name] = true;
-                }
-            }
+            $this->loop($packaged, $handled, $name);
         }
 
         return $packaged;
+    }
+
+    private function loop(&$packaged, &$handled, $name) {
+        $symbol = $this->nameMap[$name];
+        //并未打包
+        if (empty($this->componentMap[$symbol])) {
+            $packaged[] = $name;
+        } else {
+            $package_name = $this->componentMap[$symbol];
+            $packaged[] = $package_name;
+            $package_symbols = $this->packageMap[$package_name]['has'];
+            $package_type = $this->packageMap[$package_name]['type'];
+            foreach ($package_symbols as $resource_symbol) {
+                $resource_name = $this->getResourceNameForSymbol($package_type, $resource_symbol);
+                $handled[$resource_name] = true;
+            }
+        }
     }
 }
