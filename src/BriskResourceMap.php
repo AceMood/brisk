@@ -207,7 +207,7 @@ final class BriskResourceMap extends Phobject {
     //给资源路径数组,返回所在的包资源名数组
     public function getPackagedNamesForNames(array $names) {
         $resolved = $this->resolveResources($names);
-        return $this->packageResources($resolved, last($names));
+        return $this->packageResources($resolved, $names);
     }
 
     //==========================//
