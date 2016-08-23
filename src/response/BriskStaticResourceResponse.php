@@ -189,12 +189,14 @@ abstract class BriskStaticResourceResponse extends Phobject {
         $this->resolveResources();
         $result = array();
 
-        $print = array(
-            'resourceMap' => array(
-                'js' => array(),
-                'css' => array()
-            )
-        );
+        if ($type === 'js') {
+            $print = array(
+                'resourceMap' => array(
+                    'js' => array(),
+                    'css' => array()
+                )
+            );
+        }
 
         foreach ($this->packaged as $source_name => $resource_names) {
             $map = BriskResourceMap::getNamedInstance($source_name);
@@ -203,12 +205,14 @@ abstract class BriskStaticResourceResponse extends Phobject {
                 $resource_type = $map->getResourceTypeForName($resource_name);
 
                 //记录到打印的资源表
-                $symbol = $map->getNameMap()[$resource_name];
-                $res = $map->getSymbolMap()[$resource_type][$symbol];
-                $print['resourceMap'][$resource_type][$symbol] = array(
-                    'uri' => self::getCDN() . $res['uri'],
-                    'deps' => $res['deps']
-                );
+                if ($type === 'js') {
+                    $symbol = $map->getNameMap()[$resource_name];
+                    $res = $map->getSymbolMap()[$resource_type][$symbol];
+                    $print['resourceMap'][$resource_type][$symbol] = array(
+                        'uri' => self::getCDN() . $res['uri'],
+                        'deps' => isset($res['deps']) ? $res['deps'] : array()
+                    );
+                }
 
                 if ($resource_type == $type) {
                     $resources_of_type[] = $resource_name;
@@ -218,8 +222,10 @@ abstract class BriskStaticResourceResponse extends Phobject {
             $result[] = $this->renderPackagedResources($map, $resources_of_type);
         }
 
-        $mapCode = self::renderInlineScript('var kerneljs = ' . json_encode($print) . ';');
-        array_unshift($result, $mapCode);
+        if ($type === 'js') {
+            $mapCode = self::renderInlineScript('var kerneljs = ' . json_encode($print) . ';');
+            array_unshift($result, $mapCode);
+        }
 
         return phutil_implode_html('', $result);
     }
