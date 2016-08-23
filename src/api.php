@@ -51,7 +51,7 @@ function render_js_block() {
 }
 
 //todo
-function load_widget($path, $mode) {
+function load_widget($path, $mode = null) {
     BriskWidgetView::load($path, $mode);
 }
 

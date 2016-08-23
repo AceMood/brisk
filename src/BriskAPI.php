@@ -5,11 +5,20 @@
  * build multiple resource responses per page.
  */
 final class BriskAPI extends Phobject {
-    private static $response;
+    private static $pageResponse;
+    private static $ajaxResponse;
+
     public static function getStaticResourceResponse() {
-        if (empty(self::$response)) {
-            self::$response = new BriskStaticResourceResponse();
+        if (BriskUtils::isAjaxify()) {
+            if (empty(self::$ajaxResponse)) {
+                self::$ajaxResponse = new BriskAjaxResponse();
+            }
+            return self::$ajaxResponse;
+        } else {
+            if (empty(self::$pageResponse)) {
+                self::$pageResponse = new BriskPageResponse();
+            }
+            return self::$pageResponse;
         }
-        return self::$response;
     }
 }

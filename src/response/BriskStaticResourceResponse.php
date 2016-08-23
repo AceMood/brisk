@@ -5,51 +5,42 @@
  * @{function:require_static_resource}, and then builds appropriate HTML or
  * Ajax responses.
  */
-final class BriskStaticResourceResponse extends Phobject {
+abstract class BriskStaticResourceResponse extends Phobject {
     //当前请求的渲染模式
-    private $mode;
+    protected $mode;
 
     //动态设置cdn
-    private $cdn = '';
+    protected $cdn = '';
 
     //当前response关联的pageview
-    private $view = null;
+    protected $view = null;
 
     //收集所有打印的外链资源唯一路径
-    private $symbols = array();
+    protected $symbols = array();
 
     //记录打印的内联资源唯一id
-    private $inlined = array();
+    protected $inlined = array();
 
     //是否需要对收集的资源进行解析
-    private $needsResolve = true;
+    protected $needsResolve = true;
 
     //命名空间划分,记录引用的资源
-    private $packaged;
+    protected $packaged;
 
-    private $metadata = array();
+    protected $metadata = array();
 
-    private $metadataBlock = 0;
+    protected $metadataBlock = 0;
 
     //页面初始化需要加载的框架
-    private $behaviors = array();
+    protected $behaviors = array();
 
-    private $hasRendered = array();
+    protected $hasRendered = array();
 
-    private $postprocessorKey;
+    protected $postprocessorKey;
 
-    public function __construct($mode = null) {
+    public function __construct() {
         if (isset($_REQUEST['__metablock__'])) {
             $this->metadataBlock = (int)$_REQUEST['__metablock__'];
-        }
-
-        $this->mode = BriskEnv::$mode_normal;
-        if (isset($mode)) {
-            $this->mode = $mode;
-        }
-        
-        if (BriskUtils::isAjaxify()) {
-            $this->mode = BriskEnv::$mode_quickling;
         }
     }
 
@@ -97,7 +88,7 @@ final class BriskStaticResourceResponse extends Phobject {
         }
         return $this;
     }
-    
+
     /**
      * 记录请求依赖的外链资源
      * @param string $name 工程目录资源路径
@@ -198,11 +189,27 @@ final class BriskStaticResourceResponse extends Phobject {
         $this->resolveResources();
         $result = array();
 
+        $print = array(
+            'resourceMap' => array(
+                'js' => array(),
+                'css' => array()
+            )
+        );
+
         foreach ($this->packaged as $source_name => $resource_names) {
             $map = BriskResourceMap::getNamedInstance($source_name);
             $resources_of_type = array();
             foreach ($resource_names as $resource_name) {
                 $resource_type = $map->getResourceTypeForName($resource_name);
+
+                //记录到打印的资源表
+                $symbol = $map->getNameMap()[$resource_name];
+                $res = $map->getSymbolMap()[$resource_type][$symbol];
+                $print['resourceMap'][$resource_type][$symbol] = array(
+                    'uri' => self::getCDN() . $res['uri'],
+                    'deps' => $res['deps']
+                );
+
                 if ($resource_type == $type) {
                     $resources_of_type[] = $resource_name;
                 }
@@ -210,6 +217,10 @@ final class BriskStaticResourceResponse extends Phobject {
 
             $result[] = $this->renderPackagedResources($map, $resources_of_type);
         }
+
+        $mapCode = self::renderInlineScript('var kerneljs = ' . json_encode($print) . ';');
+        array_unshift($result, $mapCode);
+
         return phutil_implode_html('', $result);
     }
 
@@ -231,7 +242,7 @@ final class BriskStaticResourceResponse extends Phobject {
      * @return $this
      * @throws Exception
      */
-    private function resolveResources() {
+    protected function resolveResources() {
         if ($this->needsResolve) {
             $this->packaged = array();
             foreach ($this->symbols as $source_name => $names) {
@@ -245,7 +256,7 @@ final class BriskStaticResourceResponse extends Phobject {
     }
 
     //渲染整个资源
-    private function renderPackagedResources(BriskResourceMap $map, array $resources) {
+    protected function renderPackagedResources(BriskResourceMap $map, array $resources) {
         $output = array();
         foreach ($resources as $name) {
             if (isset($this->hasRendered[$name])) {
@@ -258,7 +269,7 @@ final class BriskStaticResourceResponse extends Phobject {
     }
 
     //渲染单个资源
-    private function renderResource(BriskResourceMap $map, $name) {
+    protected function renderResource(BriskResourceMap $map, $name) {
         $uri = $this->getURI($map, $name);
         $type = $map->getResourceTypeForName($name);
 //        $multimeter = MultimeterControl::getInstance();
@@ -292,7 +303,7 @@ final class BriskStaticResourceResponse extends Phobject {
     }
 
     //根据内容渲染内联style
-    private static function renderInlineStyle($data) {
+    protected static function renderInlineStyle($data) {
         if (stripos($data, '</style>') !== false) {
             throw new Exception(pht(
                 'Literal %s is not allowed inside inline style.',
@@ -312,7 +323,7 @@ final class BriskStaticResourceResponse extends Phobject {
     }
 
     //根据内容渲染内联script
-    private static function renderInlineScript($data) {
+    protected static function renderInlineScript($data) {
         if (stripos($data, '</script>') !== false) {
             throw new Exception(pht(
                 'Literal %s is not allowed inside inline script.',
