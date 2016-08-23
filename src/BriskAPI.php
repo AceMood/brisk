@@ -9,7 +9,7 @@ final class BriskAPI extends Phobject {
     private static $ajaxResponse;
 
     public static function getStaticResourceResponse() {
-        if (BriskUtils::isAjaxify()) {
+        if (BriskUtils::isAjaxPipe()) {
             if (empty(self::$ajaxResponse)) {
                 self::$ajaxResponse = new BriskAjaxResponse();
             }

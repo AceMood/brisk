@@ -71,12 +71,12 @@ class BriskPageResponse extends BriskStaticResourceResponse {
 //        }
 //    }
 
-    public function buildResponse($payload, $error = null) {
-        if (isset($this->view)) {
-            return $this->view->render();
-        }
-        
-
-        return '';
-    }
+//    public function buildResponse($payload, $error = null) {
+//        if (isset($this->view)) {
+//            return $this->view->render();
+//        }
+//
+//
+//        return '';
+//    }
 }
