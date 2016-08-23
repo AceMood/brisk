@@ -50,9 +50,9 @@ function render_js_block() {
     echo $content->getHTMLContent();
 }
 
-//todo
-function load_widget($path, $mode = null) {
-    BriskWidgetView::load($path, $mode);
+//
+function load_widget($path, $id = null, $mode = null) {
+    BriskWidgetFactory::load($path, $id, $mode);
 }
 
 /**

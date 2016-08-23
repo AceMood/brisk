@@ -545,64 +545,6 @@ final class Filesystem extends Phobject {
     }
 
 
-    /**
-     * Return all directories between a path and the specified root directory
-     * (defaulting to "/"). Iterating over them walks from the path to the root.
-     *
-     * @param  string        Path, absolute or relative to PWD.
-     * @param  string        The root directory.
-     * @return list<string>  List of parent paths, including the provided path.
-     * @task   directory
-     */
-    public static function walkToRoot($path, $root = '/') {
-        $path = self::resolvePath($path);
-        $root = self::resolvePath($root);
-
-        if (is_link($path)) {
-            $path = realpath($path);
-        }
-        if (is_link($root)) {
-            $root = realpath($root);
-        }
-
-        // NOTE: We don't use `isDescendant()` here because we don't want to reject
-        // paths which don't exist on disk.
-        $root_list = new FileList(array($root));
-        if (!$root_list->contains($path)) {
-            return array();
-        }
-
-        $walk = array();
-        $parts = explode(DIRECTORY_SEPARATOR, $path);
-        foreach ($parts as $k => $part) {
-            if (!strlen($part)) {
-                unset($parts[$k]);
-            }
-        }
-
-        while (true) {
-            if (phutil_is_windows()) {
-                $next = implode(DIRECTORY_SEPARATOR, $parts);
-            } else {
-                $next = DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $parts);
-            }
-
-            $walk[] = $next;
-            if ($next == $root) {
-                break;
-            }
-
-            if (!$parts) {
-                break;
-            }
-
-            array_pop($parts);
-        }
-
-        return $walk;
-    }
-
-
     /* -(  Paths  )-------------------------------------------------------------- */
 
 
@@ -674,27 +616,6 @@ final class Filesystem extends Phobject {
         return $path;
     }
 
-    /**
-     * Test whether a path is descendant from some root path after resolving all
-     * symlinks and removing artifacts. Both paths must exists for the relation
-     * to obtain. A path is always a descendant of itself as long as it exists.
-     *
-     * @param  string   Child path, absolute or relative to PWD.
-     * @param  string   Root path, absolute or relative to PWD.
-     * @return bool     True if resolved child path is in fact a descendant of
-     *                  resolved root path and both exist.
-     * @task   path
-     */
-    public static function isDescendant($path, $root) {
-        try {
-            self::assertExists($path);
-            self::assertExists($root);
-        } catch (FilesystemException $e) {
-            return false;
-        }
-        $fs = new FileList(array($root));
-        return $fs->contains($path);
-    }
 
     /**
      * Convert a canonical path to its most human-readable format. It is
