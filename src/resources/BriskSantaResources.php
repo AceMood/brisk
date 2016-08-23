@@ -35,6 +35,6 @@ final class BriskSantaResources extends BriskResourcesOnDisk {
 
     //获取工程目录下文件的路径
     private function getProjectPath($to_file) {
-        return dirname(dirname(__FILE__)) . '/' . $to_file;
+        return dirname(dirname(dirname(dirname(__FILE__)))) . '/' . $to_file;
     }
 }

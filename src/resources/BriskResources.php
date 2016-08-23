@@ -4,6 +4,17 @@
  * Defines the location of static resources.
  */
 abstract class BriskResources extends Phobject {
+    //文件后缀类型映射
+    private static $typeMap = array(
+        'jsx' => 'js',
+        'js' => 'js',
+        'coffee' => 'js',
+        'ts' => 'js',
+        'less' => 'css',
+        'css' => 'css',
+        'scss' => 'css'
+    );
+
     //项目名称作为命名空间
     abstract public function getName();
 
@@ -18,7 +29,7 @@ abstract class BriskResources extends Phobject {
     //获取资源类型 如js,css
     public function getResourceType($path) {
         $suffix = last(explode('.', $path));
-        return BriskEnv::$typeMap[$suffix];
+        return self::$typeMap[$suffix];
     }
 
     //加载资源表

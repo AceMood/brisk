@@ -14,3 +14,6 @@ function __autoload($className) {
 }
 
 spl_autoload_register('__autoload');
+
+require_once 'lib/utils.php';
+require_once 'lib/render.php';

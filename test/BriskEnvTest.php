@@ -13,15 +13,4 @@ class EnvTest extends PHPUnit_Framework_TestCase {
         $this->assertClassHasAttribute('mode_bigpipe', 'BriskEnv');
         $this->assertClassHasAttribute('mode_bigrender', 'BriskEnv');
     }
-
-    public function testTypeMap() {
-
-        $typeMap = BriskEnv::$typeMap;
-
-        $this->assertEquals($typeMap['jsx'], 'js');
-        $this->assertEquals($typeMap['js'], 'js');
-        $this->assertEquals($typeMap['less'], 'css');
-        $this->assertEquals($typeMap['scss'], 'css');
-        $this->assertEquals($typeMap['css'], 'css');
-    }
 }

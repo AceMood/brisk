@@ -2,6 +2,6 @@
 
 require_once 'src/resources/BriskSantaResources.php';
 
-class SantaResourcesTest extends PHPUnit_Framework_TestCase {
+class BriskSantaResourcesTest extends PHPUnit_Framework_TestCase {
 
 }

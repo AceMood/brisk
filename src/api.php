@@ -9,8 +9,8 @@ require_once '__init_script_register__.php';
  * you invoke it as close to the actual dependency as possible so that page
  * dependencies are minimized.
  *
- * @param string $name Name of the module to include. Default is path.
- * @param string $source_name Namespace of resource map.
+ * @param string $name 资源路径名
+ * @param string $source_name 项目命名空间
  * @return void
  */
 function require_static_resource($name, $source_name = 'brisk') {
@@ -39,25 +39,20 @@ function get_cdn() {
 //输出所有外链css
 function render_css_block() {
     $response = BriskAPI::getStaticResourceResponse();
-    $response->renderResourcesOfType('css');
+    $content = $response->renderResourcesOfType('css');
+    echo $content->getHTMLContent();
 }
 
 //输出所有外链js
 function render_js_block() {
     $response = BriskAPI::getStaticResourceResponse();
-    $response->renderResourcesOfType('js');
+    $content = $response->renderResourcesOfType('js');
+    echo $content->getHTMLContent();
 }
 
 //todo
 function load_widget($path, $mode) {
-    switch ($mode) {
-        case BriskEnv::$mode_normal:
-            include $path;
-            break;
-        case BriskEnv::$mode_bigrender:
-
-            break;
-    }
+    BriskWidgetView::load($path, $mode);
 }
 
 /**

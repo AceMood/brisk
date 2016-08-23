@@ -1,7 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: baidu
- * Date: 16/8/22
- * Time: 下午4:53
- */
+
+
+class BriskWidgetView extends BriskStandardView {
+
+    public static function load($path, $mode) {
+        switch ($mode) {
+            case BriskEnv::$mode_normal:
+                include $path;
+                break;
+            case BriskEnv::$mode_bigrender:
+
+                break;
+        }
+    }
+
+    public function render() {
+
+    }
+
+}

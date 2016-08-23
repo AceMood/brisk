@@ -12,6 +12,9 @@ final class BriskStaticResourceResponse extends Phobject {
     //动态设置cdn
     private $cdn = '';
 
+    //当前response关联的pageview
+    private $view = null;
+
     //收集所有打印的外链资源唯一路径
     private $symbols = array();
 

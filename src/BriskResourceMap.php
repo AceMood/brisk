@@ -77,7 +77,7 @@ final class BriskResourceMap extends Phobject {
      * @return string|null Resource name, or null if the symbol is unknown.
      */
     public function getResourceNameForSymbol($type, $symbol) {
-        $resource = $this->nameMap[$type][$symbol];
+        $resource = $this->symbolMap[$type][$symbol];
         if (!isset($resource)) {
             throw new Exception(pht(
                 'No resource with type "%s" exists symbol is "%s"!',
@@ -207,9 +207,6 @@ final class BriskResourceMap extends Phobject {
     //给资源路径数组,返回所在的包资源名数组
     public function getPackagedNamesForNames(array $names) {
         $resolved = $this->resolveResources($names);
-
-        var_dump($resolved);
-
         return $this->packageResources($resolved, last($names));
     }
 
@@ -242,25 +239,32 @@ final class BriskResourceMap extends Phobject {
         $requires = $this->getRequiredSymbolsForName($name);
 
         $map[$name] = array();
-        foreach ($requires as $type => $required_symbol) {
-            $required_name = $this->getResourceNameForSymbol($type, $required_symbol);
-            //map中记录依赖项
-            $map[$name][] = $required_name;
-            if (isset($map[$required_name])) {
-                continue;
+        foreach ($requires as $type => $required_symbols) {
+            foreach ($required_symbols as $required_symbol) {
+                $required_name = $this->getResourceNameForSymbol($type, $required_symbol);
+                //map中记录依赖项
+                $map[$name][] = $required_name;
+                if (isset($map[$required_name])) {
+                    continue;
+                }
+                $this->resolveResource($map, $required_name);
             }
-            $this->resolveResource($map, $required_name);
         }
     }
 
     // include all resources and packages they live in
-    private function packageResources(array $resolved_map, $entry) {
+    private function packageResources(array $resolved_map, $names) {
         //记录需要引入的有序资源列表
         $packaged = array();
         //记录处理过的资源
         $handled = array();
-        $this->loop($resolved_map, $packaged, $handled, $entry);
-        return $packaged;
+
+        $names = array_reverse($names);
+        foreach ($names as $name) {
+            $this->loop($resolved_map, $packaged, $handled, $name);
+        }
+
+        return array_reverse($packaged);
     }
 
     private function loop(&$resolved_map, &$packaged, &$handled, $name) {
