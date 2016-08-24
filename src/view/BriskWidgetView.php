@@ -1,10 +1,38 @@
 <?php
 
 
-abstract class BriskWidgetView extends BriskView {
+abstract class BriskWidgetView extends BriskStaticResourceResponse {
 
-    public function __construct($path, $id, $mode) {
-        parent::__construct($id, $mode);
+    private static $mode_bigrender = 'bigrender';
+    private static $mode_lazyrender = 'lazyrender';
+    private static $mode_normal = 'normal';
+
+    //当前部件的id, 用于替换页面中同样id的div
+    protected $id = '';
+    protected $mode = null;
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function setMode($mode) {
+        if (in_array($mode, array(self::$mode_lazyrender, self::$mode_bigrender))) {
+            $this->mode = $mode;
+        } else {
+            $this->mode = self::$mode_normal;
+        }
+    }
+
+    public function getMode() {
+        return $this->mode;
+    }
+
+    public function setId($id) {
+        $this->id = phutil_escape_html($id);
+    }
+
+    public function getId() {
+        return $this->id;
     }
 
     abstract protected function renderHTML();
@@ -12,13 +40,10 @@ abstract class BriskWidgetView extends BriskView {
     public function render() {
         $html = '';
         switch ($this->mode) {
-            case BriskEnv::$mode_normal:
-                $html = $this->renderHTML();
+            case self::$mode_normal:
+                $html = $this->renderAsHTML();
                 break;
-            case BriskEnv::$mode_ajaxpipe:
-                $html = $this->renderHTML();
-                break;
-            case BriskEnv::$mode_bigrender:
+            case self::$mode_bigrender:
                 $html = phutil_tag(
                     'textarea',
                     array(
@@ -35,14 +60,17 @@ abstract class BriskWidgetView extends BriskView {
                     )
                 ));
                 break;
-            case BriskEnv::$mode_lazyrender:
+            case self::$mode_lazyrender:
                 $html = phutil_tag(
                     'textarea',
                     array(
                         'class' => 'g_soi_lazyrender',
                         'style' => 'display:none;'
                     ),
-                    'BigPipe.asyncLoad({id: "' . $this->id . '"});'
+                    hsprintf(
+                        'BigPipe.asyncLoad({id: "%s"});',
+                        $this->id
+                    )
                 );
                 $html->appendHTML(phutil_tag(
                     'div',
@@ -50,9 +78,6 @@ abstract class BriskWidgetView extends BriskView {
                         'id' => $this->id
                     )
                 ));
-                break;
-            case BriskEnv::$mode_bigpipe:
-                //todo
                 break;
         }
 

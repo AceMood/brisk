@@ -70,38 +70,4 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
 //            return '';
 //        }
 //    }
-
-//
-    public function buildResponse($payload, $error = null) {
-        $response = array(
-            'error'   => $error,
-            'payload' => $payload,
-        );
-
-        if ($this->metadata) {
-            $response['metadata'] = $this->metadata;
-            $this->metadata = array();
-        }
-
-        if ($this->behaviors) {
-            $response['behaviors'] = $this->behaviors;
-            $this->behaviors = array();
-        }
-
-        //更新$this->packaged
-        $this->resolveResources();
-        $resources = array();
-        foreach ($this->packaged as $source_name => $resource_names) {
-            $map = BriskResourceMap::getNamedInstance($source_name);
-            foreach ($resource_names as $resource_name) {
-                $resources[] = $this->getURI($map, $resource_name);
-            }
-        }
-
-        if ($resources) {
-            $response['resources'] = $resources;
-        }
-
-        return $response;
-    }
 }
