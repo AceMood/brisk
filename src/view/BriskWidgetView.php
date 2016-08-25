@@ -2,9 +2,10 @@
 
 /**
  * Class BriskWidgetView
- * 所有页面分片部件的基类
+ * 所有页面分片部件的基类.
+ * 同一个部件类的不同实例可在多个页面通过id,以及mode区分
  */
-abstract class BriskWidgetView extends BriskStaticResourceResponse {
+abstract class BriskWidgetView extends Phobject {
 
     private static $mode_bigrender = 'bigrender';
     private static $mode_lazyrender = 'lazyrender';
@@ -12,7 +13,10 @@ abstract class BriskWidgetView extends BriskStaticResourceResponse {
 
     //当前部件的id, 用于替换页面中同样id的div
     protected $id = '';
+    //当前部件的渲染模式
     protected $mode = null;
+    //当前部件的父级视图
+    private $parentView = null;
 
     public function __construct($id = '', $mode = null) {
         parent::__construct();
@@ -56,7 +60,8 @@ abstract class BriskWidgetView extends BriskStaticResourceResponse {
                     array(
                         'class' => 'g_soi_bigrender',
                         'style' => 'display:none;',
-                        'data-bigrender' => $this->id
+                        'data-bigrender' => 1,
+                        'data-pageletId' => $this->id
                     ),
                     $this->renderAsHTML()
                 );
@@ -89,6 +94,11 @@ abstract class BriskWidgetView extends BriskStaticResourceResponse {
         }
 
         return $html;
+    }
+
+    //
+    final public function setParentView($parent) {
+        $this->parentView = $parent;
     }
 
     protected function renderAsJSON() {

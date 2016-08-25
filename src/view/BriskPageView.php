@@ -10,15 +10,15 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
     private static $mode_normal = 'normal';
 
     //页面标题
-    protected $title = '';
+    private $title = '';
     //页面渲染模式
-    protected $mode = null;
+    private $mode = null;
     //页面需然渲染的分片
-    protected $pagelets = array();
+    private $pagelets = array();
     //页面分片
-    protected $widgets = array();
+    private $widgets = array();
 
-    public function __construct($title = '') {
+    function __construct($title = '') {
         parent::__construct();
         $this->setTitle($title);
         if (BriskUtils::isAjaxPipe()) {
@@ -29,15 +29,15 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         }
     }
 
-    public function setTitle($title) {
+    final function setTitle($title) {
         $this->title = $title;
     }
 
-    public function getTitle() {
+    final function getTitle() {
         return $this->title;
     }
 
-    public function setMode($mode) {
+    final function setMode($mode) {
         if ($mode === self::$mode_ajaxpipe) {
             $this->mode = $mode;
         } else {
@@ -45,7 +45,7 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         }
     }
 
-    public function getMode() {
+    final function getMode() {
         return $this->mode;
     }
 
@@ -53,7 +53,7 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
      * 设置当前页面的pagelets
      * @param {array|string} $pagelets
      */
-    public function setPagelets($pagelets) {
+    final function setPagelets($pagelets) {
         if (!is_array($pagelets)) {
             $pagelets = array($pagelets);
         }
@@ -62,7 +62,7 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         }
     }
 
-    public function getPagelets() {
+    final function getPagelets() {
         return $this->pagelets;
     }
 
@@ -71,7 +71,8 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
      * @param BriskWidgetView $widget
      * @return PhutilSafeHTML|$this
      */
-    public function loadWidget($widget) {
+    final function loadWidget($widget) {
+        $widget->setParentView($this);
         //正常渲染则直接输出部件html内容
         if ($this->mode === self::$mode_normal) {
             return $widget->render();
@@ -83,11 +84,15 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         }
     }
 
+    final function getWidgets() {
+        return $this->widgets;
+    }
+
     /**
      * 渲染本视图
      * @return string
      */
-    public function render() {
+    final function render() {
         $html = '';
         switch ($this->mode) {
             case self::$mode_ajaxpipe:
