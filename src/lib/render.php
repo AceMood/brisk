@@ -126,6 +126,12 @@ function phutil_tag_div($class, $content = null) {
     return phutil_tag('div', array('class' => $class), $content);
 }
 
+/**
+ * 对一段html转义
+ * @param PhutilSafeHTML|array|string $string
+ * @return PhutilSafeHTML|array|string
+ * @throws Exception
+ */
 function phutil_escape_html($string) {
     if ($string instanceof PhutilSafeHTML) {
         return $string;
@@ -159,6 +165,7 @@ function phutil_escape_html($string) {
         return $result;
     }
 
+    //最后将字符串转化成html实体
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
@@ -193,14 +200,16 @@ function phutil_implode_html($glue, array $pieces) {
 }
 
 /**
- * Format a HTML code. This function behaves like `sprintf()`, except that all
+ * 对一段html代码格式化. This function behaves like `sprintf()`, except that all
  * the normal conversions (like %s) will be properly escaped.
+ * @return PhutilSafeHTML
  */
 function hsprintf($html /* , ... */) {
     $args = func_get_args();
     array_shift($args);
     return new PhutilSafeHTML(
-        vsprintf($html, array_map('phutil_escape_html', $args)));
+        vsprintf($html, array_map('phutil_escape_html', $args))
+    );
 }
 
 

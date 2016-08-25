@@ -1,6 +1,9 @@
 <?php
 
-
+/**
+ * Class BriskWidgetView
+ * 所有页面分片部件的基类
+ */
 abstract class BriskWidgetView extends BriskStaticResourceResponse {
 
     private static $mode_bigrender = 'bigrender';
@@ -37,8 +40,10 @@ abstract class BriskWidgetView extends BriskStaticResourceResponse {
         return $this->id;
     }
 
-    abstract protected function renderAsHTML();
-
+    /**
+     * 渲染本视图
+     * @return string
+     */
     public function render() {
         $html = '';
         switch ($this->mode) {
@@ -53,7 +58,7 @@ abstract class BriskWidgetView extends BriskStaticResourceResponse {
                         'style' => 'display:none;',
                         'data-bigrender' => $this->id
                     ),
-                    $this->renderHTML()
+                    $this->renderAsHTML()
                 );
                 $html->appendHTML(phutil_tag(
                     'div',
@@ -112,4 +117,14 @@ abstract class BriskWidgetView extends BriskStaticResourceResponse {
 
         return $response;
     }
+
+    /**
+     * 渲染部件的html
+     * @return string
+     * @throws Exception
+     */
+    abstract function renderAsHTML();
+
+    //返回部件的模版字符串
+    abstract function getTemplateString();
 }

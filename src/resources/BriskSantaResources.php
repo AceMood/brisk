@@ -2,6 +2,9 @@
 
 /**
  * @class Santa项目的静态资源
+ * 这个类可根据具体的项目有所不同, 如取得资源表文件的逻辑,
+ * 后续考虑抽离出去通过配置文件, 这样不用每次都修改源码
+ * TODO
  */
 final class BriskSantaResources extends BriskResourcesOnDisk {
 

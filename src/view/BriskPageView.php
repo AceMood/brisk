@@ -66,14 +66,10 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         return $this->pagelets;
     }
 
-    public function retrieveWidget($widgetId) {
-        return $this->widgets[$widgetId];
-    }
-
     /**
      * 渲染期间加载对应的部件
-     * @param $widget
-     * @return mixed
+     * @param BriskWidgetView $widget
+     * @return PhutilSafeHTML|$this
      */
     public function loadWidget($widget) {
         //正常渲染则直接输出部件html内容
@@ -83,13 +79,13 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         //否则记录页面部件
         else {
             $this->widgets[] = $widget;
-            return null;
+            return $this;
         }
     }
 
     /**
      * 渲染本视图
-     * @return mixed
+     * @return string
      */
     public function render() {
         $html = '';
@@ -105,7 +101,11 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         return $html;
     }
 
-    //渲染页面成html
+    /**
+     * 渲染页面成html
+     * @return string
+     * @throws Exception
+     */
     protected function renderAsHTML() {
         return (string)hsprintf(
             $this->getTemplateString(),
@@ -127,7 +127,15 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
 
         //收集所有部件的html部分
         foreach ($this->pagelets as $pageletId) {
-            $widget = $this->retrieveWidget($pageletId);
+            $widget = $this->widgets[$pageletId];
+            if (isset($widget)) {
+                throw new Exception(pht(
+                    'No widget with id %s found in %s',
+                    $pageletId,
+                    __CLASS__
+                ));
+            }
+
             $json = $widget->renderAsJSON();
             $response['html'][$pageletId] = $json['html'];
             $response['js'][] = $json['js'];
@@ -165,7 +173,10 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         return $response;
     }
 
-    //获取默认的页面模板,不可在子类复写
+    /**
+     * 获取默认的页面模板,可在子类复写
+     * @return string
+     */
     protected function getTemplateString() {
         return
 <<<EOTEMPLATE
