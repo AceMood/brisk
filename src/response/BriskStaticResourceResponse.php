@@ -176,6 +176,7 @@ class BriskStaticResourceResponse extends Phobject {
         //更新$this->packaged
         $this->resolveResources();
         $result = array();
+        $print = array();
 
         if ($type === 'js') {
             $print = array(
@@ -188,20 +189,28 @@ class BriskStaticResourceResponse extends Phobject {
 
         foreach ($this->packaged as $source_name => $resource_names) {
             $map = BriskResourceMap::getNamedInstance($source_name);
+
+            //记录到打印的资源表
+            if ($type === 'js') {
+                $symbolMap = $map->getSymbolMap();
+                foreach ($symbolMap['js'] as $symbol => $js) {
+                    unset($js['path']);
+                    unset($js['within']);
+                    $js['uri'] = self::getCDN() . $js['uri'];
+                }
+
+                foreach ($symbolMap['css'] as $symbol => $css) {
+                    unset($css['path']);
+                    unset($css['within']);
+                    $css['uri'] = self::getCDN() . $css['uri'];
+                }
+
+                $print['resourceMap'] = $symbolMap;
+            }
+
             $resources_of_type = array();
             foreach ($resource_names as $resource_name) {
                 $resource_type = $map->getResourceTypeForName($resource_name);
-
-                //记录到打印的资源表
-                if ($type === 'js') {
-                    $symbol = $map->getNameMap()[$resource_name];
-                    $res = $map->getSymbolMap()[$resource_type][$symbol];
-                    $print['resourceMap'][$resource_type][$symbol] = array(
-                        'uri' => self::getCDN() . $res['uri'],
-                        'deps' => isset($res['deps']) ? $res['deps'] : array()
-                    );
-                }
-
                 if ($resource_type == $type) {
                     $resources_of_type[] = $resource_name;
                 }
