@@ -2,11 +2,6 @@
 
 class BriskAjaxResponse extends BriskStaticResourceResponse {
 
-    public function __construct() {
-        parent::__construct();
-        $this->mode = BriskEnv::$mode_ajaxpipe;
-    }
-
 //
 //    public function renderHTMLFooter() {
 //        $data = array();

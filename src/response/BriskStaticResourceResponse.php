@@ -12,9 +12,6 @@ class BriskStaticResourceResponse extends Phobject {
     //动态设置cdn
     protected $cdn = '';
 
-    //当前response关联的pageview
-    protected $view = null;
-
     //收集所有打印的外链资源唯一路径
     protected $symbols = array();
 
@@ -27,9 +24,8 @@ class BriskStaticResourceResponse extends Phobject {
     //命名空间划分,记录引用的资源
     protected $packaged;
 
+    //记录一些元数据
     protected $metadata = array();
-
-    protected $metadataBlock = 0;
 
     //页面初始化需要加载的框架
     protected $behaviors = array();
@@ -38,20 +34,12 @@ class BriskStaticResourceResponse extends Phobject {
 
     protected $postprocessorKey;
 
-    public function __construct() {
-        if (isset($_REQUEST['__metablock__'])) {
-            $this->metadataBlock = (int)$_REQUEST['__metablock__'];
-        }
-    }
+    public function __construct() {}
 
     public function addMetadata($metadata) {
         $id = count($this->metadata);
         $this->metadata[$id] = $metadata;
-        return $this->metadataBlock . '_' . $id;
-    }
-
-    public function getMetadataBlock() {
-        return $this->metadataBlock;
+        return $this;
     }
 
     public function setPostprocessorKey($postprocessor_key) {

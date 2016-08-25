@@ -6,9 +6,6 @@
  * Time: 下午5:19
  */
 
-$arr = array(
-    'a' => 'c',
-    'b' => 'c'
-);
+var_dump(realpath('src/api.php'));
 
-var_dump(array_search('c', $arr, true));
+echo __DIR__;

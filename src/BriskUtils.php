@@ -12,6 +12,9 @@ final class BriskUtils {
 
     /**
      * 为dom节点生成唯一id
+     * Generate a node ID which is guaranteed to be unique for the current page,
+     * even across Ajax requests. You should use this method to generate IDs for
+     * nodes which require a uniqueness guarantee.
      * @return string
      */
     public static function generateUniqueId() {

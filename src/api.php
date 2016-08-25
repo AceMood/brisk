@@ -56,22 +56,6 @@ function load_widget($path, $id = null, $mode = null) {
 }
 
 /**
- * Generate a node ID which is guaranteed to be unique for the current page,
- * even across Ajax requests. You should use this method to generate IDs for
- * nodes which require a uniqueness guarantee.
- *
- * @return string A string appropriate for use as an 'id' attribute on a DOM
- *                node. It is guaranteed to be unique for the current page, even
- *                if the current request is a subsequent Ajax request.
- */
-function generate_unique_node_id() {
-    static $unique = 0;
-    $response = BriskAPI::getStaticResourceResponse();
-    $block = $response->getMetadataBlock();
-    return 'UQ' . $block . '_' . ($unique++);
-}
-
-/**
  * Get the versioned URI for a raw resource, like an image.
  * @param   string  $resource Path to the raw image.
  * @return  string  Versioned path to the image, if one is available.
