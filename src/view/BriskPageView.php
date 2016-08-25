@@ -11,8 +11,11 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
 
     //页面标题
     protected $title = '';
+    //页面渲染模式
     protected $mode = null;
+    //页面需然渲染的分片
     protected $pagelets = array();
+    //页面分片
     protected $widgets = array();
 
     public function __construct($title = '') {
@@ -76,8 +79,9 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         //正常渲染则直接输出部件html内容
         if ($this->mode === self::$mode_normal) {
             return $widget->render();
+        }
         //否则记录页面部件
-        } else {
+        else {
             $this->widgets[] = $widget;
             return null;
         }
@@ -111,6 +115,7 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
             $this->renderResourcesOfType('js'));
     }
 
+    //渲染页面成json
     protected function renderAsJSON() {
         $response = array(
             'html' => array(),
@@ -162,8 +167,17 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
 
     //获取默认的页面模板,不可在子类复写
     protected function getTemplateString() {
-        return '<!DOCTYPE html><html><head><meta charset="UTF-8" />' .
-        '<title>%s</title>%s</head><body>%s%s</body></html>';
+        return
+<<<EOTEMPLATE
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>%s</title>
+        %s
+    </head>
+    <body>%s</body>%s</html>
+EOTEMPLATE;
     }
 
 }

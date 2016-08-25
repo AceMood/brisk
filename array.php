@@ -6,6 +6,17 @@
  * Time: 下午5:19
  */
 
-var_dump(realpath('src/api.php'));
+$html = 
+    <<<EOTEMPLATE
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8" />
+            <title>%s</title>
+            %s
+          </head>
+          %s
+        </html>
+EOTEMPLATE;
 
-echo __DIR__;
+echo $html;
