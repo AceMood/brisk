@@ -11,8 +11,10 @@ abstract class BriskWidgetView extends BriskStaticResourceResponse {
     protected $id = '';
     protected $mode = null;
 
-    public function __construct() {
+    public function __construct($id = '', $mode = null) {
         parent::__construct();
+        $this->setId($id);
+        $this->setMode($mode);
     }
 
     public function setMode($mode) {

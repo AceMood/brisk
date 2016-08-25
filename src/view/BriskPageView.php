@@ -109,9 +109,9 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
     protected function renderAsHTML() {
         return (string)hsprintf(
             $this->getTemplateString(),
-            $this->title,
+            phutil_escape_html($this->title),
             $this->renderResourcesOfType('css'),
-            '',
+            new PhutilSafeHTML(''),
             $this->renderResourcesOfType('js'));
     }
 
@@ -169,14 +169,16 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
     protected function getTemplateString() {
         return
 <<<EOTEMPLATE
-<!DOCTYPE html>
-<html>
+    <!DOCTYPE html>
+    <html>
     <head>
         <meta charset="UTF-8" />
         <title>%s</title>
         %s
     </head>
-    <body>%s</body>%s</html>
+    <body>%s</body>
+    %s
+    </html>
 EOTEMPLATE;
     }
 

@@ -2,7 +2,7 @@
 
 function __autoload($className) {
     $dir = dirname(__FILE__);
-    $subdirs = ['/lib/', '/', '/resources/', '/response/'];
+    $subdirs = ['/lib/', '/', '/resources/', '/response/', '/view/'];
     $path = '';
     foreach ($subdirs as $subdir) {
         if (file_exists($dir . $subdir . $className . '.php')) {
