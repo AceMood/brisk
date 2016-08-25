@@ -6,9 +6,6 @@
  * Ajax responses.
  */
 class BriskStaticResourceResponse extends Phobject {
-    //当前请求的渲染模式
-    protected $mode;
-
     //动态设置cdn
     protected $cdn = '';
 

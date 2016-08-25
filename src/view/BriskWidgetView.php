@@ -12,9 +12,9 @@ abstract class BriskWidgetView extends Phobject {
     private static $mode_normal = 'normal';
 
     //当前部件的id, 用于替换页面中同样id的div
-    protected $id = '';
+    private $id = '';
     //当前部件的渲染模式
-    protected $mode = null;
+    private $mode = null;
     //当前部件的父级视图
     private $parentView = null;
 
@@ -24,7 +24,7 @@ abstract class BriskWidgetView extends Phobject {
         $this->setMode($mode);
     }
 
-    public function setMode($mode) {
+    final function setMode($mode) {
         if (in_array($mode, array(self::$mode_lazyrender, self::$mode_bigrender))) {
             $this->mode = $mode;
         } else {
@@ -32,16 +32,31 @@ abstract class BriskWidgetView extends Phobject {
         }
     }
 
-    public function getMode() {
+    final function getMode() {
         return $this->mode;
     }
 
-    public function setId($id) {
+    final function setId($id) {
         $this->id = phutil_escape_html($id);
     }
 
-    public function getId() {
+    final function getId() {
         return $this->id;
+    }
+
+    //设置当前部件的父级视图
+    final function setParentView($parent) {
+        $this->parentView = $parent;
+    }
+
+    final function requireResource($name, $source_name) {
+        if (!isset($this->parentView)) {
+            throw new Exception(pht(
+                'Could not invoke requireResource with no parentView set. %s',
+                __CLASS__
+            ));
+        }
+        $this->parentView->requireResource($name, $source_name);
     }
 
     /**
@@ -94,11 +109,6 @@ abstract class BriskWidgetView extends Phobject {
         }
 
         return $html;
-    }
-
-    //
-    final public function setParentView($parent) {
-        $this->parentView = $parent;
     }
 
     protected function renderAsJSON() {
