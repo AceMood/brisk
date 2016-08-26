@@ -19,7 +19,6 @@ abstract class BriskWidgetView extends Phobject {
     private $parentView = null;
 
     public function __construct($id = '', $mode = null) {
-        parent::__construct();
         $this->setId($id);
         $this->setMode($mode);
     }
@@ -112,6 +111,13 @@ abstract class BriskWidgetView extends Phobject {
     }
 
     protected function renderAsJSON() {
+        if (!isset($this->parentView)) {
+            throw new Exception(pht(
+                'Could not invoke requireResource with no parentView set. %s',
+                __CLASS__
+            ));
+        }
+
         $response = array(
             'html' => array(),
             'js' => array(),
@@ -121,13 +127,13 @@ abstract class BriskWidgetView extends Phobject {
         );
 
         //更新$this->packaged
-        $this->resolveResources();
+        $this->parentView->resolveResources();
         $resources = array();
 
         foreach ($this->packaged as $source_name => $resource_names) {
             $map = BriskResourceMap::getNamedInstance($source_name);
             foreach ($resource_names as $resource_name) {
-                $resources[] = $this->getURI($map, $resource_name);
+                $resources[] = $this->parentView->getURI($map, $resource_name);
             }
         }
 
