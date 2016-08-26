@@ -96,6 +96,7 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         $html = '';
         switch ($this->mode) {
             case self::$mode_ajaxpipe:
+                $this->addWidgets();
                 $html = $this->renderAsJSON();
                 break;
             case self::$mode_normal:
@@ -197,5 +198,8 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
     </html>
 EOTEMPLATE;
     }
+
+    // 每个子类需要实现自己的addWidgets逻辑
+    abstract function addWidgets();
 
 }

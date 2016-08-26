@@ -94,10 +94,10 @@ class BriskStaticResourceResponse extends Phobject {
             ));
         }
 
-        $symbols = $this->symbols[$source_name];
-        if (!isset($symbols)) {
-            $symbols = $this->symbols[$source_name] = array();
+        if (!array_key_exists($source_name, $this->symbols)) {
+            $this->symbols[$source_name] = array();
         }
+        $symbols = $this->symbols[$source_name];
 
         //之前渲染过,不区分外链还是内联
         if (array_search($name, $symbols, true) > -1 ||

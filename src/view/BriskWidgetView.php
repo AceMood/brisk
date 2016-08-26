@@ -55,7 +55,12 @@ abstract class BriskWidgetView extends Phobject {
                 __CLASS__
             ));
         }
-        $this->parentView->requireResource($name, $source_name);
+
+        if ($this->mode === self::$mode_lazyrender) {
+
+        } else {
+            $this->parentView->requireResource($name, $source_name);
+        }
     }
 
     /**
