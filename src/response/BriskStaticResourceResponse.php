@@ -81,7 +81,7 @@ class BriskStaticResourceResponse extends Phobject {
      * @return mixed $this
      * @throws Exception
      */
-    public function requireResource($name, $source_name) {
+    public function requireResource($name, $source_name = 'brisk') {
         //首先确认资源表存在
         $map = BriskResourceMap::getNamedInstance($source_name);
         $symbol = $map->getNameMap()[$name];
@@ -94,8 +94,13 @@ class BriskStaticResourceResponse extends Phobject {
             ));
         }
 
+        $symbols = $this->symbols[$source_name];
+        if (!isset($symbols)) {
+            $symbols = $this->symbols[$source_name] = array();
+        }
+
         //之前渲染过,不区分外链还是内联
-        if (array_search($name, $this->symbols[$source_name], true) > -1 ||
+        if (array_search($name, $symbols, true) > -1 ||
             isset($this->inlined[$source_name][$name])) {
             return $this;
         }

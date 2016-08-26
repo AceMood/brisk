@@ -7,7 +7,7 @@
 final class BriskUtils {
 
     public static function isAjaxPipe() {
-        return $_GET['ajaxpipe'] == 1;
+        return isset($_GET['ajaxpipe']) && ($_GET['ajaxpipe'] == 1);
     }
 
     /**
