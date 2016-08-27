@@ -66,6 +66,10 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         return $this->pagelets;
     }
 
+    final function isPage() {
+        return true;
+    }
+
     /**
      * 渲染期间加载对应的部件
      * @param BriskWidgetView $widget
@@ -96,7 +100,6 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         $html = '';
         switch ($this->mode) {
             case self::$mode_ajaxpipe:
-                $this->addWidgets();
                 $html = $this->renderAsJSON();
                 break;
             case self::$mode_normal:
@@ -121,7 +124,11 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
             $this->renderResourcesOfType('js'));
     }
 
-    //渲染页面成json
+    /**
+     * 渲染页面成json
+     * @return array
+     * @throws Exception
+     */
     protected function renderAsJSON() {
         $response = array(
             'html' => array(),
@@ -131,7 +138,7 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
             'style' => array()
         );
 
-        //收集所有部件的html部分
+        //挑选需要渲染的部件
         foreach ($this->pagelets as $pageletId) {
             $widget = $this->widgets[$pageletId];
             if (isset($widget)) {
@@ -142,14 +149,14 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
                 ));
             }
 
-            $json = $widget->renderAsJSON();
+            $widget->setMode(self::$mode_ajaxpipe);
+            $json = $widget->render();
             $response['html'][$pageletId] = $json['html'];
             $response['js'][] = $json['js'];
             $response['css'][] = $json['css'];
             $response['script'][] = $json['script'];
             $response['style'][] = $json['style'];
         }
-
 
         if ($this->metadata) {
             $response['metadata'] = $this->metadata;
@@ -159,21 +166,6 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         if ($this->behaviors) {
             $response['behaviors'] = $this->behaviors;
             $this->behaviors = array();
-        }
-
-        //更新$this->packaged
-        $this->resolveResources();
-        $resources = array();
-
-        foreach ($this->packaged as $source_name => $resource_names) {
-            $map = BriskResourceMap::getNamedInstance($source_name);
-            foreach ($resource_names as $resource_name) {
-                $resources[] = $this->getURI($map, $resource_name);
-            }
-        }
-
-        if ($resources) {
-            $response['resources'] = $resources;
         }
 
         return $response;
@@ -198,8 +190,5 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
     </html>
 EOTEMPLATE;
     }
-
-    // 每个子类需要实现自己的addWidgets逻辑
-    abstract function addWidgets();
 
 }

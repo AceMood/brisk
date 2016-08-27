@@ -7,6 +7,7 @@
  */
 abstract class BriskWidgetView extends Phobject {
 
+    private static $mode_ajaxpipe = 'ajaxpipe';
     private static $mode_bigrender = 'bigrender';
     private static $mode_lazyrender = 'lazyrender';
     private static $mode_normal = 'normal';
@@ -24,7 +25,11 @@ abstract class BriskWidgetView extends Phobject {
     }
 
     final function setMode($mode) {
-        if (in_array($mode, array(self::$mode_lazyrender, self::$mode_bigrender))) {
+        if (in_array($mode, array(
+            self::$mode_lazyrender,
+            self::$mode_bigrender,
+            self::$mode_ajaxpipe
+        ))) {
             $this->mode = $mode;
         } else {
             $this->mode = self::$mode_normal;
@@ -43,11 +48,20 @@ abstract class BriskWidgetView extends Phobject {
         return $this->id;
     }
 
+    final function isWidget() {
+        return true;
+    }
+
     //设置当前部件的父级视图
     final function setParentView($parent) {
         $this->parentView = $parent;
     }
 
+    final function getParentView() {
+        return $this->parentView;
+    }
+
+    //部件中加载静态资源
     final function requireResource($name, $source_name) {
         if (!isset($this->parentView)) {
             throw new Exception(pht(
@@ -56,9 +70,12 @@ abstract class BriskWidgetView extends Phobject {
             ));
         }
 
+        //lazyrender或者
         if ($this->mode === self::$mode_lazyrender) {
 
-        } else {
+        }
+        //否则直接记录在最顶层的page view中
+        else {
             $this->parentView->requireResource($name, $source_name);
         }
     }
@@ -110,11 +127,19 @@ abstract class BriskWidgetView extends Phobject {
                     )
                 ));
                 break;
+            case self::$mode_ajaxpipe:
+                $html = $this->renderAsJSON();
+                break;
         }
 
         return $html;
     }
 
+    /**
+     * 渲染部件视图为json
+     * @return array
+     * @throws Exception
+     */
     protected function renderAsJSON() {
         if (!isset($this->parentView)) {
             throw new Exception(pht(
