@@ -17,6 +17,8 @@ abstract class BriskWidgetView extends Phobject {
     private $mode = null;
     //当前部件的父级视图
     private $parentView = null;
+    //当前部件包含的子部件
+    private $widgets = array();
 
     public function __construct($id = '', $mode = null) {
         $this->setId($id);
@@ -54,6 +56,28 @@ abstract class BriskWidgetView extends Phobject {
         return true;
     }
 
+    /**
+     * 渲染期间加载对应的部件
+     * @param BriskWidgetView $widget
+     * @return PhutilSafeHTML|$this
+     */
+    final function loadWidget($widget) {
+        $widget->setParentView($this);
+        //正常渲染则直接输出部件html内容
+        if ($this->mode === self::$mode_normal) {
+            return $widget->render();
+        }
+        //否则记录页面部件
+        else {
+            $this->widgets[] = $widget;
+            return $this;
+        }
+    }
+
+    final function getWidgets() {
+        return $this->widgets;
+    }
+
     //设置当前部件的父级视图
     final function setParentView($parent) {
         $this->parentView = $parent;
@@ -85,7 +109,7 @@ abstract class BriskWidgetView extends Phobject {
     //
     final function getTopContainerView() {
         $parent = null;
-        while (isset($this->parentView) && $this->parentView->isPage()) {
+        while (isset($this->parentView) && !$this->parentView->isPage()) {
             $parent = $this->parentView;
         }
         return $parent;
@@ -157,7 +181,7 @@ abstract class BriskWidgetView extends Phobject {
         }
 
         $response = array(
-            'html' => array(),
+            'payload' => array(),
             'js' => array(),
             'css' => array(),
             'script' => array(),

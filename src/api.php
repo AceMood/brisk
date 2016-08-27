@@ -13,13 +13,13 @@ require_once '__init_script_register__.php';
  * @param string $source_name 项目命名空间
  * @return void
  */
-function require_static_resource($name, $source_name = 'brisk') {
+function require_static_resource($name, $source_name) {
     $response = BriskAPI::getStaticResourceResponse();
     $response->requireResource($name, $source_name);
 }
 
 //将一个资源数据内联式立即输出
-function inline_static_resource($name, $source_name = 'brisk') {
+function inline_static_resource($name, $source_name) {
     $response = BriskAPI::getStaticResourceResponse();
     return $response->inlineResource($name, $source_name);
 }

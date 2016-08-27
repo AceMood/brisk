@@ -13,9 +13,9 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
     private $title = '';
     //页面渲染模式
     private $mode = null;
-    //页面需然渲染的分片
+    //页面需然渲染的分片id
     private $pagelets = array();
-    //页面分片
+    //页面分片的部件
     private $widgets = array();
 
     function __construct($title = '') {
@@ -130,8 +130,9 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
      * @throws Exception
      */
     protected function renderAsJSON() {
-        $response = array(
-            'html' => array(),
+        $res = array(
+            'error' => null,
+            'payload' => array(),
             'js' => array(),
             'css' => array(),
             'script' => array(),
@@ -150,24 +151,24 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
             }
 
             $json = $widget->renderAsJSON();
-            $response['html'][$pageletId] = $json['html'];
-            $response['js'] = array_merge($response['js'], $json['js']);
-            $response['css'][] = array_merge($response['css'], $json['css']);
-            $response['script'][] = array_merge($response['script'], $json['script']);
-            $response['style'][] = array_merge($response['style'], $json['style']);
+            $res['payload'][$pageletId] = $json['payload'];
+            $res['js'] = array_unique(array_merge($res['js'], $json['js']));
+            $res['css'][] = array_unique(array_merge($res['css'], $json['css']));
+            $res['script'][] = array_unique(array_merge($res['script'], $json['script']));
+            $res['style'][] = array_unique(array_merge($res['style'], $json['style']));
         }
 
         if ($this->metadata) {
-            $response['metadata'] = $this->metadata;
+            $res['metadata'] = $this->metadata;
             $this->metadata = array();
         }
 
         if ($this->behaviors) {
-            $response['behaviors'] = $this->behaviors;
+            $res['behaviors'] = $this->behaviors;
             $this->behaviors = array();
         }
 
-        return $response;
+        return $res;
     }
 
     /**
