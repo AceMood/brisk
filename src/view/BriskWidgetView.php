@@ -7,7 +7,6 @@
  */
 abstract class BriskWidgetView extends Phobject {
 
-    private static $mode_ajaxpipe = 'ajaxpipe';
     private static $mode_bigrender = 'bigrender';
     private static $mode_lazyrender = 'lazyrender';
     private static $mode_normal = 'normal';
@@ -27,8 +26,7 @@ abstract class BriskWidgetView extends Phobject {
     final function setMode($mode) {
         if (in_array($mode, array(
             self::$mode_lazyrender,
-            self::$mode_bigrender,
-            self::$mode_ajaxpipe
+            self::$mode_bigrender
         ))) {
             $this->mode = $mode;
         } else {
@@ -46,6 +44,10 @@ abstract class BriskWidgetView extends Phobject {
 
     final function getId() {
         return $this->id;
+    }
+
+    final function isPage() {
+        return false;
     }
 
     final function isWidget() {
@@ -78,6 +80,15 @@ abstract class BriskWidgetView extends Phobject {
         else {
             $this->parentView->requireResource($name, $source_name);
         }
+    }
+
+    //
+    final function getTopContainerView() {
+        $parent = null;
+        while (isset($this->parentView) && $this->parentView->isPage()) {
+            $parent = $this->parentView;
+        }
+        return $parent;
     }
 
     /**
@@ -127,9 +138,6 @@ abstract class BriskWidgetView extends Phobject {
                     )
                 ));
                 break;
-            case self::$mode_ajaxpipe:
-                $html = $this->renderAsJSON();
-                break;
         }
 
         return $html;
@@ -140,7 +148,7 @@ abstract class BriskWidgetView extends Phobject {
      * @return array
      * @throws Exception
      */
-    protected function renderAsJSON() {
+    public function renderAsJSON() {
         if (!isset($this->parentView)) {
             throw new Exception(pht(
                 'Could not invoke requireResource with no parentView set. %s',

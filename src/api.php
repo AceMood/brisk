@@ -50,11 +50,6 @@ function render_js_block() {
     echo $content->getHTMLContent();
 }
 
-//
-function load_widget($path, $id = null, $mode = null) {
-    BriskWidgetFactory::load($path, $id, $mode);
-}
-
 /**
  * Get the versioned URI for a raw resource, like an image.
  * @param   string  $resource Path to the raw image.

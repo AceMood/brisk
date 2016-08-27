@@ -149,13 +149,12 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
                 ));
             }
 
-            $widget->setMode(self::$mode_ajaxpipe);
-            $json = $widget->render();
+            $json = $widget->renderAsJSON();
             $response['html'][$pageletId] = $json['html'];
-            $response['js'][] = $json['js'];
-            $response['css'][] = $json['css'];
-            $response['script'][] = $json['script'];
-            $response['style'][] = $json['style'];
+            $response['js'] = array_merge($response['js'], $json['js']);
+            $response['css'][] = array_merge($response['css'], $json['css']);
+            $response['script'][] = array_merge($response['script'], $json['script']);
+            $response['style'][] = array_merge($response['style'], $json['style']);
         }
 
         if ($this->metadata) {
