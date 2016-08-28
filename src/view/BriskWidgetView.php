@@ -24,11 +24,6 @@ abstract class BriskWidgetView extends Phobject {
     //当前部件包含的子部件
     private $widgets = array();
 
-    private $js = array();
-    private $css = array();
-    private $script = array();
-    private $style = array();
-
     public function __construct($id = '', $mode = null) {
         if (empty($id)) {
             $id = BriskUtils::generateUniqueId();

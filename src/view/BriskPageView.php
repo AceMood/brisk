@@ -117,6 +117,17 @@ abstract class BriskPageView extends Phobject {
     }
 
     /**
+     * 将一张图片内联为dataUri的方式
+     * @param $name
+     * @param $source_name
+     * @return mixed
+     * @throws Exception
+     */
+    final function inlineImage($name, $source_name) {
+        $this->response->requireResource($name, $source_name);
+    }
+
+    /**
      * 渲染本视图
      * @return string
      */

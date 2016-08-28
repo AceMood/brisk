@@ -75,6 +75,7 @@ final class BriskResourceMap extends Phobject {
      * @param string $type
      * @param string $symbol Resource symbol to lookup.
      * @return string|null Resource name, or null if the symbol is unknown.
+     * @throws Exception
      */
     public function getResourceNameForSymbol($type, $symbol) {
         $resource = $this->symbolMap[$type][$symbol];

@@ -14,11 +14,13 @@ class BriskStaticResourceResponse extends Phobject {
 
     //记录打印的内联资源唯一id
     protected $inlined = array();
+    protected $styles = array();
+    protected $scripts = array();
 
     //是否需要对收集的资源进行解析
     protected $needsResolve = true;
 
-    //命名空间划分,记录引用的资源
+    //命名空间划分,记录外链引用的资源
     protected $packaged;
 
     //记录一些元数据
@@ -27,6 +29,7 @@ class BriskStaticResourceResponse extends Phobject {
     //页面初始化需要加载的框架
     protected $behaviors = array();
 
+    //记录是否被渲染过
     protected $hasRendered = array();
 
     protected $postprocessorKey;
@@ -111,7 +114,13 @@ class BriskStaticResourceResponse extends Phobject {
         return $this;
     }
 
-    //资源内联
+    /**
+     * 资源内联 todo
+     * @param $name
+     * @param $source_name
+     * @return PhutilSafeHTML|string
+     * @throws Exception
+     */
     public function inlineResource($name, $source_name) {
         //首先确认资源存在
         $map = BriskResourceMap::getNamedInstance($source_name);
@@ -143,8 +152,14 @@ class BriskStaticResourceResponse extends Phobject {
         return '';
     }
 
-    //资源内联
-    public function inlineImage($name, $source_name) {
+    /**
+     * 将一张图片内联为dataUri的方式
+     * @param $name
+     * @param $source_name
+     * @return mixed
+     * @throws Exception
+     */
+    public function inlineImage($name, $source_name = 'brisk') {
         $map = BriskResourceMap::getNamedInstance($source_name);
         $symbol = $map->getNameMap()[$name];
         if ($symbol === null) {
