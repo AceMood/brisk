@@ -17,10 +17,22 @@ abstract class BriskResourcesOnDisk extends BriskResources {
 
     // according to name as 'static/a.js', get the real file-system path
     private function getPathToResource($name) {
+        $symbolMap = idx($this->map, 'resource', array());
+        $nameMap = idx($this->map, 'paths', array());
+        $symbol = $nameMap[$name];
+        $type = $this->getResourceType($name);
+        // todo 这里假设没有通过soi指定cdn, 或者是通过pageview设置的cdn, 此时uri是编译目录的相对路径
+        $uri = preg_replace('/^\//', '', $symbolMap[$type][$symbol]['uri']);
+
         return $this->getPathToResources() . DIRECTORY_SEPARATOR . $name;
     }
 
-    //读取文件内容
+    /**
+     * 读取文件内容
+     * @param $name
+     * @return string
+     * @throws FilesystemException
+     */
     public function getResourceData($name) {
         return Filesystem::readFile($this->getPathToResource($name));
     }
