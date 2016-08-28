@@ -132,13 +132,12 @@ abstract class BriskWidgetView extends Phobject {
      */
     public function renderAsHTML() {
         $html = '';
+        $this->willRender();
         switch ($this->mode) {
             case self::$mode_normal:
-                $this->willRender();
                 $html = $this->produceHTML();
                 break;
             case self::$mode_bigrender:
-                $this->willRender();
                 $html = phutil_tag(
                     'textarea',
                     array(
@@ -207,12 +206,12 @@ abstract class BriskWidgetView extends Phobject {
         );
     }
 
+    //渲染前触发, 子类可重写
+    protected function willRender() {}
+
     /**
      * 返回部件的模版字符串, 各子类具体实现
      * @return string
      */
     abstract function getTemplateString();
-
-    //渲染前触发
-    abstract function willRender();
 }

@@ -3,7 +3,6 @@
 /**
  * Class BriskPageView
  * 渲染页面的抽象类
- * 
  */
 abstract class BriskPageView extends Phobject {
 
@@ -63,7 +62,7 @@ abstract class BriskPageView extends Phobject {
             $pagelets = array($pagelets);
         }
         foreach ($pagelets as $id) {
-            $this->pagelets[$id] = true;
+            $this->pagelets[] = $id;
         }
     }
 
@@ -139,9 +138,13 @@ abstract class BriskPageView extends Phobject {
         $html = '';
         switch ($this->mode) {
             case self::$mode_ajaxpipe:
+                //这里不需要加载页面全局的资源, 不再调用willRender
+                $this->willRender();
                 $html = $this->renderAsJSON();
                 break;
             case self::$mode_normal:
+                $this->willRender();
+                $this->loadGlobalResources();
                 $html = $this->renderAsHTML();
                 break;
         }
@@ -169,18 +172,12 @@ abstract class BriskPageView extends Phobject {
      * @throws Exception
      */
     protected function renderAsJSON() {
-        $res = array(
-            'payload' => array(),
-            'js' => array(),
-            'css' => array(),
-            'script' => array(),
-            'style' => array()
-        );
+        $res = array();
 
         //挑选需要渲染的部件
         foreach ($this->pagelets as $pageletId) {
             $widget = $this->widgets[$pageletId];
-            if (isset($widget)) {
+            if (!isset($widget)) {
                 throw new Exception(pht(
                     'No widget with id %s found in %s',
                     $pageletId,
@@ -192,6 +189,7 @@ abstract class BriskPageView extends Phobject {
             $res['js'] = $this->response->renderResourcesOfType('js');
             $res['css'] = $this->response->renderResourcesOfType('css');
             $res['script'] = $this->response->produceScript();
+            $res['style'] = array();
         }
 
         if ($this->metadata) {
@@ -226,5 +224,11 @@ abstract class BriskPageView extends Phobject {
     </html>
 EOTEMPLATE;
     }
+
+    //渲染前触发, 子类可重写
+    protected function willRender() {}
+
+    //全页面渲染的时候加载页面级别的资源
+    abstract function loadGlobalResources();
 
 }

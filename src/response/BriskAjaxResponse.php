@@ -19,7 +19,7 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
             }
         }
 
-        return $result;
+        return array_unique($result, SORT_STRING);
     }
 
     //渲染输出行内的javascript
