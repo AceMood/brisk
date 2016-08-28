@@ -3,8 +3,9 @@
 /**
  * Class BriskPageView
  * 渲染页面的抽象类
+ * 
  */
-abstract class BriskPageView extends BriskStaticResourceResponse {
+abstract class BriskPageView extends Phobject {
 
     private static $mode_ajaxpipe = 'ajaxpipe';
     private static $mode_normal = 'normal';
@@ -18,14 +19,18 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
     //页面分片的部件
     private $widgets = array();
 
+    //当前请求页面关联的response对象
+    private $response = null;
+
     function __construct($title = '') {
-        parent::__construct();
         $this->setTitle($title);
         if (BriskUtils::isAjaxPipe()) {
             $this->mode = self::$mode_ajaxpipe;
             $this->setPagelets($_GET['pagelets']);
+            $this->response = new BriskAjaxResponse();
         } else {
             $this->mode = self::$mode_normal;
+            $this->response = new BriskStaticResourceResponse();
         }
     }
 
@@ -66,6 +71,14 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         return $this->pagelets;
     }
 
+    final function setCDN($cdn) {
+        $this->response->setCDN($cdn);
+    }
+
+    final function getCDN() {
+        return $this->response->getCDN();
+    }
+
     final function isPage() {
         return true;
     }
@@ -79,7 +92,7 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         $widget->setParentView($this);
         //正常渲染则直接输出部件html内容
         if ($this->mode === self::$mode_normal) {
-            return $widget->render();
+            return $widget->renderAsHTML();
         }
         //否则记录页面部件
         else {
@@ -90,6 +103,17 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
 
     final function getWidgets() {
         return $this->widgets;
+    }
+
+    /**
+     * 记录请求依赖的外链资源
+     * @param string $name 工程目录资源路径
+     * @param string $source_name 空间
+     * @return mixed $this
+     * @throws Exception
+     */
+    final function requireResource($name, $source_name) {
+        $this->response->requireResource($name, $source_name);
     }
 
     /**
@@ -119,9 +143,9 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
         return (string)hsprintf(
             $this->getTemplateString(),
             phutil_escape_html($this->title),
-            $this->renderResourcesOfType('css'),
+            $this->response->renderResourcesOfType('css'),
             new PhutilSafeHTML(''),
-            $this->renderResourcesOfType('js'));
+            $this->response->renderResourcesOfType('js'));
     }
 
     /**
@@ -131,7 +155,6 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
      */
     protected function renderAsJSON() {
         $res = array(
-            'error' => null,
             'payload' => array(),
             'js' => array(),
             'css' => array(),
@@ -150,12 +173,10 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
                 ));
             }
 
-            $json = $widget->renderAsJSON();
-            $res['payload'][$pageletId] = $json['payload'];
-            $res['js'] = array_unique(array_merge($res['js'], $json['js']));
-            $res['css'][] = array_unique(array_merge($res['css'], $json['css']));
-            $res['script'][] = array_unique(array_merge($res['script'], $json['script']));
-            $res['style'][] = array_unique(array_merge($res['style'], $json['style']));
+            $res['payload'][$pageletId] = $widget->renderAsJSON();
+            $res['js'] = $this->response->renderResourcesOfType('js');
+            $res['css'] = $this->response->renderResourcesOfType('css');
+            $res['script'] = $this->response->produceScript();
         }
 
         if ($this->metadata) {
@@ -168,7 +189,7 @@ abstract class BriskPageView extends BriskStaticResourceResponse {
             $this->behaviors = array();
         }
 
-        return $res;
+        return json_encode($res);
     }
 
     /**
