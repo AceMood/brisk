@@ -113,7 +113,7 @@ abstract class BriskPageView extends Phobject {
      * @throws Exception
      */
     final function requireResource($name, $source_name) {
-        $this->response->requireResource($name, $source_name);
+        return $this->response->requireResource($name, $source_name);
     }
 
     /**
@@ -124,7 +124,7 @@ abstract class BriskPageView extends Phobject {
      * @throws Exception
      */
     final function inlineImage($name, $source_name) {
-        $this->response->requireResource($name, $source_name);
+        return $this->response->requireResource($name, $source_name);
     }
 
     /**
