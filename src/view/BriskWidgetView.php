@@ -117,6 +117,27 @@ abstract class BriskWidgetView extends Phobject {
         }
     }
 
+    /**
+     * 部件中内联静态资源
+     * @param string $name
+     * @param string|null $source_name
+     * @throws Exception
+     */
+    final function inlineResource($name, $source_name = 'brisk') {
+        if (!isset($this->parentView)) {
+            throw new Exception(pht(
+                'Could not invoke requireResource with no parentView set. %s',
+                __CLASS__
+            ));
+        }
+
+        //直接记录在最顶层的page view中
+        $topView = $this->getTopLevelView();
+        if (isset($topView)) {
+            $topView->inlineResource($name, $source_name);
+        }
+    }
+
     //获取顶层的pageview对象
     final function getTopLevelView() {
         $parent = $this->getParentView();

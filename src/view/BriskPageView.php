@@ -126,6 +126,17 @@ abstract class BriskPageView extends Phobject {
     }
 
     /**
+     * 记录请求依赖的内联资源
+     * @param string $name 工程目录资源路径
+     * @param string $source_name 空间
+     * @return mixed $this
+     * @throws Exception
+     */
+    final function inlineResource($name, $source_name = 'brisk') {
+        return $this->response->inlineResource($name, $source_name);
+    }
+
+    /**
      * 将一张图片内联为dataUri的方式
      * @param $name
      * @param $source_name
