@@ -42,6 +42,10 @@ class BriskStaticResourceResponse extends Phobject {
         return $this;
     }
 
+    public function getMetadata() {
+        return $this->metadata;
+    }
+
     public function setPostprocessorKey($postprocessor_key) {
         $this->postprocessorKey = $postprocessor_key;
         return $this;
@@ -75,6 +79,10 @@ class BriskStaticResourceResponse extends Phobject {
             $this->behaviors[$behavior][] = $config;
         }
         return $this;
+    }
+
+    public function getBehavior() {
+        return $this->behaviors;
     }
 
     /**

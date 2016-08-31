@@ -181,7 +181,9 @@ abstract class BriskPageView extends Phobject {
      * @throws Exception
      */
     protected function renderAsJSON() {
-        $res = array();
+        $res = array(
+            'payload' => array()
+        );
 
         //挑选需要渲染的部件
         foreach ($this->pagelets as $pageletId) {
@@ -202,15 +204,11 @@ abstract class BriskPageView extends Phobject {
             $res['style'] = array();
         }
 
-        if ($this->response->metadata) {
-            $res['metadata'] = $this->response->metadata;
-            $this->response->metadata = array();
-        }
+        $res['metadata'] = $this->response->getMetadata();
+        $this->response->metadata = array();
 
-        if ($this->response->behaviors) {
-            $res['behaviors'] = $this->response->behaviors;
-            $this->response->behaviors = array();
-        }
+        $res['behaviors'] = $this->response->getBehavior();
+        $this->response->behaviors = array();
 
         return json_encode($res);
     }
