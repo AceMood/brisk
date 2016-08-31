@@ -8,7 +8,7 @@
  */
 final class BriskSantaResources extends BriskResourcesOnDisk {
 
-    private $webdir = 'dist';
+    private $distDirectory = 'dist/';
     private $mapPath = 'dist/resource.json';
 
     //项目名用作命名空间
@@ -18,12 +18,12 @@ final class BriskSantaResources extends BriskResourcesOnDisk {
 
     //设置构建好的静态文件目录
     public function setPathToResources($dir) {
-        return $this->webdir = $dir;
+        return $this->distDirectory = $dir;
     }
 
     //获取所有构建好的静态文件目录
     public function getPathToResources() {
-        return $this->getProjectPath($this->webdir);
+        return $this->getProjectPath($this->distDirectory);
     }
 
     //设置resource.json路径

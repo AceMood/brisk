@@ -13,6 +13,10 @@ function __autoload($className) {
     }
 }
 
+function init_settings() {
+    
+}
+
 spl_autoload_register('__autoload');
 
 require_once 'lib/pht.php';

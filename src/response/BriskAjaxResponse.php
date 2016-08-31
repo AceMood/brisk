@@ -62,16 +62,15 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
         }
 
         $result[] = 'kerneljs.setResourceMap(' . json_encode($print) . ');';
-
-        $scripts = $this->inlined['js'];
-        if (!empty($scripts)) {
-            foreach ($scripts as $source_name => $inlineScripts) {
-                foreach ($inlineScripts as $script) {
-                    $result[] = '~function(){'.$script.'}();';
+        foreach ($this->inlined as $source_name => $inlineScripts) {
+            if (!empty($inlineScripts['js'])) {
+                $scripts = $inlineScripts['js'];
+                foreach ($scripts as $script) {
+                    $result[] = '~function(){' . $script . '}();';
                 }
             }
-            $this->inlined['js'] = array();
         }
+        $this->inlined['js'] = array();
         return $result;
     }
 
@@ -81,15 +80,15 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
      */
     public function produceStyle() {
         $result = array();
-        $styles = $this->inlined['css'];
-        if (!empty($styles)) {
-            foreach ($styles as $source_name => $inlineStyles) {
-                foreach ($inlineStyles as $style) {
+        foreach ($this->inlined as $source_name => $inlineStyles) {
+            if (!empty($inlineStyles['css'])) {
+                $styles = $inlineStyles['css'];
+                foreach ($styles as $style) {
                     $result[] = $style;
                 }
             }
-            $this->inlined['css'] = array();
         }
+        $this->inlined['css'] = array();
         return $result;
     }
 

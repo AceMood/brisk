@@ -24,7 +24,7 @@ abstract class BriskResourcesOnDisk extends BriskResources {
         // todo 这里假设没有通过soi指定cdn, 或者是通过pageview设置的cdn, 此时uri是编译目录的相对路径
         $uri = preg_replace('/^\//', '', $symbolMap[$type][$symbol]['uri']);
 
-        return $this->getPathToResources() . DIRECTORY_SEPARATOR . $name;
+        return $this->getPathToResources() . DIRECTORY_SEPARATOR . $uri;
     }
 
     /**
