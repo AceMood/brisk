@@ -106,11 +106,13 @@ class BriskStaticResourceResponse extends Phobject {
         if (!array_key_exists($source_name, $this->symbols)) {
             $this->symbols[$source_name] = array();
         }
+
         $symbols = $this->symbols[$source_name];
+        $resource_type = $map->getResourceTypeForName($name);
 
         //之前渲染过,不区分外链还是内联
         if (array_search($name, $symbols, true) > -1 ||
-            isset($this->inlined[$source_name][$name])) {
+            isset($this->inlined[$source_name][$resource_type][$name])) {
             return $this;
         }
 
@@ -148,11 +150,11 @@ class BriskStaticResourceResponse extends Phobject {
 
         //立即渲染,不优化输出位置
         $fileContent = $map->getResourceDataForName($name, $source_name);
-        $this->inlined[$source_name][$resource_type][$name] = true;
+        $this->inlined[$source_name][$resource_type][$name] = $fileContent;
         if ($resource_type === 'js') {
-            return self::renderInlineScript($fileContent);
+            return BriskUtils::renderInlineScript($fileContent);
         } else if ($resource_type === 'css') {
-            return self::renderInlineStyle($fileContent);
+            return BriskUtils::renderInlineStyle($fileContent);
         }
 
         return '';
@@ -243,7 +245,9 @@ class BriskStaticResourceResponse extends Phobject {
         }
 
         if ($type === 'js') {
-            $mapCode = self::renderInlineScript('var kerneljs = ' . json_encode($print) . ';');
+            $mapCode = BriskUtils::renderInlineScript(
+                'var kerneljs = ' . json_encode($print) . ';'
+            );
             array_unshift($result, $mapCode);
         }
 
@@ -326,45 +330,5 @@ class BriskStaticResourceResponse extends Phobject {
             $name,
             $type
         ));
-    }
-
-    //根据内容渲染内联style
-    protected static function renderInlineStyle($data) {
-        if (stripos($data, '</style>') !== false) {
-            throw new Exception(pht(
-                'Literal %s is not allowed inside inline style.',
-                '</style>'));
-        }
-        if (strpos($data, '<!') !== false) {
-            throw new Exception(pht(
-                'Literal %s is not allowed inside inline style.',
-                '<!'));
-        }
-        // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
-        // would need to send the document with XHTML content type.
-        return phutil_tag(
-            'style',
-            array(),
-            phutil_safe_html($data));
-    }
-
-    //根据内容渲染内联script
-    protected static function renderInlineScript($data) {
-        if (stripos($data, '</script>') !== false) {
-            throw new Exception(pht(
-                'Literal %s is not allowed inside inline script.',
-                '</script>'));
-        }
-        if (strpos($data, '<!') !== false) {
-            throw new Exception(pht(
-                'Literal %s is not allowed inside inline script.',
-                '<!'));
-        }
-        // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
-        // would need to send the document with XHTML content type.
-        return phutil_tag(
-            'script',
-            array('type' => 'text/javascript'),
-            phutil_safe_html($data));
     }
 }

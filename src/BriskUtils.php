@@ -22,5 +22,54 @@ final class BriskUtils {
         $t = 'node';
         return 'brisk_' . $t . '_' . ($uniqueIdCounter++);
     }
-    
+
+    /**
+     * 根据内容渲染内联style
+     * @param $data
+     * @return PhutilSafeHTML
+     * @throws Exception
+     */
+    public static function renderInlineStyle($data) {
+        if (stripos($data, '</style>') !== false) {
+            throw new Exception(pht(
+                'Literal %s is not allowed inside inline style.',
+                '</style>'));
+        }
+        if (strpos($data, '<!') !== false) {
+            throw new Exception(pht(
+                'Literal %s is not allowed inside inline style.',
+                '<!'));
+        }
+        // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
+        // would need to send the document with XHTML content type.
+        return phutil_tag(
+            'style',
+            array(),
+            phutil_safe_html($data));
+    }
+
+    /**
+     * 根据内容渲染内联script
+     * @param $data
+     * @return PhutilSafeHTML
+     * @throws Exception
+     */
+    public static function renderInlineScript($data) {
+        if (stripos($data, '</script>') !== false) {
+            throw new Exception(pht(
+                'Literal %s is not allowed inside inline script.',
+                '</script>'));
+        }
+        if (strpos($data, '<!') !== false) {
+            throw new Exception(pht(
+                'Literal %s is not allowed inside inline script.',
+                '<!'));
+        }
+        // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
+        // would need to send the document with XHTML content type.
+        return phutil_tag(
+            'script',
+            array('type' => 'text/javascript'),
+            phutil_safe_html($data));
+    }
 }
