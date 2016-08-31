@@ -12,7 +12,12 @@ abstract class BriskResources extends Phobject {
         'ts' => 'js',
         'less' => 'css',
         'css' => 'css',
-        'scss' => 'css'
+        'scss' => 'css',
+        'png' => 'img',
+        'jpg' => 'img',
+        'jpeg' => 'img',
+        'webp' => 'img',
+        'bmp' => 'img',
     );
 
     //项目名称作为命名空间
@@ -26,7 +31,7 @@ abstract class BriskResources extends Phobject {
         return 0;
     }
 
-    //获取资源类型 如js,css
+    //获取资源类型 如js,css,img
     public function getResourceType($path) {
         $suffix = last(explode('.', $path));
         return self::$typeMap[$suffix];

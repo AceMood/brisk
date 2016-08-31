@@ -14,8 +14,6 @@ class BriskStaticResourceResponse extends Phobject {
 
     //记录打印的内联资源唯一id
     protected $inlined = array();
-    protected $styles = array();
-    protected $scripts = array();
 
     //是否需要对收集的资源进行解析
     protected $needsResolve = true;
@@ -141,19 +139,19 @@ class BriskStaticResourceResponse extends Phobject {
             ));
         }
 
+        $resource_type = $map->getResourceTypeForName($name);
+
         //之前已经内联渲染过
-        if (isset($this->inlined[$source_name][$name])) {
+        if (isset($this->inlined[$source_name][$resource_type][$name])) {
             return '';
         }
 
         //立即渲染,不优化输出位置
         $fileContent = $map->getResourceDataForName($name, $source_name);
-        $this->inlined[$source_name][$name] = true;
-
-        $type = $map->getResourceTypeForName($name);
-        if ($type === 'js') {
+        $this->inlined[$source_name][$resource_type][$name] = true;
+        if ($resource_type === 'js') {
             return self::renderInlineScript($fileContent);
-        } else if ($type === 'css') {
+        } else if ($resource_type === 'css') {
             return self::renderInlineStyle($fileContent);
         }
 
@@ -167,7 +165,7 @@ class BriskStaticResourceResponse extends Phobject {
      * @return mixed
      * @throws Exception
      */
-    public function inlineImage($name, $source_name = 'brisk') {
+    public function generateDataURI($name, $source_name = 'brisk') {
         $map = BriskResourceMap::getNamedInstance($source_name);
         $symbol = $map->getNameMap()[$name];
         if ($symbol === null) {

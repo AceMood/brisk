@@ -63,6 +63,7 @@ abstract class BriskPageView extends Phobject {
     /**
      * 设置当前页面的pagelets
      * @param {array|string} $pagelets
+     * @return mixed
      */
     final function setPagelets($pagelets) {
         if (!is_array($pagelets)) {
@@ -201,7 +202,7 @@ abstract class BriskPageView extends Phobject {
             $res['js'] = $this->response->renderResourcesOfType('js');
             $res['css'] = $this->response->renderResourcesOfType('css');
             $res['script'] = $this->response->produceScript();
-            $res['style'] = array();
+            $res['style'] = $this->response->produceStyle();
         }
 
         // 需要元数据但不需要behavior
