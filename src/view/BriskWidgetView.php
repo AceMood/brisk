@@ -119,9 +119,9 @@ abstract class BriskWidgetView extends Phobject {
 
     //获取顶层的pageview对象
     final function getTopLevelView() {
-        $parent = null;
-        while (isset($this->parentView) && !$this->parentView->isPage()) {
-            $parent = $this->parentView;
+        $parent = $this->getParentView();
+        while (isset($parent) && !($parent->isPage())) {
+            $parent = $parent->getParentView();
         }
         return $parent;
     }

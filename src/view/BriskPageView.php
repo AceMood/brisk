@@ -204,11 +204,11 @@ abstract class BriskPageView extends Phobject {
             $res['style'] = array();
         }
 
-        $res['metadata'] = $this->response->getMetadata();
-        $this->response->metadata = array();
-
-        $res['behaviors'] = $this->response->getBehavior();
-        $this->response->behaviors = array();
+        // 需要元数据但不需要behavior
+        $metadata = $this->response->getMetadata();
+        if (!empty($metadata)) {
+            $res['metadata'] = $metadata;
+        }
 
         return json_encode($res);
     }
