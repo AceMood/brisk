@@ -62,6 +62,7 @@ class BriskStaticResourceResponse extends Phobject {
     }
 
     /**
+     * todo
      * Register a behavior for initialization.
      *
      * NOTE: If `$config` is empty, a behavior will execute only once even if it

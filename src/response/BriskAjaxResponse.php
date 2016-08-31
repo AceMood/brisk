@@ -63,14 +63,15 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
 
         $result[] = 'kerneljs.setResourceMap(' . json_encode($print) . ');';
 
-        if (!empty($this->inlined)) {
-            $inlined = $this->inlined;
-            $this->inlined = array();
-            foreach ($inlined as $script) {
-                $result[] = '~function(){'.$script.'}();';
+        $scripts = $this->inlined['js'];
+        if (!empty($scripts)) {
+            foreach ($scripts as $source_name => $inlineScripts) {
+                foreach ($inlineScripts as $script) {
+                    $result[] = '~function(){'.$script.'}();';
+                }
             }
+            $this->inlined['js'] = array();
         }
-
         return $result;
     }
 
@@ -80,13 +81,47 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
      */
     public function produceStyle() {
         $result = array();
-        if (!empty($this->inlined)) {
-            $inlined = $this->inlined;
-            $this->inlined = array();
-            foreach ($inlined as $style) {
-                $result[] = $style;
+        $styles = $this->inlined['css'];
+        if (!empty($styles)) {
+            foreach ($styles as $source_name => $inlineStyles) {
+                foreach ($inlineStyles as $style) {
+                    $result[] = $style;
+                }
             }
+            $this->inlined['css'] = array();
         }
         return $result;
+    }
+
+    /**
+     * 资源内联
+     * @param $name
+     * @param $source_name
+     * @return PhutilSafeHTML|string
+     * @throws Exception
+     */
+    public function inlineResource($name, $source_name) {
+        //首先确认资源存在
+        $map = BriskResourceMap::getNamedInstance($source_name);
+        $symbol = $map->getNameMap()[$name];
+        if ($symbol === null) {
+            throw new Exception(pht(
+                'No resource with name "%s" exists in source "%s"!',
+                $name,
+                $source_name
+            ));
+        }
+
+        $resource_type = $map->getResourceTypeForName($name);
+
+        //之前已经内联渲染过
+        if (isset($this->inlined[$source_name][$resource_type][$name])) {
+            return '';
+        }
+
+        //立即渲染,不优化输出位置
+        $fileContent = $map->getResourceDataForName($name, $source_name);
+        $this->inlined[$source_name][$resource_type][$name] = $fileContent;
+        return $this;
     }
 }
