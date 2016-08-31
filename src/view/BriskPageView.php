@@ -33,8 +33,14 @@ abstract class BriskPageView extends Phobject {
         }
     }
 
+    final function addMetadata($metadata) {
+        $this->response->addMetadata($metadata);
+        return $this;
+    }
+
     final function setTitle($title) {
         $this->title = $title;
+        return $this;
     }
 
     final function getTitle() {
@@ -47,6 +53,7 @@ abstract class BriskPageView extends Phobject {
         } else {
             $this->mode = self::$mode_normal;
         }
+        return $this;
     }
 
     final function getMode() {
@@ -64,6 +71,7 @@ abstract class BriskPageView extends Phobject {
         foreach ($pagelets as $id) {
             $this->pagelets[] = $id;
         }
+        return $this;
     }
 
     final function getPagelets() {
@@ -72,6 +80,7 @@ abstract class BriskPageView extends Phobject {
 
     final function setCDN($cdn) {
         $this->response->setCDN($cdn);
+        return $this;
     }
 
     final function getCDN() {
@@ -95,7 +104,7 @@ abstract class BriskPageView extends Phobject {
         }
         //否则记录页面部件
         else {
-            $this->widgets[] = $widget;
+            $this->widgets[$widget->getId()] = $widget;
             return $this;
         }
     }
@@ -176,14 +185,15 @@ abstract class BriskPageView extends Phobject {
 
         //挑选需要渲染的部件
         foreach ($this->pagelets as $pageletId) {
-            $widget = $this->widgets[$pageletId];
-            if (!isset($widget)) {
+            if (!isset($this->getWidgets()[$pageletId])) {
                 throw new Exception(pht(
                     'No widget with id %s found in %s',
                     $pageletId,
                     __CLASS__
                 ));
             }
+
+            $widget = $this->getWidgets()[$pageletId];
 
             $res['payload'][$pageletId] = $widget->renderAsJSON();
             $res['js'] = $this->response->renderResourcesOfType('js');
@@ -192,14 +202,14 @@ abstract class BriskPageView extends Phobject {
             $res['style'] = array();
         }
 
-        if ($this->metadata) {
-            $res['metadata'] = $this->metadata;
-            $this->metadata = array();
+        if ($this->response->metadata) {
+            $res['metadata'] = $this->response->metadata;
+            $this->response->metadata = array();
         }
 
-        if ($this->behaviors) {
-            $res['behaviors'] = $this->behaviors;
-            $this->behaviors = array();
+        if ($this->response->behaviors) {
+            $res['behaviors'] = $this->response->behaviors;
+            $this->response->behaviors = array();
         }
 
         return json_encode($res);
