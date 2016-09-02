@@ -41,4 +41,9 @@ abstract class BriskResources extends Phobject {
     public function loadMap() {
         return array();
     }
+
+    //加载打包信息
+    public function loadPackages() {
+        return array();
+    }
 }

@@ -16,12 +16,12 @@ final class BriskSantaResources extends BriskResourcesOnDisk {
         return 'santa';
     }
 
-    //设置构建好的静态文件目录
+    //设置编译好的静态文件目录
     public function setPathToResources($dir) {
         return $this->distDirectory = $dir;
     }
 
-    //获取所有构建好的静态文件目录
+    //获取编译文件目录
     public function getPathToResources() {
         return $this->getProjectPath($this->distDirectory);
     }
@@ -36,7 +36,13 @@ final class BriskSantaResources extends BriskResourcesOnDisk {
         return $this->getProjectPath($this->mapPath);
     }
 
-    //获取工程目录下文件的路径
+    //获取packages.json的位置
+    public function getPathToPackageMap() {
+        $dir = dirname($this->getProjectPath($this->mapPath));
+        return $dir . DIRECTORY_SEPARATOR . 'packages.json';
+    }
+
+    //获取工程目录下文件的路径 todo
     private function getProjectPath($to_file) {
         return dirname(dirname(dirname(dirname(__FILE__)))) . '/' . $to_file;
     }

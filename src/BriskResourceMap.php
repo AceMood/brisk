@@ -30,8 +30,8 @@ final class BriskResourceMap extends Phobject {
         $map = $this->resources->loadMap();
 
         $this->symbolMap = idx($map, 'resource', array());
-        $this->packageMap = idx($map, 'packages', array());
         $this->nameMap = idx($map, 'paths', array());
+        $this->packageMap = $this->resources->loadPackages();
         $this->componentMap = array();
 
         foreach ($this->packageMap as $package_name => $symbols) {
