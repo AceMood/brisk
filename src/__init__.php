@@ -2,7 +2,7 @@
 
 function __autoload($className) {
     $dir = dirname(__FILE__);
-    $subdirs = ['/lib/', '/', '/resources/', '/response/', '/view/'];
+    $subdirs = ['/', '/resources/', '/response/', '/view/'];
     $path = '';
     foreach ($subdirs as $subdir) {
         if (file_exists($dir . $subdir . $className . '.php')) {
@@ -13,12 +13,7 @@ function __autoload($className) {
     }
 }
 
-function init_settings() {
-    
-}
+//加载libphutil
+require_once '../libphutil/src/__phutil_library_init__.php';
 
 spl_autoload_register('__autoload');
-
-require_once 'lib/pht.php';
-require_once 'lib/utils.php';
-require_once 'lib/render.php';
