@@ -88,23 +88,35 @@ abstract class BriskPageView extends Phobject {
         return $this->response->getCDN();
     }
 
+    /**
+     * 组件类型是页面
+     * @return bool
+     */
     final function isPage() {
         return true;
     }
 
     /**
-     * 渲染期间加载对应的部件
+     * 设置资源表打印类型
+     * @param integer $type
+     */
+    final function setPrintType($type) {
+        if (isset($this->response)) {
+            $this->response->setPrintType($type);
+        }
+    }
+
+    /**
+     * 渲染期间加载对应的部件.
+     * 正常渲染则直接输出部件html内容, 否则记录页面部件
      * @param BriskWidgetView $widget
      * @return PhutilSafeHTML|$this
      */
     final function loadWidget($widget) {
         $widget->setParentView($this);
-        //正常渲染则直接输出部件html内容
         if ($this->mode === self::$mode_normal) {
             return $widget->renderAsHTML();
-        }
-        //否则记录页面部件
-        else {
+        } else {
             $this->widgets[$widget->getId()] = $widget;
             return $this;
         }
@@ -126,10 +138,10 @@ abstract class BriskPageView extends Phobject {
     }
 
     /**
-     * 记录请求依赖的内联资源
+     * 内联资源
      * @param string $name 工程目录资源路径
      * @param string $source_name 空间
-     * @return mixed $this
+     * @return mixed
      * @throws Exception
      */
     final function inlineResource($name, $source_name = 'brisk') {
@@ -137,16 +149,21 @@ abstract class BriskPageView extends Phobject {
     }
 
     /**
-     * 将一张图片内联为dataUri的方式
+     * 返回图片内联为dataUri的方式
      * @param $name
      * @param $source_name
      * @return mixed
      * @throws Exception
      */
-    final function inlineImage($name, $source_name = 'brisk') {
-        return $this->response->requireResource($name, $source_name);
+    final function generateDataURI($name, $source_name = 'brisk') {
+        return $this->response->generateDataURI($name, $source_name);
     }
 
+    /**
+     * 将一种类型的资源输出到页面
+     * @param string $type 资源类型如js, css
+     * @return PhutilSafeHTML
+     */
     final function renderResourcesOfType($type) {
         return $this->response->renderResourcesOfType($type);
     }
@@ -159,7 +176,7 @@ abstract class BriskPageView extends Phobject {
         $html = '';
         switch ($this->mode) {
             case self::$mode_ajaxpipe:
-                //这里不需要加载页面全局的资源, 不再调用willRender
+                //这里不需要加载页面全局的资源, 不再调用loadGlobalResources
                 $this->willRender();
                 $html = $this->renderAsJSON();
                 break;

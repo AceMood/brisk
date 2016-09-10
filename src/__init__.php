@@ -14,6 +14,6 @@ function __autoload($className) {
 }
 
 //加载libphutil
-require_once '../libphutil/src/__phutil_library_init__.php';
+require_once '../libphutil/__phutil_library_init__.php';
 
 spl_autoload_register('__autoload');

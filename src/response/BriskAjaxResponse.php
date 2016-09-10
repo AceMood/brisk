@@ -70,7 +70,6 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
                 }
             }
         }
-        $this->inlined['js'] = array();
         return $result;
     }
 
@@ -88,7 +87,6 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
                 }
             }
         }
-        $this->inlined['css'] = array();
         return $result;
     }
 
@@ -118,7 +116,6 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
             return '';
         }
 
-        //立即渲染,不优化输出位置
         $fileContent = $map->getResourceDataForName($name, $source_name);
         $this->inlined[$source_name][$resource_type][$name] = $fileContent;
         return $this;
