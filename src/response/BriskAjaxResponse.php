@@ -34,34 +34,24 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
         //更新$this->packaged
         $this->resolveResources();
         $result = array();
-        $print = array(
+        $res = array(
             'resourceMap' => array(
                 'js' => array(),
                 'css' => array()
             )
         );
 
-        foreach ($this->packaged as $source_name => $resource_names) {
-            $map = BriskResourceMap::getNamedInstance($source_name);
-
-            //记录到打印的资源表
-            $symbolMap = $map->getSymbolMap();
-            foreach ($symbolMap['js'] as $symbol => $js) {
-                unset($js['path']);
-                unset($js['within']);
-                $js['uri'] = self::getCDN() . $js['uri'];
-            }
-
-            foreach ($symbolMap['css'] as $symbol => $css) {
-                unset($css['path']);
-                unset($css['within']);
-                $css['uri'] = self::getCDN() . $css['uri'];
-            }
-
-            $print['resourceMap'] = $symbolMap;
+        switch ($this->getPrintType()) {
+            case BriskPrintType::$ALL_RES:
+                $this->buildAllRes($res);
+                $result[] = 'kerneljs.setResourceMap(' . json_encode($res) . ');';
+                break;
+            case BriskPrintType::$ONLY_ASYNC:
+                $this->buildAsyncRes($res);
+                $result[] = 'kerneljs.setResourceMap(' . json_encode($res) . ');';
+                break;
         }
 
-        $result[] = 'kerneljs.setResourceMap(' . json_encode($print) . ');';
         foreach ($this->inlined as $source_name => $inlineScripts) {
             if (!empty($inlineScripts['js'])) {
                 $scripts = $inlineScripts['js'];
