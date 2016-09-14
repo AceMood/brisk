@@ -201,7 +201,8 @@ abstract class BriskPageView extends Phobject {
             phutil_escape_html($this->title),
             $this->response->renderResourcesOfType('css'),
             new PhutilSafeHTML(''),
-            $this->response->renderResourcesOfType('js'));
+            $this->response->renderResourcesOfType('js')
+        );
     }
 
     /**

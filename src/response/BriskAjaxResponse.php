@@ -1,10 +1,14 @@
 <?php
 
+/**
+ * Class BriskAjaxResponse
+ * 
+ */
 class BriskAjaxResponse extends BriskStaticResourceResponse {
 
     /**
      * 输出外链资源类型的json格式, 如 ['base-style', 'dialog-style']
-     * @param $type
+     * @param string $type 资源类型
      * @return array
      */
     public function renderResourcesOfType($type) {
@@ -82,8 +86,8 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
 
     /**
      * 资源内联
-     * @param $name
-     * @param $source_name
+     * @param string $name
+     * @param string $source_name
      * @return PhutilSafeHTML|string
      * @throws Exception
      */

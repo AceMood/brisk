@@ -1,6 +1,6 @@
 <?php
 
-require_once '__init_script_register__.php';
+require_once '__init__.php';
 
 /**
  * Include a CSS or JS static resource by name. This function records a

@@ -4,7 +4,7 @@
  * Class BriskWidgetView
  * 所有页面分片部件的基类.
  * 同一个部件类的不同实例可在多个页面通过id,以及mode区分
- * WidgetView应对不用渲染模式需要提供两个方法进行渲染,
+ * WidgetView对不用渲染模式需要提供两个方法进行渲染,
  * 1. 顶级页面正常渲染, 部件提供renderAsHTML方法,
  *    依据初始化时指定的模式渲染, normal, bigrender 或者lazyrender
  * 2. 顶级页面通过quickling渲染, 部件提供renderAsJSON方法
@@ -138,7 +138,10 @@ abstract class BriskWidgetView extends Phobject {
         }
     }
 
-    //获取顶层的pageview对象
+    /**
+     * 获取顶层的pageview对象
+     * @return BriskPageView
+     */
     final function getTopLevelView() {
         $parent = $this->getParentView();
         while (isset($parent) && !($parent->isPage())) {
