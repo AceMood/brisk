@@ -291,6 +291,7 @@ class BriskStaticResourceResponse extends Phobject {
 
     //渲染单个资源
     protected function renderResource(BriskResourceMap $map, $name) {
+        $symbol = $map->getNameMap()[$name];
         $uri = $this->getURI($map, $name);
         $type = $map->getResourceTypeForName($name);
 //        $multimeter = MultimeterControl::getInstance();
@@ -306,6 +307,7 @@ class BriskStaticResourceResponse extends Phobject {
                         'rel'   => 'stylesheet',
                         'type'  => 'text/css',
                         'href'  => $uri,
+                        'data-modux-hash' => $symbol
                     ));
             case 'js':
                 return phutil_tag(
@@ -313,6 +315,7 @@ class BriskStaticResourceResponse extends Phobject {
                     array(
                         'type'  => 'text/javascript',
                         'src'   => $uri,
+                        'data-modux-hash' => $symbol
                     ));
         }
 
