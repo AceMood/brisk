@@ -250,16 +250,16 @@ abstract class BriskPageView extends Phobject {
     protected function getTemplateString() {
         return
 <<<EOTEMPLATE
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>%s</title>
-        %s
-    </head>
-    <body>%s</body>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>%s</title>
     %s
-    </html>
+</head>
+<body>%s</body>
+%s
+</html>
 EOTEMPLATE;
     }
 
