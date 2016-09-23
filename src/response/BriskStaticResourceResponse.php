@@ -342,15 +342,19 @@ class BriskStaticResourceResponse extends Phobject {
         switch ($this->getPrintType()) {
             case BriskPrintType::$ALL_RES:
                 $this->buildAllRes($res);
+                $json = json_encode($res['resourceMap']);
                 $code = BriskUtils::renderInlineScript(
-                    'var kerneljs = ' . json_encode($res) . ';'
+                    'if (require && require.setResourceMap) require.setResourceMap('
+                    . $json . '); else var __RESOURCE_MAP__ = ' . $json . ';'
                 );
                 array_unshift($result, $code);
                 break;
             case BriskPrintType::$ONLY_ASYNC:
                 $this->buildAsyncRes($res);
+                $json = json_encode($res['resourceMap']);
                 $code = BriskUtils::renderInlineScript(
-                    'var kerneljs = ' . json_encode($res) . ';'
+                    'if (require && require.setResourceMap) require.setResourceMap('
+                    . $json . '); else var __RESOURCE_MAP__ = ' . $json . ';'
                 );
                 array_unshift($result, $code);
                 break;
