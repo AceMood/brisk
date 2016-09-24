@@ -35,7 +35,8 @@ final class BriskResourceMap extends Phobject {
         $this->componentMap = array();
 
         if (!empty($this->packageMap)) {
-            foreach ($this->packageMap as $package_name => $symbols) {
+            foreach ($this->packageMap as $package_name => $package_info) {
+                $symbols = isset($package_info['has']) ? $package_info['has'] : array();
                 foreach ($symbols as $symbol) {
                     $this->componentMap[$symbol] = $package_name;
                 }

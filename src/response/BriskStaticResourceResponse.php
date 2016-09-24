@@ -255,7 +255,7 @@ class BriskStaticResourceResponse extends Phobject {
             $this->printResourceMap($result);
         }
 
-        return phutil_implode_html('\n', $result);
+        return phutil_implode_html('', $result);
     }
 
     /**

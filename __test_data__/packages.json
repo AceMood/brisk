@@ -1,0 +1,27 @@
+{
+    "p0": {
+        "uri": "/dist/static/pkg/jqueryui.css",
+        "has": [
+            "NzYYH",
+            "E6s8l",
+            "fXIGg"
+        ],
+        "type": "css"
+    },
+    "p1": {
+        "uri": "/dist/static/pkg/jquery.bundle.js",
+        "has": [
+            "jquery",
+            "jquery.cookie"
+        ],
+        "type": "js"
+    },
+    "p2": {
+        "uri": "/dist/static/pkg/mvc.js",
+        "has": [
+            "underscore",
+            "Backbone"
+        ],
+        "type": "js"
+    }
+}

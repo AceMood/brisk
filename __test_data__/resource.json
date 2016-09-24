@@ -1,285 +1,428 @@
 {
     "resource": {
-        "css": {
-            "reset-style": {
-                "uri": "https://fbstatic.com/static/res/Vm87C6yZl.reset.css",
-                "type": "css",
-                "path": "src/css/reset.css",
+        "js": {
+            "Backbone": {
+                "uri": "/dist/static/res/c1a671877.backbone.js",
+                "type": "js",
+                "path": "lib/backbone.js",
                 "within": [
-                    "p0"
+                    "p2"
+                ],
+                "deps": [
+                    "underscore"
                 ]
             },
-            "main": {
-                "uri": "https://fbstatic.com/static/res/g69kHLSo2.withId.css",
-                "type": "css",
-                "path": "src/css/withId.css",
+            "jquery.cookie": {
+                "uri": "/dist/static/res/db79c0867.jquery.cookie.js",
+                "type": "js",
+                "path": "lib/jquery.cookie.js",
                 "within": [
-                    "p0"
+                    "p1"
                 ]
             },
-            "YG9FV": {
-                "uri": "https://fbstatic.com/static/res/47bCoH0Nq.inlineImage.css",
-                "type": "css",
-                "path": "src/css/inlineImage.css",
+            "jquery": {
+                "uri": "/dist/static/res/525134d11.jquery.js",
+                "type": "js",
+                "path": "lib/jquery.js",
                 "within": [
-                    "p0"
+                    "p1"
                 ]
             },
-            "+mruT": {
-                "uri": "https://fbstatic.com/static/res/iwc5AHNS1.mangle.css",
-                "type": "css",
-                "path": "src/css/mangle.css",
+            "modux": {
+                "uri": "/dist/static/res/bfc7abfce.modux.js",
+                "type": "js",
+                "path": "lib/modux.js"
+            },
+            "underscore": {
+                "uri": "/dist/static/res/e6b702d5d.underscore.js",
+                "type": "js",
+                "path": "lib/underscore.js",
                 "within": [
-                    "p0"
+                    "p2"
                 ]
             },
-            "mFLE6": {
-                "uri": "https://fbstatic.com/static/res/KrYRWuc+Q.plain.css",
-                "type": "css",
-                "path": "src/css/plain.css",
-                "within": [
-                    "p0"
+            "BaseModel": {
+                "uri": "/dist/static/res/6bbfa3779.BaseModel.js",
+                "type": "js",
+                "path": "common/view/BaseModel.js",
+                "deps": [
+                    "Backbone",
+                    "API",
+                    "UI.Alert",
+                    "UI.ErrorDialog"
                 ]
             },
-            "a5tlT": {
-                "uri": "https://fbstatic.com/static/res/ISzUrzbxo.moduleA.css",
-                "type": "css",
-                "path": "src/app/moduleA.css"
+            "BaseView": {
+                "uri": "/dist/static/res/198e443f4.BaseView.js",
+                "type": "js",
+                "path": "common/view/BaseView.js",
+                "deps": [
+                    "Backbone",
+                    "underscore"
+                ]
             },
-            "e6fCE": {
-                "uri": "https://fbstatic.com/static/res/nLFdhtvim.dialog.css",
-                "type": "css",
-                "path": "src/less/dialog.less"
+            "Module": {
+                "uri": "/dist/static/res/b9a518451.Module.js",
+                "type": "js",
+                "path": "common/view/Module.js",
+                "deps": [
+                    "BaseModel",
+                    "Backbone"
+                ]
             },
-            "JAhPf": {
-                "uri": "https://fbstatic.com/static/res/ukiiX1OM0.detail.css",
-                "type": "css",
-                "path": "src/less/detail.less"
+            "StandardTemplateListView": {
+                "uri": "/dist/static/res/a5ee255c8.TemplateListView.js",
+                "type": "js",
+                "path": "standard/view/TemplateListView/TemplateListView.js",
+                "deps": [
+                    "BaseView",
+                    "HrZLc",
+                    "ModuleView",
+                    "UI.Tab"
+                ]
             },
-            "zhSrg": {
-                "type": "css",
-                "path": "src/less/empty.less"
+            "template-standardtemplatelist": {
+                "uri": "/dist/static/res/23aac8473.template.js",
+                "type": "js",
+                "path": "standard/view/TemplateListView/template.js"
             },
-            "UVPXf": {
-                "uri": "https://fbstatic.com/static/res/tEUjsrWyA.import.css",
-                "type": "css",
-                "path": "src/less/import.less"
+            "Router": {
+                "uri": "/dist/static/res/e56db820a.Router.js",
+                "type": "js",
+                "path": "common/static/js/Router.js",
+                "deps": [
+                    "Backbone",
+                    "DesktopView",
+                    "IconView",
+                    "API",
+                    "UI.Window",
+                    "RouterMap",
+                    "tE4Ei",
+                    "AuthorityLostView"
+                ]
             },
-            "J0bO1": {
-                "uri": "https://fbstatic.com/static/res/F+4wWG4c2.purecss.css",
-                "type": "css",
-                "path": "src/less/purecss.less"
+            "RouterMap": {
+                "uri": "/dist/static/res/56bde9d64.RouterMap.js",
+                "type": "js",
+                "path": "common/static/js/RouterMap.js"
             },
-            "Dez3f": {
-                "uri": "https://fbstatic.com/static/res/sjVMJBGn3.shop_list.css",
-                "type": "css",
-                "path": "src/less/shop_list.less",
+            "API": {
+                "uri": "/dist/static/res/9e139bbf8.api.js",
+                "type": "js",
+                "path": "common/static/js/api.js",
+                "deps": [
+                    "CONST",
+                    "UI.Alert"
+                ],
+                "asyncLoaded": [
+                    "SvnPasswordDialog"
+                ]
+            },
+            "CONST": {
+                "uri": "/dist/static/res/e58c37103.const.js",
+                "type": "js",
+                "path": "common/static/js/const.js"
+            },
+            "fragment": {
+                "uri": "/dist/static/res/cf1ad5280.fragment.js",
+                "type": "js",
+                "path": "common/static/js/fragment.js"
+            },
+            "AuthorityLostView": {
+                "uri": "/dist/static/res/ef2ca1531.AuthorityLostView.js",
+                "type": "js",
+                "path": "common/view/AuthorityLostView/AuthorityLostView.js",
+                "deps": [
+                    "BaseView"
+                ]
+            },
+            "template-authoritylostview": {
+                "uri": "/dist/static/res/26a89799e.template.js",
+                "type": "js",
+                "path": "common/view/AuthorityLostView/template.js"
+            },
+            "template-desktopview": {
+                "uri": "/dist/static/res/199b80342.template.js",
+                "type": "js",
+                "path": "common/view/DesktopView/template.js"
+            },
+            "DesktopView": {
+                "uri": "/dist/static/res/c2a207d8a.DesktopView.js",
+                "type": "js",
+                "path": "common/view/DesktopView/DesktopView.js",
+                "deps": [
+                    "Backbone",
+                    "BaseView",
+                    "NotifyView"
+                ]
+            },
+            "template-iconview": {
+                "uri": "/dist/static/res/42125b71b.template.js",
+                "type": "js",
+                "path": "common/view/IconView/template.js"
+            },
+            "IconView": {
+                "uri": "/dist/static/res/1a0e9eb97.IconView.js",
+                "type": "js",
+                "path": "common/view/IconView/IconView.js",
                 "css": [
-                    "e6fCE"
+                    "hep4N"
+                ],
+                "deps": [
+                    "BaseView"
                 ]
             },
-            "xI2wM": {
-                "uri": "https://fbstatic.com/static/res/NWMt7SkmE.verify_list.css",
-                "type": "css",
-                "path": "src/less/verify_list.less"
+            "ModuleListView": {
+                "uri": "/dist/static/res/8998e4bb2.ModuleListView.js",
+                "type": "js",
+                "path": "common/view/ModuleListView/ModuleListView.js",
+                "deps": [
+                    "BaseView",
+                    "7Juww",
+                    "ModuleView",
+                    "UI.Tab"
+                ]
+            },
+            "template-modulelistview": {
+                "uri": "/dist/static/res/79d0b5078.template.js",
+                "type": "js",
+                "path": "common/view/ModuleListView/template.js"
+            },
+            "NotifyView": {
+                "uri": "/dist/static/res/6715d2a58.NotfiyView.js",
+                "type": "js",
+                "path": "common/view/NotifyView/NotfiyView.js",
+                "deps": [
+                    "BaseView"
+                ]
+            },
+            "template-notifyview": {
+                "uri": "/dist/static/res/3a4ee5b93.template.js",
+                "type": "js",
+                "path": "common/view/NotifyView/template.js"
+            },
+            "ModuleView": {
+                "uri": "/dist/static/res/2b4163506.ModuleView.js",
+                "type": "js",
+                "path": "common/view/ModuleView/ModuleView.js"
+            },
+            "SvnPasswordDialog": {
+                "uri": "/dist/static/res/07f4b7f63.dialog.js",
+                "type": "js",
+                "path": "common/widget/SvnPasswordDialog/dialog.js",
+                "css": [
+                    "s03PK"
+                ],
+                "deps": [
+                    "underscore",
+                    "UI.Dialog",
+                    "8q_kf",
+                    "API"
+                ]
+            },
+            "UI.Alert": {
+                "uri": "/dist/static/res/371ebc51f.alert.js",
+                "type": "js",
+                "path": "common/widget/Alert/alert.js",
+                "deps": [
+                    "UI.Dialog"
+                ]
+            },
+            "UI.ErrorDialog": {
+                "uri": "/dist/static/res/8667904dc.ErrorDialog.js",
+                "type": "js",
+                "path": "common/widget/ErrorDialog/ErrorDialog.js",
+                "deps": [
+                    "UI.Alert"
+                ]
+            },
+            "UI.Dialog": {
+                "uri": "/dist/static/res/3bbc23e1c.dialog.js",
+                "type": "js",
+                "path": "common/widget/Dialog/dialog.js",
+                "deps": [
+                    "4wdBP"
+                ]
+            },
+            "UI.Tab": {
+                "uri": "/dist/static/res/a21a2ac83.tab.js",
+                "type": "js",
+                "path": "common/widget/Tab/tab.js",
+                "deps": [
+                    "underscore"
+                ]
+            },
+            "UI.Window": {
+                "uri": "/dist/static/res/d5d5951cd.window.js",
+                "type": "js",
+                "path": "common/widget/Window/window.js",
+                "deps": [
+                    "underscore",
+                    "Backbone",
+                    "UI.Dialog"
+                ]
+            },
+            "XRmJ0": {
+                "uri": "/dist/static/res/f334a8ea4.jquery-ui.js",
+                "type": "js",
+                "path": "lib/jqueryui/jquery-ui.js"
+            },
+            "xTyK4": {
+                "uri": "/dist/static/res/e3ade61db.bootstrap.js",
+                "type": "js",
+                "path": "lib/bootstrap/bootstrap.js"
+            },
+            "HrZLc": {
+                "uri": "/dist/static/res/f626fa17e.model.js",
+                "type": "js",
+                "path": "standard/view/TemplateListView/model.js",
+                "deps": [
+                    "Backbone",
+                    "Module"
+                ]
+            },
+            "+TjxR": {
+                "uri": "/dist/static/res/ed20b3cec.index.js",
+                "type": "js",
+                "path": "standard/static/js/index.js",
+                "deps": [
+                    "Backbone",
+                    "StandardTemplateListView",
+                    "Router"
+                ]
+            },
+            "WDmAu": {
+                "uri": "/dist/static/res/75f43cc21.router.js",
+                "type": "js",
+                "path": "standard/static/js/router.js"
+            },
+            "tE4Ei": {
+                "uri": "/dist/static/res/0e61dab14.iconconfig.js",
+                "type": "js",
+                "path": "common/static/js/iconconfig.js"
+            },
+            "8q_kf": {
+                "uri": "/dist/static/res/be251c175.template.js",
+                "type": "js",
+                "path": "common/widget/SvnPasswordDialog/template.js"
+            },
+            "STp_3": {
+                "uri": "/dist/static/res/a537f6e7a.template.js",
+                "type": "js",
+                "path": "common/view/ModuleView/template.js"
+            },
+            "7Juww": {
+                "uri": "/dist/static/res/c0a141624.model.js",
+                "type": "js",
+                "path": "common/view/ModuleListView/model.js",
+                "deps": [
+                    "Backbone",
+                    "Module"
+                ]
+            },
+            "4wdBP": {
+                "uri": "/dist/static/res/4fe4c8cd1.template.js",
+                "type": "js",
+                "path": "common/widget/Dialog/template.js"
             }
         },
-        "js": {
-            "app": {
-                "uri": "https://fbstatic.com/static/res/uJscvoH_I.app.js",
-                "type": "js",
-                "path": "src/app/app.js",
+        "css": {
+            "bootstrap-style": {
+                "uri": "/dist/static/res/0c804006c.bootstrap.css",
+                "type": "css",
+                "path": "lib/bootstrap/bootstrap.css"
+            },
+            "NzYYH": {
+                "uri": "/dist/static/res/2b8054ac3.jquery-ui.min.css",
+                "type": "css",
+                "path": "lib/jqueryui/jquery-ui.min.css",
                 "within": [
-                    "p1"
-                ],
-                "deps": [
-                    "AQJGK",
-                    "zMZ2x",
-                    "T4EMD"
-                ],
-                "asyncLoaded": [
-                    "tospe"
+                    "p0"
                 ]
             },
-            "Foo": {
-                "uri": "https://fbstatic.com/static/res/W1qlh6ATN.class.js",
-                "type": "js",
-                "path": "src/es2015/class.js"
-            },
-            "vrcode": {
-                "uri": "https://fbstatic.com/static/res/v8T_eWYja.vrcode.js",
-                "type": "js",
-                "path": "src/js/vrcode.js"
-            },
-            "base": {
-                "uri": "https://fbstatic.com/static/res/SZyUOjeH4.withId.js",
-                "type": "js",
-                "path": "src/js/withId.js"
-            },
-            "react-app": {
-                "uri": "https://fbstatic.com/static/res/GxOJM6+cT.app.js",
-                "type": "js",
-                "path": "src/jsx/app.jsx",
-                "deps": [
-                    "math"
-                ]
-            },
-            "math": {
-                "uri": "https://fbstatic.com/static/res/MnPvjDU8m.math.js",
-                "type": "js",
-                "path": "src/jsx/math.js"
-            },
-            "AQJGK": {
-                "uri": "https://fbstatic.com/static/res/iVzvT46_t.moduleA.js",
-                "type": "js",
-                "path": "src/app/moduleA.js",
+            "E6s8l": {
+                "uri": "/dist/static/res/62cb20ea2.jquery-ui.structure.min.css",
+                "type": "css",
+                "path": "lib/jqueryui/jquery-ui.structure.min.css",
                 "within": [
-                    "p1"
-                ],
-                "css": [
-                    "a5tlT"
+                    "p0"
                 ]
             },
-            "zMZ2x": {
-                "uri": "https://fbstatic.com/static/res/nHqSA1QzU.moduleB.js",
-                "type": "js",
-                "path": "src/app/moduleB.js",
+            "fXIGg": {
+                "uri": "/dist/static/res/6453967d2.jquery-ui.theme.min.css",
+                "type": "css",
+                "path": "lib/jqueryui/jquery-ui.theme.min.css",
                 "within": [
-                    "p1"
-                ],
-                "deps": [
-                    "AQJGK"
+                    "p0"
                 ]
             },
-            "T4EMD": {
-                "uri": "https://fbstatic.com/static/res/hHaPMAdXb.moduleC.js",
-                "type": "js",
-                "path": "src/app/moduleC.js",
-                "within": [
-                    "p1"
-                ],
-                "deps": [
-                    "zMZ2x"
-                ]
+            "Jzjzp": {
+                "uri": "/dist/static/res/c9458eaeb.tpldev.css",
+                "type": "css",
+                "path": "common/static/css/tpldev.css"
             },
-            "tospe": {
-                "uri": "https://fbstatic.com/static/res/CvUJQubWL.vrcode.js",
-                "type": "js",
-                "path": "src/app/vrcode.js",
-                "within": [
-                    "p1"
-                ]
+            "hep4N": {
+                "uri": "/dist/static/res/b0da4bd43.IconView.css",
+                "type": "css",
+                "path": "common/view/IconView/IconView.css"
             },
-            "Iu6OX": {
-                "uri": "https://fbstatic.com/static/res/ACB6fOs8S.arrow.js",
-                "type": "js",
-                "path": "src/es2015/arrow.js"
-            },
-            "dj5Pa": {
-                "uri": "https://fbstatic.com/static/res/hV+rEz19P.asyncRequire.js",
-                "type": "js",
-                "path": "src/js/asyncRequire.js",
-                "asyncLoaded": [
-                    "vrcode"
-                ]
-            },
-            "sWXOl": {
-                "uri": "https://fbstatic.com/static/res/1dVv1Hrnk.entry.js",
-                "type": "js",
-                "path": "src/js/entry.js",
-                "deps": [
-                    "base"
-                ]
-            },
-            "27kaY": {
-                "uri": "https://fbstatic.com/static/res/kdB0F7I8p.inlineTest.js",
-                "type": "js",
-                "path": "src/js/inlineTest.js"
-            },
-            "fvr+Q": {
-                "uri": "https://fbstatic.com/static/res/nUSerlK7z.noId.js",
-                "type": "js",
-                "path": "src/js/noId.js"
-            },
-            "GwHRf": {
-                "uri": "https://fbstatic.com/static/res/kXialOfkC.syncRequire.js",
-                "type": "js",
-                "path": "src/js/syncRequire.js",
-                "deps": [
-                    "base"
-                ]
-            },
-            "XvY+s": {
-                "uri": "https://fbstatic.com/static/res/qJFIAD_9+.uriTest.js",
-                "type": "js",
-                "path": "src/js/uriTest.js"
-            },
-            "WlvnF": {
-                "uri": "https://fbstatic.com/static/res/cIU1ZS86W.module.js",
-                "type": "js",
-                "path": "src/jsx/module.js",
-                "deps": [
-                    "math"
-                ]
+            "s03PK": {
+                "uri": "/dist/static/res/101d4824b.dialog.css",
+                "type": "css",
+                "path": "common/widget/SvnPasswordDialog/dialog.css"
             }
         }
     },
     "paths": {
-        "src/css/reset.css": "reset-style",
-        "src/css/withId.css": "main",
-        "src/css/inlineImage.css": "YG9FV",
-        "src/css/mangle.css": "+mruT",
-        "src/css/plain.css": "mFLE6",
-        "src/app/moduleA.css": "a5tlT",
-        "src/less/dialog.less": "e6fCE",
-        "src/less/detail.less": "JAhPf",
-        "src/less/empty.less": "zhSrg",
-        "src/less/import.less": "UVPXf",
-        "src/less/purecss.less": "J0bO1",
-        "src/less/shop_list.less": "Dez3f",
-        "src/less/verify_list.less": "xI2wM",
-        "src/app/app.js": "app",
-        "src/es2015/class.js": "Foo",
-        "src/js/vrcode.js": "vrcode",
-        "src/js/withId.js": "base",
-        "src/jsx/app.jsx": "react-app",
-        "src/jsx/math.js": "math",
-        "src/app/moduleA.js": "AQJGK",
-        "src/app/moduleB.js": "zMZ2x",
-        "src/app/moduleC.js": "T4EMD",
-        "src/app/vrcode.js": "tospe",
-        "src/es2015/arrow.js": "Iu6OX",
-        "src/js/asyncRequire.js": "dj5Pa",
-        "src/js/entry.js": "sWXOl",
-        "src/js/inlineTest.js": "27kaY",
-        "src/js/noId.js": "fvr+Q",
-        "src/js/syncRequire.js": "GwHRf",
-        "src/js/uriTest.js": "XvY+s",
-        "src/jsx/module.js": "WlvnF"
-    },
-    "packages": {
-        "p0": {
-            "uri": "https://fbstatic.com/static/pkg/T1UyQRXHo.pkg.build.css",
-            "has": [
-                "main",
-                "reset-style",
-                "mFLE6",
-                "+mruT",
-                "YG9FV"
-            ],
-            "type": "css"
-        },
-        "p1": {
-            "uri": "https://fbstatic.com/static/pkg/8JQJ_OJH1.pkg.build.js",
-            "has": [
-                "tospe",
-                "AQJGK",
-                "zMZ2x",
-                "T4EMD",
-                "app"
-            ],
-            "type": "js"
-        }
+        "lib/backbone.js": "Backbone",
+        "lib/jquery.cookie.js": "jquery.cookie",
+        "lib/jquery.js": "jquery",
+        "lib/modux.js": "modux",
+        "lib/underscore.js": "underscore",
+        "common/view/BaseModel.js": "BaseModel",
+        "common/view/BaseView.js": "BaseView",
+        "common/view/Module.js": "Module",
+        "standard/view/TemplateListView/TemplateListView.js": "StandardTemplateListView",
+        "standard/view/TemplateListView/template.js": "template-standardtemplatelist",
+        "common/static/js/Router.js": "Router",
+        "common/static/js/RouterMap.js": "RouterMap",
+        "common/static/js/api.js": "API",
+        "common/static/js/const.js": "CONST",
+        "common/static/js/fragment.js": "fragment",
+        "common/view/AuthorityLostView/AuthorityLostView.js": "AuthorityLostView",
+        "common/view/AuthorityLostView/template.js": "template-authoritylostview",
+        "common/view/DesktopView/template.js": "template-desktopview",
+        "common/view/DesktopView/DesktopView.js": "DesktopView",
+        "common/view/IconView/template.js": "template-iconview",
+        "common/view/IconView/IconView.js": "IconView",
+        "common/view/ModuleListView/ModuleListView.js": "ModuleListView",
+        "common/view/ModuleListView/template.js": "template-modulelistview",
+        "common/view/NotifyView/NotfiyView.js": "NotifyView",
+        "common/view/NotifyView/template.js": "template-notifyview",
+        "common/view/ModuleView/ModuleView.js": "ModuleView",
+        "common/widget/SvnPasswordDialog/dialog.js": "SvnPasswordDialog",
+        "common/widget/Alert/alert.js": "UI.Alert",
+        "common/widget/ErrorDialog/ErrorDialog.js": "UI.ErrorDialog",
+        "common/widget/Dialog/dialog.js": "UI.Dialog",
+        "common/widget/Tab/tab.js": "UI.Tab",
+        "common/widget/Window/window.js": "UI.Window",
+        "lib/jqueryui/jquery-ui.js": "XRmJ0",
+        "lib/bootstrap/bootstrap.js": "xTyK4",
+        "standard/view/TemplateListView/model.js": "HrZLc",
+        "standard/static/js/index.js": "+TjxR",
+        "standard/static/js/router.js": "WDmAu",
+        "common/static/js/iconconfig.js": "tE4Ei",
+        "common/widget/SvnPasswordDialog/template.js": "8q_kf",
+        "common/view/ModuleView/template.js": "STp_3",
+        "common/view/ModuleListView/model.js": "7Juww",
+        "common/widget/Dialog/template.js": "4wdBP",
+        "lib/bootstrap/bootstrap.css": "bootstrap-style",
+        "lib/jqueryui/jquery-ui.min.css": "NzYYH",
+        "lib/jqueryui/jquery-ui.structure.min.css": "E6s8l",
+        "lib/jqueryui/jquery-ui.theme.min.css": "fXIGg",
+        "common/static/css/tpldev.css": "Jzjzp",
+        "common/view/IconView/IconView.css": "hep4N",
+        "common/widget/SvnPasswordDialog/dialog.css": "s03PK"
     },
     "cssClassMap": {}
 }
