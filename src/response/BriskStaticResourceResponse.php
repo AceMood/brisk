@@ -297,7 +297,12 @@ class BriskStaticResourceResponse extends Phobject {
 
     //渲染单个资源
     protected function renderResource(BriskResourceMap $map, $name) {
-        $symbol = $map->getNameMap()[$name];
+        if ($map->isPackageResource($name)) {
+            $symbol = $name;
+        } else {
+            $symbol = $map->getNameMap()[$name];
+        }
+
         $uri = $this->getURI($map, $name);
         $type = $map->getResourceTypeForName($name);
 //        $multimeter = MultimeterControl::getInstance();
