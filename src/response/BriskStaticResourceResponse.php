@@ -276,7 +276,13 @@ class BriskStaticResourceResponse extends Phobject {
         return $this;
     }
 
-    //渲染整个资源
+    /**
+     * 渲染全部需要的资源
+     * @param BriskResourceMap $map
+     * @param array $resources
+     * @return array
+     * @throws Exception
+     */
     protected function renderPackagedResources(BriskResourceMap $map, array $resources) {
         $output = array();
         foreach ($resources as $name) {
@@ -308,7 +314,8 @@ class BriskStaticResourceResponse extends Phobject {
                         'type'  => 'text/css',
                         'href'  => $uri,
                         'data-modux-hash' => $symbol
-                    ));
+                    )
+                );
             case 'js':
                 return phutil_tag(
                     'script',
@@ -316,7 +323,8 @@ class BriskStaticResourceResponse extends Phobject {
                         'type'  => 'text/javascript',
                         'src'   => $uri,
                         'data-modux-hash' => $symbol
-                    ));
+                    )
+                );
         }
 
         throw new Exception(pht(

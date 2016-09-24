@@ -141,8 +141,8 @@ final class BriskResourceMap extends Phobject {
      * @return string|null Data URI, or null if we declined to generate one.
      */
     public function generateDataURI($resource_name) {
-        $type = $this->getResourceTypeForName($resource_name);
-        switch ($type) {
+        $suffix = last(explode('.', $resource_name));
+        switch ($suffix) {
             case 'png':
                 $type = 'image/png';
                 break;
@@ -174,9 +174,18 @@ final class BriskResourceMap extends Phobject {
         return $uri;
     }
 
-    //获取资源类型
+    /**
+     * 根据资源名(工程路径), 获取资源类型
+     * @param string $name
+     * @return mixed
+     */
     public function getResourceTypeForName($name) {
-        return $this->resources->getResourceType($name);
+        if ($this->isPackageResource($name)) {
+            $package_info = $this->packageMap[$name];
+            return $package_info['type'];
+        } else {
+            return $this->resources->getResourceType($name);
+        }
     }
 
     //根据资源名取得资源内容
@@ -184,11 +193,20 @@ final class BriskResourceMap extends Phobject {
         return $this->resources->getResourceData($name);
     }
 
-    //给定资源名,返回线上路径
+    /**
+     * 给定资源工程路径名, 返回线上路径
+     * @param string $name
+     * @return null|string
+     */
     public function getURIForName($name) {
-        $type = $this->getResourceTypeForName($name);
-        $symbol = idx($this->nameMap, $name);
-        return $this->getURIForSymbol($type, $symbol);
+        if ($this->isPackageResource($name)) {
+            $package_info = $this->packageMap[$name];
+            return $package_info['uri'];
+        } else {
+            $type = $this->getResourceTypeForName($name);
+            $symbol = idx($this->nameMap, $name);
+            return $this->getURIForSymbol($type, $symbol);
+        }
     }
 
     /**
