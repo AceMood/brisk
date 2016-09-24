@@ -191,7 +191,11 @@ final class BriskResourceMap extends Phobject {
         return $this->getURIForSymbol($type, $symbol);
     }
 
-    //传一个资源名返回依赖的所有资源id
+    /**
+     * 传一个资源名返回依赖的所有资源id
+     * @param string $name
+     * @return array(js: array, css: array)|null
+     */
     public function getRequiredSymbolsForName($name) {
         $symbol = idx($this->nameMap, $name);
         if ($symbol === null) {
@@ -208,7 +212,11 @@ final class BriskResourceMap extends Phobject {
         );
     }
 
-    //给资源路径数组,返回所在的包资源名数组
+    /**
+     * 给资源路径数组, 返回所在的包资源名数组
+     * @param array $names
+     * @return array
+     */
     public function getPackagedNamesForNames(array $names) {
         $resolved = $this->resolveResources($names);
         return $this->packageResources($resolved, $names);
@@ -290,11 +298,17 @@ final class BriskResourceMap extends Phobject {
             foreach ($package_symbols as $resource_symbol) {
                 $resource_name = $this->getResourceNameForSymbol($package_type, $resource_symbol);
                 $handled[$resource_name] = true;
-                foreach ($resolved_map[$resource_name] as $require) {
-                    if (isset($handled[$require])) {
-                        continue;
+                // 有一种可能是并未引入需要的资源, 但配置打包里面将该资源一起合并进来,
+                // 此时$resolved_map没有记录该资源信息
+                if (isset($resolved_map[$resource_name])) {
+                    foreach ($resolved_map[$resource_name] as $require) {
+                        if (isset($handled[$require])) {
+                            continue;
+                        }
+                        $this->loop($resolved_map, $packaged, $handled, $require);
                     }
-                    $this->loop($resolved_map, $packaged, $handled, $require);
+                } else {
+                    $this->resolveResource($resolved_map, $resource_name);
                 }
             }
         }

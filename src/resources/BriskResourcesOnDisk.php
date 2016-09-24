@@ -66,7 +66,7 @@ abstract class BriskResourcesOnDisk extends BriskResources {
      * @throws FilesystemException
      */
     public function loadPackages() {
-        if ($this->map === null) {
+        if ($this->packages === null) {
             $mapPath = $this->getPathToPackageMap();
             $data = Filesystem::readFile($mapPath);
             $this->packages = json_decode($data, true);
