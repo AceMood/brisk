@@ -298,7 +298,8 @@ class BriskStaticResourceResponse extends Phobject {
     //渲染单个资源
     protected function renderResource(BriskResourceMap $map, $name) {
         if ($map->isPackageResource($name)) {
-            $symbol = $name;
+            $package_info = $map->getPackageMap()[$name];
+            $symbol = implode('-', $package_info['has']);
         } else {
             $symbol = $map->getNameMap()[$name];
         }
