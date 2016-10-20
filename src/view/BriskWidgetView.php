@@ -156,12 +156,13 @@ abstract class BriskWidgetView extends Phobject {
      */
     public function renderAsHTML() {
         $html = '';
-        $this->willRender();
         switch ($this->mode) {
             case self::$mode_normal:
+                $this->willRender();
                 $html = $this->produceHTML();
                 break;
             case self::$mode_bigrender:
+                $this->willRender();
                 $html = phutil_tag(
                     'textarea',
                     array(
