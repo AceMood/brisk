@@ -254,8 +254,8 @@ class BriskStaticResourceResponse extends Phobject {
         if ($type === 'js') {
             $this->printResourceMap($result);
             // todo modux插入到最前面
-            if (!isset($this->hasRendered['modux'])) {
-                $name = $map->getSymbolMap()['js']['modux']['path'];
+            $name = $map->getSymbolMap()['js']['modux']['path'];
+            if (!isset($this->hasRendered[$name])) {
                 array_unshift($result, $this->renderResource($map, $name));
             }
         }
