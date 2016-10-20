@@ -253,6 +253,10 @@ class BriskStaticResourceResponse extends Phobject {
 
         if ($type === 'js') {
             $this->printResourceMap($result);
+            // todo modux插入到最前面
+            if (!isset($this->hasRendered['modux'])) {
+                array_unshift($result, $this->renderResource($map, 'modux'));
+            }
         }
 
         return phutil_implode_html('', $result);
@@ -358,8 +362,8 @@ class BriskStaticResourceResponse extends Phobject {
                 $this->buildAllRes($res);
                 $json = json_encode($res['resourceMap']);
                 $code = BriskUtils::renderInlineScript(
-                    'if (require && require.setResourceMap) require.setResourceMap('
-                    . $json . '); else var __RESOURCE_MAP__ = ' . $json . ';'
+                    'if ("undefined" !== typeof require) {require.setResourceMap('
+                    . $json . ')};'
                 );
                 array_unshift($result, $code);
                 break;
@@ -367,8 +371,8 @@ class BriskStaticResourceResponse extends Phobject {
                 $this->buildAsyncRes($res);
                 $json = json_encode($res['resourceMap']);
                 $code = BriskUtils::renderInlineScript(
-                    'if (require && require.setResourceMap) require.setResourceMap('
-                    . $json . '); else var __RESOURCE_MAP__ = ' . $json . ';'
+                    'if ("undefined" !== typeof require) {require.setResourceMap('
+                    . $json . ')};'
                 );
                 array_unshift($result, $code);
                 break;

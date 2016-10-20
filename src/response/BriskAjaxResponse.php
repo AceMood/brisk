@@ -62,7 +62,7 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
             if (!empty($inlineScripts['js'])) {
                 $scripts = $inlineScripts['js'];
                 foreach ($scripts as $script) {
-                    $result[] = '~function(){' . $script . '}();';
+                    $result[] = '(function(){' . $script . '}());';
                 }
             }
         }
