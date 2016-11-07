@@ -37,9 +37,7 @@ function inline_static($name, $source_name = 'brisk') {
 }
 
 
-/**
- * 输出所有css
- */
+// 输出收集的css
 function render_css_block() {
   $response = BriskAPI::staticResourceResponse();
   $content = $response->renderResourcesOfType('css');
@@ -47,9 +45,7 @@ function render_css_block() {
 }
 
 
-/**
- * 输出所有js
- */
+// 输出收集的js
 function render_js_block() {
   $response = BriskAPI::staticResourceResponse();
   $content = $response->renderResourcesOfType('js');
