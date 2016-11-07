@@ -21,7 +21,6 @@ function require_static($name, $source_name = 'brisk') {
   $response->requireResource($name, $source_name);
 }
 
-
 // 很方便的api. 根据资源名称渲染行内的CSS或JS. 不会计算依赖, 而是把这个资源直接输出.
 // 适合一些统计脚本或者小片段的脚本, 并且这样的脚本也可以在编译时压缩, 样式表也完全适合.
 // 对于要由服务端数据决定的脚本, 可以直接通过`BriskUtils::renderInlineStyle`和
@@ -36,7 +35,6 @@ function inline_static($name, $source_name = 'brisk') {
   echo $response->inlineResource($name, $source_name);
 }
 
-
 // 输出收集的css
 function render_css_block() {
   $response = BriskAPI::staticResourceResponse();
@@ -44,14 +42,12 @@ function render_css_block() {
   echo $content->getHTMLContent();
 }
 
-
 // 输出收集的js
 function render_js_block() {
   $response = BriskAPI::staticResourceResponse();
   $content = $response->renderResourcesOfType('js');
   echo $content->getHTMLContent();
 }
-
 
 /**
  * 获取一个资源的线上路径
