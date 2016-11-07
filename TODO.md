@@ -1,7 +1,6 @@
 1. [pageview和widgetview的再抽象]
 2. [widget多层嵌套的场景]
 3. [BriskSantaResources加载路径的可扩展性]
-4. [配合使用的kerneljs优化] done! 已迁移modux
 5. [测试用例]
 6. [编写模板时前端开发的痛点]
 6.1 [数据未准备好时mock的处理]
