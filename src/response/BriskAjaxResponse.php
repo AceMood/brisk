@@ -46,12 +46,12 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
         );
 
         switch ($this->getPrintType()) {
-            case BriskPrintType::$ALL_RES:
+            case MAP_ALL:
                 $this->buildAllRes($res);
                 $result[] = 'require.setResourceMap('
                     . json_encode($res['resourceMap']) . ');';
                 break;
-            case BriskPrintType::$ONLY_ASYNC:
+            case MAP_ASYNC:
                 $this->buildAsyncRes($res);
                 $result[] = 'require.setResourceMap('
                     . json_encode($res['resourceMap']) . ');';

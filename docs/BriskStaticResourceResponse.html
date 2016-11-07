@@ -84,8 +84,7 @@
  * Tracks and resolves dependencies the page declares with
  * @{function:require_static_resource}, and then builds appropriate HTML or
  * Ajax responses.
- */</span>
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskStaticResourceResponse</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Phobject</span> </span>{</pre></div></div>
+ */</span></pre></div></div>
             
         </li>
         
@@ -96,11 +95,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>动态设置cdn</p>
+              <hr>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $cdn = <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
@@ -111,11 +108,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>默认打印全部资源表</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $printType = MAP_ALL;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskStaticResourceResponse</span> </span>{</pre></div></div>
             
         </li>
         
@@ -126,11 +123,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>收集所有打印的外链资源唯一路径</p>
+              <p>动态设置cdn</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $symbols = <span class="hljs-keyword">array</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $cdn = <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
@@ -141,11 +138,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>记录打印的内联资源唯一id</p>
+              <p>默认打印全部资源表</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $inlined = <span class="hljs-keyword">array</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $printType = MAP_ALL;</pre></div></div>
             
         </li>
         
@@ -156,11 +153,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>是否需要对收集的资源进行解析</p>
+              <p>收集所有打印的外链资源唯一路径</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $needsResolve = <span class="hljs-keyword">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $symbols = <span class="hljs-keyword">array</span>();</pre></div></div>
             
         </li>
         
@@ -171,11 +168,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>命名空间划分,记录外链引用的资源</p>
+              <p>记录打印的内联资源唯一id</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $packaged;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $inlined = <span class="hljs-keyword">array</span>();</pre></div></div>
             
         </li>
         
@@ -186,11 +183,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>记录一些元数据</p>
+              <p>是否需要对收集的资源进行解析</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $metadata = <span class="hljs-keyword">array</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $needsResolve = <span class="hljs-keyword">true</span>;</pre></div></div>
             
         </li>
         
@@ -201,11 +198,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>页面初始化需要加载的框架</p>
+              <p>命名空间划分,记录外链引用的资源</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $behaviors = <span class="hljs-keyword">array</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $packaged;</pre></div></div>
             
         </li>
         
@@ -216,86 +213,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>记录是否被渲染过</p>
+              <p>记录一些元数据</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> $hasRendered = <span class="hljs-keyword">array</span>();
-
-    <span class="hljs-keyword">protected</span> $postprocessorKey;
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">()</span> </span>{}
-
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addMetadata</span><span class="hljs-params">($metadata)</span> </span>{
-        $id = count(<span class="hljs-keyword">$this</span>-&gt;metadata);
-        <span class="hljs-keyword">$this</span>-&gt;metadata[$id] = $metadata;
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-    }
-
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getMetadata</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;metadata;
-    }
-
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setPostprocessorKey</span><span class="hljs-params">($postprocessor_key)</span> </span>{
-        <span class="hljs-keyword">$this</span>-&gt;postprocessorKey = $postprocessor_key;
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-    }
-
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPostprocessorKey</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;postprocessorKey;
-    }
-
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setCDN</span><span class="hljs-params">($cdn)</span> </span>{
-        <span class="hljs-keyword">$this</span>-&gt;cdn = $cdn;
-    }
-
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getCDN</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;cdn;
-    }
-
-    <span class="hljs-comment">/**
-     * 设置资源表打印类型
-     * <span class="hljs-doctag">@param</span> integer $type
-     */</span>
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setPrintType</span><span class="hljs-params">($type)</span> </span>{
-        <span class="hljs-keyword">$this</span>-&gt;printType = $type;
-    }
-
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPrintType</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;printType;
-    }
-
-    <span class="hljs-comment">/**
-     * todo
-     * Register a behavior for initialization.
-     *
-     * <span class="hljs-doctag">NOTE:</span> If `$config` is empty, a behavior will execute only once even if it
-     * is initialized multiple times. If `$config` is nonempty, the behavior will
-     * be invoked once for each configuration.
-     */</span>
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initBehavior</span><span class="hljs-params">($behavior, array $config = array<span class="hljs-params">()</span>, $source_name = null)</span> </span>{
-        <span class="hljs-keyword">$this</span>-&gt;requireResource($behavior, $source_name);
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">empty</span>(<span class="hljs-keyword">$this</span>-&gt;behaviors[$behavior])) {
-            <span class="hljs-keyword">$this</span>-&gt;behaviors[$behavior] = <span class="hljs-keyword">array</span>();
-        }
-        <span class="hljs-keyword">if</span> ($config) {
-            <span class="hljs-keyword">$this</span>-&gt;behaviors[$behavior][] = $config;
-        }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-    }
-
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBehavior</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;behaviors;
-    }
-
-    <span class="hljs-comment">/**
-     * 根据资源名获取线上路径
-     * <span class="hljs-doctag">@param</span> BriskResourceMap $map
-     * <span class="hljs-doctag">@param</span> $name
-     * <span class="hljs-doctag">@return</span> string
-     */</span>
-    <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getURI</span><span class="hljs-params">(BriskResourceMap $map, $name)</span> </span>{
-        $uri = $map-&gt;getURIForName($name);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $metadata = <span class="hljs-keyword">array</span>();</pre></div></div>
             
         </li>
         
@@ -306,26 +228,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>If we have a postprocessor selected, add it to the URI.</p>
+              <p>页面初始化需要加载的框架</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $postprocessor_key = <span class="hljs-keyword">$this</span>-&gt;getPostprocessorKey();
-        <span class="hljs-keyword">if</span> ($postprocessor_key) {
-            $uri = preg_replace(<span class="hljs-string">'@^/res/@'</span>, <span class="hljs-string">'/res/'</span> . $postprocessor_key . <span class="hljs-string">'X/'</span>, $uri);
-        }
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;cdn . $uri;
-    }
-
-    <span class="hljs-comment">/**
-     * 记录请求依赖的外链资源
-     * <span class="hljs-doctag">@param</span> string $name 工程目录资源路径
-     * <span class="hljs-doctag">@param</span> string $source_name 空间
-     * <span class="hljs-doctag">@return</span> mixed $this
-     * <span class="hljs-doctag">@throws</span> Exception
-     */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">requireResource</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $behaviors = <span class="hljs-keyword">array</span>();</pre></div></div>
             
         </li>
         
@@ -336,27 +243,86 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>首先确认资源表存在</p>
+              <p>记录是否被渲染过</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $map = BriskResourceMap::getNamedInstance($source_name);
-        $symbol = $map-&gt;getNameMap()[$name];
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $hasRendered = <span class="hljs-keyword">array</span>();
 
-        <span class="hljs-keyword">if</span> ($symbol === <span class="hljs-keyword">null</span>) {
-            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
-                <span class="hljs-string">'No resource with name "%s" exists in source "%s"!'</span>,
-                $name,
-                $source_name
-            ));
-        }
+  <span class="hljs-keyword">protected</span> $postprocessorKey;
 
-        <span class="hljs-keyword">if</span> (!array_key_exists($source_name, <span class="hljs-keyword">$this</span>-&gt;symbols)) {
-            <span class="hljs-keyword">$this</span>-&gt;symbols[$source_name] = <span class="hljs-keyword">array</span>();
-        }
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">()</span> </span>{}
 
-        $symbols = <span class="hljs-keyword">$this</span>-&gt;symbols[$source_name];
-        $resource_type = $map-&gt;getResourceTypeForName($name);</pre></div></div>
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addMetadata</span><span class="hljs-params">($metadata)</span> </span>{
+    $id = count(<span class="hljs-keyword">$this</span>-&gt;metadata);
+    <span class="hljs-keyword">$this</span>-&gt;metadata[$id] = $metadata;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
+
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getMetadata</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;metadata;
+  }
+
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setPostprocessorKey</span><span class="hljs-params">($postprocessor_key)</span> </span>{
+    <span class="hljs-keyword">$this</span>-&gt;postprocessorKey = $postprocessor_key;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
+
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPostprocessorKey</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;postprocessorKey;
+  }
+
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setCDN</span><span class="hljs-params">($cdn)</span> </span>{
+    <span class="hljs-keyword">$this</span>-&gt;cdn = $cdn;
+  }
+
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getCDN</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;cdn;
+  }
+
+  <span class="hljs-comment">/**
+   * 设置资源表打印类型
+   * <span class="hljs-doctag">@param</span> integer $type
+   */</span>
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setPrintType</span><span class="hljs-params">($type)</span> </span>{
+    <span class="hljs-keyword">$this</span>-&gt;printType = $type;
+  }
+
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPrintType</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;printType;
+  }
+
+  <span class="hljs-comment">/**
+   * todo
+   * Register a behavior for initialization.
+   *
+   * <span class="hljs-doctag">NOTE:</span> If `$config` is empty, a behavior will execute only once even if it
+   * is initialized multiple times. If `$config` is nonempty, the behavior will
+   * be invoked once for each configuration.
+   */</span>
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initBehavior</span><span class="hljs-params">($behavior, array $config = array<span class="hljs-params">()</span>, $source_name = null)</span> </span>{
+    <span class="hljs-keyword">$this</span>-&gt;requireResource($behavior, $source_name);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">empty</span>(<span class="hljs-keyword">$this</span>-&gt;behaviors[$behavior])) {
+      <span class="hljs-keyword">$this</span>-&gt;behaviors[$behavior] = <span class="hljs-keyword">array</span>();
+    }
+    <span class="hljs-keyword">if</span> ($config) {
+      <span class="hljs-keyword">$this</span>-&gt;behaviors[$behavior][] = $config;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
+
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBehavior</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;behaviors;
+  }
+
+  <span class="hljs-comment">/**
+   * 根据资源名获取线上路径
+   * <span class="hljs-doctag">@param</span> BriskResourceMap $map
+   * <span class="hljs-doctag">@param</span> $name
+   * <span class="hljs-doctag">@return</span> string
+   */</span>
+  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getURI</span><span class="hljs-params">(BriskResourceMap $map, $name)</span> </span>{
+    $uri = $map-&gt;getURIForName($name);</pre></div></div>
             
         </li>
         
@@ -367,29 +333,26 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>之前渲染过,不区分外链还是内联</p>
+              <p>If we have a postprocessor selected, add it to the URI.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (array_search($name, $symbols, <span class="hljs-keyword">true</span>) &gt; <span class="hljs-number">-1</span> ||
-            <span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;inlined[$source_name][$resource_type][$name])) {
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-        }
-
-        <span class="hljs-keyword">$this</span>-&gt;symbols[$source_name][] = $name;
-        <span class="hljs-keyword">$this</span>-&gt;needsResolve = <span class="hljs-keyword">true</span>;
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+            <div class="content"><div class='highlight'><pre>    $postprocessor_key = <span class="hljs-keyword">$this</span>-&gt;getPostprocessorKey();
+    <span class="hljs-keyword">if</span> ($postprocessor_key) {
+      $uri = preg_replace(<span class="hljs-string">'@^/res/@'</span>, <span class="hljs-string">'/res/'</span> . $postprocessor_key . <span class="hljs-string">'X/'</span>, $uri);
     }
 
-    <span class="hljs-comment">/**
-     * 资源内联
-     * <span class="hljs-doctag">@param</span> string $name 资源在工程目录的路径
-     * <span class="hljs-doctag">@param</span> string $source_name 项目空间
-     * <span class="hljs-doctag">@return</span> PhutilSafeHTML|string
-     * <span class="hljs-doctag">@throws</span> Exception
-     */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">inlineResource</span><span class="hljs-params">($name, $source_name)</span> </span>{</pre></div></div>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;cdn . $uri;
+  }
+
+  <span class="hljs-comment">/**
+   * 记录请求依赖的外链资源
+   * <span class="hljs-doctag">@param</span> string $name 工程目录资源路径
+   * <span class="hljs-doctag">@param</span> string $source_name 空间
+   * <span class="hljs-doctag">@return</span> mixed $this
+   * <span class="hljs-doctag">@throws</span> Exception
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">requireResource</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -400,21 +363,27 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>首先确认资源存在</p>
+              <p>首先确认资源表存在</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $map = BriskResourceMap::getNamedInstance($source_name);
-        $symbol = $map-&gt;getNameMap()[$name];
-        <span class="hljs-keyword">if</span> ($symbol === <span class="hljs-keyword">null</span>) {
-            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
-                <span class="hljs-string">'No resource with name "%s" exists in source "%s"!'</span>,
-                $name,
-                $source_name
-            ));
-        }
+            <div class="content"><div class='highlight'><pre>    $map = BriskResourceMap::getNamedInstance($source_name);
+    $symbol = $map-&gt;getNameMap()[$name];
 
-        $resource_type = $map-&gt;getResourceTypeForName($name);</pre></div></div>
+    <span class="hljs-keyword">if</span> ($symbol === <span class="hljs-keyword">null</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
+        <span class="hljs-string">'No resource with name "%s" exists in source "%s"!'</span>,
+        $name,
+        $source_name
+      ));
+    }
+
+    <span class="hljs-keyword">if</span> (!array_key_exists($source_name, <span class="hljs-keyword">$this</span>-&gt;symbols)) {
+      <span class="hljs-keyword">$this</span>-&gt;symbols[$source_name] = <span class="hljs-keyword">array</span>();
+    }
+
+    $symbols = <span class="hljs-keyword">$this</span>-&gt;symbols[$source_name];
+    $resource_type = $map-&gt;getResourceTypeForName($name);</pre></div></div>
             
         </li>
         
@@ -425,13 +394,29 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>之前已经内联渲染过</p>
+              <p>之前渲染过,不区分外链还是内联</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;inlined[$source_name][$resource_type][$name])) {
-            <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
-        }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (array_search($name, $symbols, <span class="hljs-keyword">true</span>) &gt; <span class="hljs-number">-1</span> ||
+      <span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;inlined[$source_name][$resource_type][$name])) {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+    }
+
+    <span class="hljs-keyword">$this</span>-&gt;symbols[$source_name][] = $name;
+    <span class="hljs-keyword">$this</span>-&gt;needsResolve = <span class="hljs-keyword">true</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
+
+  <span class="hljs-comment">/**
+   * 资源内联
+   * <span class="hljs-doctag">@param</span> string $name 资源在工程目录的路径
+   * <span class="hljs-doctag">@param</span> string $source_name 项目空间
+   * <span class="hljs-doctag">@return</span> PhutilSafeHTML|string
+   * <span class="hljs-doctag">@throws</span> Exception
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">inlineResource</span><span class="hljs-params">($name, $source_name)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -442,41 +427,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>立即渲染,不优化输出位置</p>
+              <p>首先确认资源存在</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $fileContent = $map-&gt;getResourceDataForName($name, $source_name);
-        <span class="hljs-keyword">$this</span>-&gt;inlined[$source_name][$resource_type][$name] = $fileContent;
-        <span class="hljs-keyword">if</span> ($resource_type === <span class="hljs-string">'js'</span>) {
-            <span class="hljs-keyword">return</span> BriskUtils::renderInlineScript($fileContent);
-        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($resource_type === <span class="hljs-string">'css'</span>) {
-            <span class="hljs-keyword">return</span> BriskUtils::renderInlineStyle($fileContent);
-        }
-
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+            <div class="content"><div class='highlight'><pre>    $map = BriskResourceMap::getNamedInstance($source_name);
+    $symbol = $map-&gt;getNameMap()[$name];
+    <span class="hljs-keyword">if</span> ($symbol === <span class="hljs-keyword">null</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
+        <span class="hljs-string">'No resource with name "%s" exists in source "%s"!'</span>,
+        $name,
+        $source_name
+      ));
     }
 
-    <span class="hljs-comment">/**
-     * 将图片内联为dataUri的方式
-     * <span class="hljs-doctag">@param</span> $name
-     * <span class="hljs-doctag">@param</span> $source_name
-     * <span class="hljs-doctag">@return</span> mixed
-     * <span class="hljs-doctag">@throws</span> Exception
-     */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateDataURI</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{
-        $map = BriskResourceMap::getNamedInstance($source_name);
-        $symbol = $map-&gt;getNameMap()[$name];
-        <span class="hljs-keyword">if</span> ($symbol === <span class="hljs-keyword">null</span>) {
-            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
-                <span class="hljs-string">'No resource with name "%s" exists in source "%s"!'</span>,
-                $name,
-                $source_name
-            ));
-        }
-
-        <span class="hljs-keyword">return</span> $map-&gt;generateDataURI($name);
-    }</pre></div></div>
+    $resource_type = $map-&gt;getResourceTypeForName($name);</pre></div></div>
             
         </li>
         
@@ -487,31 +452,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>单独渲染一个外链资源</p>
+              <p>之前已经内联渲染过</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderSingleResource</span><span class="hljs-params">($name, $source_name)</span> </span>{
-        $map = BriskResourceMap::getNamedInstance($source_name);
-        $symbol = $map-&gt;getNameMap()[$name];
-        <span class="hljs-keyword">if</span> ($symbol === <span class="hljs-keyword">null</span>) {
-            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
-                <span class="hljs-string">'No resource with name "%s" exists in source "%s"!'</span>,
-                $name,
-                $source_name
-            ));
-        }
-        $packaged = $map-&gt;getPackagedNamesForNames(<span class="hljs-keyword">array</span>($name));
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;renderPackagedResources($map, $packaged);
-    }
-
-    <span class="hljs-comment">/**
-     * 渲染输出一种资源类型的html片段
-     * <span class="hljs-doctag">@param</span> string $type 资源类型
-     * <span class="hljs-doctag">@return</span> PhutilSafeHTML
-     * <span class="hljs-doctag">@throws</span> Exception
-     */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderResourcesOfType</span><span class="hljs-params">($type)</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;inlined[$source_name][$resource_type][$name])) {
+      <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+    }</pre></div></div>
             
         </li>
         
@@ -522,28 +469,41 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>更新$this-&gt;packaged</p>
+              <p>立即渲染,不优化输出位置</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">$this</span>-&gt;resolveResources();
-        $result = <span class="hljs-keyword">array</span>();
+            <div class="content"><div class='highlight'><pre>    $fileContent = $map-&gt;getResourceDataForName($name, $source_name);
+    <span class="hljs-keyword">$this</span>-&gt;inlined[$source_name][$resource_type][$name] = $fileContent;
+    <span class="hljs-keyword">if</span> ($resource_type === <span class="hljs-string">'js'</span>) {
+      <span class="hljs-keyword">return</span> BriskUtils::renderInlineScript($fileContent);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($resource_type === <span class="hljs-string">'css'</span>) {
+      <span class="hljs-keyword">return</span> BriskUtils::renderInlineStyle($fileContent);
+    }
 
-        <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;packaged <span class="hljs-keyword">as</span> $source_name =&gt; $resource_names) {
-            $map = BriskResourceMap::getNamedInstance($source_name);
-            $resources_of_type = <span class="hljs-keyword">array</span>();
-            <span class="hljs-keyword">foreach</span> ($resource_names <span class="hljs-keyword">as</span> $resource_name) {
-                $resource_type = $map-&gt;getResourceTypeForName($resource_name);
-                <span class="hljs-keyword">if</span> ($resource_type == $type) {
-                    $resources_of_type[] = $resource_name;
-                }
-            }
+    <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+  }
 
-            $result[] = <span class="hljs-keyword">$this</span>-&gt;renderPackagedResources($map, $resources_of_type);
-        }
+  <span class="hljs-comment">/**
+   * 将图片内联为dataUri的方式
+   * <span class="hljs-doctag">@param</span> $name
+   * <span class="hljs-doctag">@param</span> $source_name
+   * <span class="hljs-doctag">@return</span> mixed
+   * <span class="hljs-doctag">@throws</span> Exception
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateDataURI</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{
+    $map = BriskResourceMap::getNamedInstance($source_name);
+    $symbol = $map-&gt;getNameMap()[$name];
+    <span class="hljs-keyword">if</span> ($symbol === <span class="hljs-keyword">null</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
+        <span class="hljs-string">'No resource with name "%s" exists in source "%s"!'</span>,
+        $name,
+        $source_name
+      ));
+    }
 
-        <span class="hljs-keyword">if</span> ($type === <span class="hljs-string">'js'</span>) {
-            <span class="hljs-keyword">$this</span>-&gt;printResourceMap($result);</pre></div></div>
+    <span class="hljs-keyword">return</span> $map-&gt;generateDataURI($name);
+  }</pre></div></div>
             
         </li>
         
@@ -554,55 +514,31 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>todo modux插入到最前面</p>
+              <p>单独渲染一个外链资源</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            $name = $map-&gt;getSymbolMap()[<span class="hljs-string">'js'</span>][<span class="hljs-string">'modux'</span>][<span class="hljs-string">'path'</span>];
-            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;hasRendered[$name])) {
-                array_unshift($result, <span class="hljs-keyword">$this</span>-&gt;renderResource($map, $name));
-            }
-        }
-
-        <span class="hljs-keyword">return</span> phutil_implode_html(<span class="hljs-string">''</span>, $result);
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderSingleResource</span><span class="hljs-params">($name, $source_name)</span> </span>{
+    $map = BriskResourceMap::getNamedInstance($source_name);
+    $symbol = $map-&gt;getNameMap()[$name];
+    <span class="hljs-keyword">if</span> ($symbol === <span class="hljs-keyword">null</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
+        <span class="hljs-string">'No resource with name "%s" exists in source "%s"!'</span>,
+        $name,
+        $source_name
+      ));
     }
+    $packaged = $map-&gt;getPackagedNamesForNames(<span class="hljs-keyword">array</span>($name));
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;renderPackagedResources($map, $packaged);
+  }
 
-    <span class="hljs-comment">/**
-     * 更新$this-&gt;packaged, $this-&gt;needsResolve标示false
-     * <span class="hljs-doctag">@return</span> $this
-     * <span class="hljs-doctag">@throws</span> Exception
-     */</span>
-    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveResources</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;needsResolve) {
-            <span class="hljs-keyword">$this</span>-&gt;packaged = <span class="hljs-keyword">array</span>();
-            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;symbols <span class="hljs-keyword">as</span> $source_name =&gt; $names) {
-                $map = BriskResourceMap::getNamedInstance($source_name);
-                $packaged = $map-&gt;getPackagedNamesForNames($names);
-                <span class="hljs-keyword">$this</span>-&gt;packaged[$source_name] = $packaged;
-            }
-            <span class="hljs-keyword">$this</span>-&gt;needsResolve = <span class="hljs-keyword">false</span>;
-        }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-    }
-
-    <span class="hljs-comment">/**
-     * 渲染全部需要的资源
-     * <span class="hljs-doctag">@param</span> BriskResourceMap $map
-     * <span class="hljs-doctag">@param</span> array $resources
-     * <span class="hljs-doctag">@return</span> array
-     * <span class="hljs-doctag">@throws</span> Exception
-     */</span>
-    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderPackagedResources</span><span class="hljs-params">(BriskResourceMap $map, array $resources)</span> </span>{
-        $output = <span class="hljs-keyword">array</span>();
-        <span class="hljs-keyword">foreach</span> ($resources <span class="hljs-keyword">as</span> $name) {
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;hasRendered[$name])) {
-                <span class="hljs-keyword">continue</span>;
-            }
-            <span class="hljs-keyword">$this</span>-&gt;hasRendered[$name] = <span class="hljs-keyword">true</span>;
-            $output[] = <span class="hljs-keyword">$this</span>-&gt;renderResource($map, $name);
-        }
-        <span class="hljs-keyword">return</span> $output;
-    }</pre></div></div>
+  <span class="hljs-comment">/**
+   * 渲染输出一种资源类型的html片段
+   * <span class="hljs-doctag">@param</span> string $type 资源类型
+   * <span class="hljs-doctag">@return</span> PhutilSafeHTML
+   * <span class="hljs-doctag">@throws</span> Exception
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderResourcesOfType</span><span class="hljs-params">($type)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -613,20 +549,28 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>渲染单个资源</p>
+              <p>更新$this-&gt;packaged</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderResource</span><span class="hljs-params">(BriskResourceMap $map, $name)</span> </span>{
-        <span class="hljs-keyword">if</span> ($map-&gt;isPackageResource($name)) {
-            $package_info = $map-&gt;getPackageMap()[$name];
-            $symbol = implode(<span class="hljs-string">'|'</span>, $package_info[<span class="hljs-string">'has'</span>]);
-        } <span class="hljs-keyword">else</span> {
-            $symbol = $map-&gt;getNameMap()[$name];
-        }
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">$this</span>-&gt;resolveResources();
+    $result = <span class="hljs-keyword">array</span>();
 
-        $uri = <span class="hljs-keyword">$this</span>-&gt;getURI($map, $name);
-        $type = $map-&gt;getResourceTypeForName($name);</pre></div></div>
+    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;packaged <span class="hljs-keyword">as</span> $source_name =&gt; $resource_names) {
+      $map = BriskResourceMap::getNamedInstance($source_name);
+      $resources_of_type = <span class="hljs-keyword">array</span>();
+      <span class="hljs-keyword">foreach</span> ($resource_names <span class="hljs-keyword">as</span> $resource_name) {
+        $resource_type = $map-&gt;getResourceTypeForName($resource_name);
+        <span class="hljs-keyword">if</span> ($resource_type == $type) {
+          $resources_of_type[] = $resource_name;
+        }
+      }
+
+      $result[] = <span class="hljs-keyword">$this</span>-&gt;renderPackagedResources($map, $resources_of_type);
+    }
+
+    <span class="hljs-keyword">if</span> ($type === <span class="hljs-string">'js'</span>) {
+      <span class="hljs-keyword">$this</span>-&gt;printResourceMap($result);</pre></div></div>
             
         </li>
         
@@ -637,81 +581,55 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <pre><code>   $multimeter = MultimeterControl::getInstance();
-   <span class="hljs-keyword">if</span> ($multimeter) {
-       $event_type = MultimeterEvent::TYPE_STATIC_RESOURCE;
-       $multimeter-&gt;newEvent($event_type, <span class="hljs-string">'rsrc.'</span>.$name, <span class="hljs-number">1</span>);
-   }
-</code></pre>
+              <p>todo modux插入到最前面</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">switch</span> ($type) {
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'css'</span>:
-                <span class="hljs-keyword">return</span> phutil_tag(
-                    <span class="hljs-string">'link'</span>,
-                    <span class="hljs-keyword">array</span>(
-                        <span class="hljs-string">'rel'</span>   =&gt; <span class="hljs-string">'stylesheet'</span>,
-                        <span class="hljs-string">'type'</span>  =&gt; <span class="hljs-string">'text/css'</span>,
-                        <span class="hljs-string">'href'</span>  =&gt; $uri,
-                        <span class="hljs-string">'data-modux-hash'</span> =&gt; $symbol
-                    )
-                );
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'js'</span>:
-                <span class="hljs-keyword">return</span> phutil_tag(
-                    <span class="hljs-string">'script'</span>,
-                    <span class="hljs-keyword">array</span>(
-                        <span class="hljs-string">'type'</span>  =&gt; <span class="hljs-string">'text/javascript'</span>,
-                        <span class="hljs-string">'src'</span>   =&gt; $uri,
-                        <span class="hljs-string">'data-modux-hash'</span> =&gt; $symbol
-                    )
-                );
-        }
-
-        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
-            <span class="hljs-string">'Unable to render resource "%s", which has unknown type "%s".'</span>,
-            $name,
-            $type
-        ));
+            <div class="content"><div class='highlight'><pre>      $name = $map-&gt;getSymbolMap()[<span class="hljs-string">'js'</span>][<span class="hljs-string">'modux'</span>][<span class="hljs-string">'path'</span>];
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;hasRendered[$name])) {
+        array_unshift($result, <span class="hljs-keyword">$this</span>-&gt;renderResource($map, $name));
+      }
     }
 
-    <span class="hljs-comment">/**
-     * 输出打印资源表信息
-     * <span class="hljs-doctag">@param</span> array $result
-     * <span class="hljs-doctag">@throws</span> Exception
-     */</span>
-    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">printResourceMap</span><span class="hljs-params">(&amp;$result)</span> </span>{
-        $res = <span class="hljs-keyword">array</span>(
-            <span class="hljs-string">'resourceMap'</span> =&gt; <span class="hljs-keyword">array</span>(
-                <span class="hljs-string">'js'</span> =&gt; <span class="hljs-keyword">array</span>(),
-                <span class="hljs-string">'css'</span> =&gt; <span class="hljs-keyword">array</span>()
-            )
-        );
+    <span class="hljs-keyword">return</span> phutil_implode_html(<span class="hljs-string">''</span>, $result);
+  }
 
-        <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">$this</span>-&gt;getPrintType()) {
-            <span class="hljs-keyword">case</span> MAP_ALL:
-                <span class="hljs-keyword">$this</span>-&gt;buildAllRes($res);
-                $json = json_encode($res[<span class="hljs-string">'resourceMap'</span>]);
-                $code = BriskUtils::renderInlineScript(
-                    <span class="hljs-string">'if ("undefined" !== typeof require) {require.setResourceMap('</span>
-                    . $json . <span class="hljs-string">')}'</span>
-                );
-                array_unshift($result, $code);
-                <span class="hljs-keyword">break</span>;
-            <span class="hljs-keyword">case</span> MAP_ASYNC:
-                <span class="hljs-keyword">$this</span>-&gt;buildAsyncRes($res);
-                $json = json_encode($res[<span class="hljs-string">'resourceMap'</span>]);
-                $code = BriskUtils::renderInlineScript(
-                    <span class="hljs-string">'if ("undefined" !== typeof require) {require.setResourceMap('</span>
-                    . $json . <span class="hljs-string">')}'</span>
-                );
-                array_unshift($result, $code);
-                <span class="hljs-keyword">break</span>;
-        }
+  <span class="hljs-comment">/**
+   * 更新$this-&gt;packaged, $this-&gt;needsResolve标示false
+   * <span class="hljs-doctag">@return</span> $this
+   * <span class="hljs-doctag">@throws</span> Exception
+   */</span>
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveResources</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;needsResolve) {
+      <span class="hljs-keyword">$this</span>-&gt;packaged = <span class="hljs-keyword">array</span>();
+      <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;symbols <span class="hljs-keyword">as</span> $source_name =&gt; $names) {
+        $map = BriskResourceMap::getNamedInstance($source_name);
+        $packaged = $map-&gt;getPackagedNamesForNames($names);
+        <span class="hljs-keyword">$this</span>-&gt;packaged[$source_name] = $packaged;
+      }
+      <span class="hljs-keyword">$this</span>-&gt;needsResolve = <span class="hljs-keyword">false</span>;
     }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
 
-    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildAllRes</span><span class="hljs-params">(&amp;$res)</span> </span>{
-        <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;packaged <span class="hljs-keyword">as</span> $source_name =&gt; $resource_names) {
-            $map = BriskResourceMap::getNamedInstance($source_name);</pre></div></div>
+  <span class="hljs-comment">/**
+   * 渲染全部需要的资源
+   * <span class="hljs-doctag">@param</span> BriskResourceMap $map
+   * <span class="hljs-doctag">@param</span> array $resources
+   * <span class="hljs-doctag">@return</span> array
+   * <span class="hljs-doctag">@throws</span> Exception
+   */</span>
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderPackagedResources</span><span class="hljs-params">(BriskResourceMap $map, array $resources)</span> </span>{
+    $output = <span class="hljs-keyword">array</span>();
+    <span class="hljs-keyword">foreach</span> ($resources <span class="hljs-keyword">as</span> $name) {
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;hasRendered[$name])) {
+        <span class="hljs-keyword">continue</span>;
+      }
+      <span class="hljs-keyword">$this</span>-&gt;hasRendered[$name] = <span class="hljs-keyword">true</span>;
+      $output[] = <span class="hljs-keyword">$this</span>-&gt;renderResource($map, $name);
+    }
+    <span class="hljs-keyword">return</span> $output;
+  }</pre></div></div>
             
         </li>
         
@@ -722,37 +640,20 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>记录到打印的资源表</p>
+              <p>渲染单个资源</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            $symbolMap = $map-&gt;getSymbolMap();
-            <span class="hljs-keyword">foreach</span> ($symbolMap[<span class="hljs-string">'js'</span>] <span class="hljs-keyword">as</span> $symbol =&gt; $js) {
-                <span class="hljs-keyword">unset</span>($js[<span class="hljs-string">'path'</span>]);
-                <span class="hljs-keyword">unset</span>($js[<span class="hljs-string">'within'</span>]);
-                $js[<span class="hljs-string">'uri'</span>] = <span class="hljs-keyword">self</span>::getCDN() . $js[<span class="hljs-string">'uri'</span>];
-            }
-
-            <span class="hljs-keyword">foreach</span> ($symbolMap[<span class="hljs-string">'css'</span>] <span class="hljs-keyword">as</span> $symbol =&gt; $css) {
-                <span class="hljs-keyword">unset</span>($css[<span class="hljs-string">'path'</span>]);
-                <span class="hljs-keyword">unset</span>($css[<span class="hljs-string">'within'</span>]);
-                $css[<span class="hljs-string">'uri'</span>] = <span class="hljs-keyword">self</span>::getCDN() . $css[<span class="hljs-string">'uri'</span>];
-            }
-
-            $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'js'</span>] = array_merge(
-                $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'js'</span>],
-                $symbolMap[<span class="hljs-string">'js'</span>]
-            );
-            $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'css'</span>] = array_merge(
-                $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'css'</span>],
-                $symbolMap[<span class="hljs-string">'css'</span>]
-            );
-        }
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderResource</span><span class="hljs-params">(BriskResourceMap $map, $name)</span> </span>{
+    <span class="hljs-keyword">if</span> ($map-&gt;isPackageResource($name)) {
+      $package_info = $map-&gt;getPackageMap()[$name];
+      $symbol = implode(<span class="hljs-string">'|'</span>, $package_info[<span class="hljs-string">'has'</span>]);
+    } <span class="hljs-keyword">else</span> {
+      $symbol = $map-&gt;getNameMap()[$name];
     }
 
-    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildAsyncRes</span><span class="hljs-params">(&amp;$res)</span> </span>{
-        <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;packaged <span class="hljs-keyword">as</span> $source_name =&gt; $resource_names) {
-            $map = BriskResourceMap::getNamedInstance($source_name);</pre></div></div>
+    $uri = <span class="hljs-keyword">$this</span>-&gt;getURI($map, $name);
+    $type = $map-&gt;getResourceTypeForName($name);</pre></div></div>
             
         </li>
         
@@ -763,28 +664,81 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>记录到打印的资源表</p>
-
+              <pre><code>   $multimeter = MultimeterControl::getInstance();
+   <span class="hljs-keyword">if</span> ($multimeter) {
+       $event_type = MultimeterEvent::TYPE_STATIC_RESOURCE;
+       $multimeter-&gt;newEvent($event_type, <span class="hljs-string">'rsrc.'</span>.$name, <span class="hljs-number">1</span>);
+   }
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>            $symbolMap = $map-&gt;getSymbolMap();
-            <span class="hljs-keyword">foreach</span> ($symbolMap[<span class="hljs-string">'js'</span>] <span class="hljs-keyword">as</span> $symbol =&gt; $js) {
-                <span class="hljs-keyword">foreach</span> ($js[<span class="hljs-string">'asyncLoaded'</span>] <span class="hljs-keyword">as</span> $required_symbol) {
-                    <span class="hljs-keyword">$this</span>-&gt;addJsRes($required_symbol, $symbolMap, $res);
-                }
-            }
-        }
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">switch</span> ($type) {
+      <span class="hljs-keyword">case</span> <span class="hljs-string">'css'</span>:
+        <span class="hljs-keyword">return</span> phutil_tag(
+          <span class="hljs-string">'link'</span>,
+          <span class="hljs-keyword">array</span>(
+            <span class="hljs-string">'rel'</span>   =&gt; <span class="hljs-string">'stylesheet'</span>,
+            <span class="hljs-string">'type'</span>  =&gt; <span class="hljs-string">'text/css'</span>,
+            <span class="hljs-string">'href'</span>  =&gt; $uri,
+            <span class="hljs-string">'data-modux-hash'</span> =&gt; $symbol
+          )
+        );
+      <span class="hljs-keyword">case</span> <span class="hljs-string">'js'</span>:
+        <span class="hljs-keyword">return</span> phutil_tag(
+          <span class="hljs-string">'script'</span>,
+          <span class="hljs-keyword">array</span>(
+            <span class="hljs-string">'type'</span>  =&gt; <span class="hljs-string">'text/javascript'</span>,
+            <span class="hljs-string">'src'</span>   =&gt; $uri,
+            <span class="hljs-string">'data-modux-hash'</span> =&gt; $symbol
+          )
+        );
     }
 
-    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addJsRes</span><span class="hljs-params">($required_symbol, $map, &amp;$res)</span> </span>{
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>($res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'js'</span>][$required_symbol])) {
-            $required_js = $map[<span class="hljs-string">'js'</span>][$required_symbol];
-            $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'js'</span>][$required_symbol] = <span class="hljs-keyword">array</span>(
-                <span class="hljs-string">'type'</span> =&gt; <span class="hljs-string">'js'</span>,
-                <span class="hljs-string">'uri'</span> =&gt; <span class="hljs-keyword">self</span>::getCDN() . $required_js[<span class="hljs-string">'uri'</span>],
-                <span class="hljs-string">'deps'</span> =&gt; $required_js[<span class="hljs-string">'deps'</span>],
-                <span class="hljs-string">'css'</span> =&gt; $required_js[<span class="hljs-string">'css'</span>]
-            );</pre></div></div>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
+      <span class="hljs-string">'Unable to render resource "%s", which has unknown type "%s".'</span>,
+      $name,
+      $type
+    ));
+  }
+
+  <span class="hljs-comment">/**
+   * 输出打印资源表信息
+   * <span class="hljs-doctag">@param</span> array $result
+   * <span class="hljs-doctag">@throws</span> Exception
+   */</span>
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">printResourceMap</span><span class="hljs-params">(&amp;$result)</span> </span>{
+    $res = <span class="hljs-keyword">array</span>(
+      <span class="hljs-string">'resourceMap'</span> =&gt; <span class="hljs-keyword">array</span>(
+        <span class="hljs-string">'js'</span> =&gt; <span class="hljs-keyword">array</span>(),
+        <span class="hljs-string">'css'</span> =&gt; <span class="hljs-keyword">array</span>()
+      )
+    );
+
+    <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">$this</span>-&gt;getPrintType()) {
+      <span class="hljs-keyword">case</span> MAP_ALL:
+        <span class="hljs-keyword">$this</span>-&gt;buildAllRes($res);
+        $json = json_encode($res[<span class="hljs-string">'resourceMap'</span>]);
+        $code = BriskUtils::renderInlineScript(
+          <span class="hljs-string">'if ("undefined" !== typeof require) {require.setResourceMap('</span>
+          . $json . <span class="hljs-string">')}'</span>
+        );
+        array_unshift($result, $code);
+        <span class="hljs-keyword">break</span>;
+      <span class="hljs-keyword">case</span> MAP_ASYNC:
+        <span class="hljs-keyword">$this</span>-&gt;buildAsyncRes($res);
+        $json = json_encode($res[<span class="hljs-string">'resourceMap'</span>]);
+        $code = BriskUtils::renderInlineScript(
+          <span class="hljs-string">'if ("undefined" !== typeof require) {require.setResourceMap('</span>
+          . $json . <span class="hljs-string">')}'</span>
+        );
+        array_unshift($result, $code);
+        <span class="hljs-keyword">break</span>;
+    }
+  }
+
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildAllRes</span><span class="hljs-params">(&amp;$res)</span> </span>{
+    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;packaged <span class="hljs-keyword">as</span> $source_name =&gt; $resource_names) {
+      $map = BriskResourceMap::getNamedInstance($source_name);</pre></div></div>
             
         </li>
         
@@ -795,27 +749,37 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>加载$required_js的依赖</p>
+              <p>记录到打印的资源表</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">foreach</span> ($required_js[<span class="hljs-string">'css'</span>] <span class="hljs-keyword">as</span> $required_css_symbol) {
-                <span class="hljs-keyword">$this</span>-&gt;addCssRes($required_css_symbol, $map, $res);
-            }
-            <span class="hljs-keyword">foreach</span> ($required_js[<span class="hljs-string">'asyncLoaded'</span>] <span class="hljs-keyword">as</span> $required_js_symbol) {
-                <span class="hljs-keyword">$this</span>-&gt;addJsRes($required_js_symbol, $map, $res);
-            }
-        }
-    }
+            <div class="content"><div class='highlight'><pre>      $symbolMap = $map-&gt;getSymbolMap();
+      <span class="hljs-keyword">foreach</span> ($symbolMap[<span class="hljs-string">'js'</span>] <span class="hljs-keyword">as</span> $symbol =&gt; $js) {
+        <span class="hljs-keyword">unset</span>($js[<span class="hljs-string">'path'</span>]);
+        <span class="hljs-keyword">unset</span>($js[<span class="hljs-string">'within'</span>]);
+        $js[<span class="hljs-string">'uri'</span>] = <span class="hljs-keyword">self</span>::getCDN() . $js[<span class="hljs-string">'uri'</span>];
+      }
 
-    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addCssRes</span><span class="hljs-params">($required_symbol, $map, &amp;$res)</span> </span>{
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>($res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'css'</span>][$required_symbol])) {
-            $required_css = $map[<span class="hljs-string">'css'</span>][$required_symbol];
-            $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'css'</span>][$required_symbol] = <span class="hljs-keyword">array</span>(
-                <span class="hljs-string">'type'</span> =&gt; <span class="hljs-string">'css'</span>,
-                <span class="hljs-string">'uri'</span> =&gt; <span class="hljs-keyword">self</span>::getCDN() . $required_css[<span class="hljs-string">'uri'</span>],
-                <span class="hljs-string">'css'</span> =&gt; $required_css[<span class="hljs-string">'css'</span>]
-            );</pre></div></div>
+      <span class="hljs-keyword">foreach</span> ($symbolMap[<span class="hljs-string">'css'</span>] <span class="hljs-keyword">as</span> $symbol =&gt; $css) {
+        <span class="hljs-keyword">unset</span>($css[<span class="hljs-string">'path'</span>]);
+        <span class="hljs-keyword">unset</span>($css[<span class="hljs-string">'within'</span>]);
+        $css[<span class="hljs-string">'uri'</span>] = <span class="hljs-keyword">self</span>::getCDN() . $css[<span class="hljs-string">'uri'</span>];
+      }
+
+      $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'js'</span>] = array_merge(
+        $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'js'</span>],
+        $symbolMap[<span class="hljs-string">'js'</span>]
+      );
+      $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'css'</span>] = array_merge(
+        $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'css'</span>],
+        $symbolMap[<span class="hljs-string">'css'</span>]
+      );
+    }
+  }
+
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildAsyncRes</span><span class="hljs-params">(&amp;$res)</span> </span>{
+    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;packaged <span class="hljs-keyword">as</span> $source_name =&gt; $resource_names) {
+      $map = BriskResourceMap::getNamedInstance($source_name);</pre></div></div>
             
         </li>
         
@@ -826,15 +790,78 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
+              <p>记录到打印的资源表</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      $symbolMap = $map-&gt;getSymbolMap();
+      <span class="hljs-keyword">foreach</span> ($symbolMap[<span class="hljs-string">'js'</span>] <span class="hljs-keyword">as</span> $symbol =&gt; $js) {
+        <span class="hljs-keyword">foreach</span> ($js[<span class="hljs-string">'asyncLoaded'</span>] <span class="hljs-keyword">as</span> $required_symbol) {
+          <span class="hljs-keyword">$this</span>-&gt;addJsRes($required_symbol, $symbolMap, $res);
+        }
+      }
+    }
+  }
+
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addJsRes</span><span class="hljs-params">($required_symbol, $map, &amp;$res)</span> </span>{
+    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>($res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'js'</span>][$required_symbol])) {
+      $required_js = $map[<span class="hljs-string">'js'</span>][$required_symbol];
+      $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'js'</span>][$required_symbol] = <span class="hljs-keyword">array</span>(
+        <span class="hljs-string">'type'</span> =&gt; <span class="hljs-string">'js'</span>,
+        <span class="hljs-string">'uri'</span> =&gt; <span class="hljs-keyword">self</span>::getCDN() . $required_js[<span class="hljs-string">'uri'</span>],
+        <span class="hljs-string">'deps'</span> =&gt; $required_js[<span class="hljs-string">'deps'</span>],
+        <span class="hljs-string">'css'</span> =&gt; $required_js[<span class="hljs-string">'css'</span>]
+      );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>加载$required_js的依赖</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">foreach</span> ($required_js[<span class="hljs-string">'css'</span>] <span class="hljs-keyword">as</span> $required_css_symbol) {
+        <span class="hljs-keyword">$this</span>-&gt;addCssRes($required_css_symbol, $map, $res);
+      }
+      <span class="hljs-keyword">foreach</span> ($required_js[<span class="hljs-string">'asyncLoaded'</span>] <span class="hljs-keyword">as</span> $required_js_symbol) {
+        <span class="hljs-keyword">$this</span>-&gt;addJsRes($required_js_symbol, $map, $res);
+      }
+    }
+  }
+
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addCssRes</span><span class="hljs-params">($required_symbol, $map, &amp;$res)</span> </span>{
+    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>($res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'css'</span>][$required_symbol])) {
+      $required_css = $map[<span class="hljs-string">'css'</span>][$required_symbol];
+      $res[<span class="hljs-string">'resourceMap'</span>][<span class="hljs-string">'css'</span>][$required_symbol] = <span class="hljs-keyword">array</span>(
+        <span class="hljs-string">'type'</span> =&gt; <span class="hljs-string">'css'</span>,
+        <span class="hljs-string">'uri'</span> =&gt; <span class="hljs-keyword">self</span>::getCDN() . $required_css[<span class="hljs-string">'uri'</span>],
+        <span class="hljs-string">'css'</span> =&gt; $required_css[<span class="hljs-string">'css'</span>]
+      );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
               <p>加载$required_css的依赖</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">foreach</span> ($required_css[<span class="hljs-string">'css'</span>] <span class="hljs-keyword">as</span> $required_css_symbol) {
-                <span class="hljs-keyword">$this</span>-&gt;addCssRes($required_css_symbol, $map, $res);
-            }
-        }
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">foreach</span> ($required_css[<span class="hljs-string">'css'</span>] <span class="hljs-keyword">as</span> $required_css_symbol) {
+        <span class="hljs-keyword">$this</span>-&gt;addCssRes($required_css_symbol, $map, $res);
+      }
     }
+  }
 }</pre></div></div>
             
         </li>

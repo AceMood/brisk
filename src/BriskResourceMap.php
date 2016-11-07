@@ -6,7 +6,7 @@
  * not need to invoke it directly; instead, you call higher-level Brisk APIs
  * and it uses the resource map to satisfy your requests.
  */
-final class BriskResourceMap extends Phobject {
+final class BriskResourceMap {
     //根据空间存储资源表
     private static $instances = array();
 

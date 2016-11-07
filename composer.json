@@ -1,6 +1,6 @@
 {
     "name": "acemood/brisk",
-    "description": "PHP static resource loader framework",
+    "description": "PHP static resource load and render framework",
     "type": "project",
     "require": {
         "php": ">=5.5.13"
