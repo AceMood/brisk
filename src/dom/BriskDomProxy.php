@@ -114,7 +114,7 @@ final class BriskDomProxy {
       if ($v === null) {
         continue;
       }
-      $v = phutil_escape_html($v);
+      $v = self::escapeHtml($v);
       $attr_string .= ' '.$k.'="'.$v.'"';
     }
 
@@ -125,10 +125,10 @@ final class BriskDomProxy {
         $content = '';
       }
     } else {
-      $content = phutil_escape_html($content);
+      $content = self::escapeHtml($content);
     }
 
-    return new PhutilSafeHTML('<'.$tag.$attr_string.'>'.$content.'</'.$tag.'>');
+    return new BriskSafeHTML('<'.$tag.$attr_string.'>'.$content.'</'.$tag.'>');
   }
 
   /**
@@ -137,14 +137,14 @@ final class BriskDomProxy {
   public static function phutil_safe_html($string) {
     if ($string == '') {
       return $string;
-    } else if ($string instanceof PhutilSafeHTML) {
+    } else if ($string instanceof BriskSafeHTML) {
       return $string;
     } else {
-      return new PhutilSafeHTML($string);
+      return new BriskSafeHTML($string);
     }
   }
 
-  public static function phutil_escape_html($string) {
+  public static function escapeHtml($string) {
     if ($string instanceof PhutilSafeHTML) {
       return $string;
     } else if ($string instanceof PhutilSafeHTMLProducerInterface) {
@@ -172,7 +172,7 @@ final class BriskDomProxy {
     } else if (is_array($string)) {
       $result = '';
       foreach ($string as $item) {
-        $result .= phutil_escape_html($item);
+        $result .= self::escapeHtml($item);
       }
       return $result;
     }

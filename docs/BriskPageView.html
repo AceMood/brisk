@@ -20,6 +20,16 @@
             <div id="jump_page">
               
                 
+                <a class="source" href="BriskDomProxy.html">
+                  BriskDomProxy.php
+                </a>
+              
+                
+                <a class="source" href="BriskSafeHTML.html">
+                  BriskSafeHTML.php
+                </a>
+              
+                
                 <a class="source" href="BriskResources.html">
                   BriskResources.php
                 </a>
@@ -84,10 +94,7 @@
  * Class BriskPageView
  * 渲染页面的抽象类
  */</span>
-<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskPageView</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Phobject</span> </span>{
-
-  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> $mode_ajaxpipe = <span class="hljs-string">'ajaxpipe'</span>;
-  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> $mode_normal = <span class="hljs-string">'normal'</span>;</pre></div></div>
+<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskPageView</span> </span>{</pre></div></div>
             
         </li>
         
@@ -167,11 +174,11 @@
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($title = <span class="hljs-string">''</span>)</span> </span>{
     <span class="hljs-keyword">$this</span>-&gt;setTitle($title);
     <span class="hljs-keyword">if</span> (BriskUtils::isAjaxPipe()) {
-      <span class="hljs-keyword">$this</span>-&gt;mode = <span class="hljs-keyword">self</span>::$mode_ajaxpipe;
+      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_AJAXPIPE;
       <span class="hljs-keyword">$this</span>-&gt;setPagelets($_GET[<span class="hljs-string">'pagelets'</span>]);
       <span class="hljs-keyword">$this</span>-&gt;response = <span class="hljs-keyword">new</span> BriskAjaxResponse();
     } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">$this</span>-&gt;mode = <span class="hljs-keyword">self</span>::$mode_normal;
+      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_NORMAL;
       <span class="hljs-keyword">$this</span>-&gt;response = <span class="hljs-keyword">new</span> BriskStaticResourceResponse();
     }
   }
@@ -191,10 +198,10 @@
   }
 
   <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setMode</span><span class="hljs-params">($mode)</span> </span>{
-    <span class="hljs-keyword">if</span> ($mode === <span class="hljs-keyword">self</span>::$mode_ajaxpipe) {
+    <span class="hljs-keyword">if</span> ($mode === RENDER_AJAXPIPE) {
       <span class="hljs-keyword">$this</span>-&gt;mode = $mode;
     } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">$this</span>-&gt;mode = <span class="hljs-keyword">self</span>::$mode_normal;
+      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_NORMAL;
     }
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
   }
@@ -257,7 +264,7 @@
    */</span>
   <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadWidget</span><span class="hljs-params">($widget)</span> </span>{
     $widget-&gt;setParentView(<span class="hljs-keyword">$this</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;mode === <span class="hljs-keyword">self</span>::$mode_normal) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;mode === RENDER_NORMAL) {
       <span class="hljs-keyword">return</span> $widget-&gt;renderAsHTML();
     } <span class="hljs-keyword">else</span> {
       <span class="hljs-keyword">$this</span>-&gt;widgets[$widget-&gt;getId()] = $widget;
@@ -318,7 +325,7 @@
   <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span><span class="hljs-params">()</span> </span>{
     $html = <span class="hljs-string">''</span>;
     <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">$this</span>-&gt;mode) {
-      <span class="hljs-keyword">case</span> <span class="hljs-keyword">self</span>::$mode_ajaxpipe:</pre></div></div>
+      <span class="hljs-keyword">case</span> RENDER_AJAXPIPE:</pre></div></div>
             
         </li>
         
@@ -336,7 +343,7 @@
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">$this</span>-&gt;willRender();
         $html = <span class="hljs-keyword">$this</span>-&gt;renderAsJSON();
         <span class="hljs-keyword">break</span>;
-      <span class="hljs-keyword">case</span> <span class="hljs-keyword">self</span>::$mode_normal:
+      <span class="hljs-keyword">case</span> RENDER_NORMAL:
         <span class="hljs-keyword">$this</span>-&gt;willRender();
         <span class="hljs-keyword">$this</span>-&gt;loadGlobalResources();
         $html = <span class="hljs-keyword">$this</span>-&gt;renderAsHTML();

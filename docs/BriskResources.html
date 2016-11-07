@@ -20,6 +20,16 @@
             <div id="jump_page">
               
                 
+                <a class="source" href="BriskDomProxy.html">
+                  BriskDomProxy.php
+                </a>
+              
+                
+                <a class="source" href="BriskSafeHTML.html">
+                  BriskSafeHTML.php
+                </a>
+              
+                
                 <a class="source" href="BriskResources.html">
                   BriskResources.php
                 </a>
@@ -81,8 +91,11 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-comment">/**
- * Defines the location of static resources.
+ * <span class="hljs-doctag">@file</span> Defines the location of static resources.
+ * <span class="hljs-doctag">@author</span> AceMood
+ * <span class="hljs-doctag">@email</span> zmike86<span class="hljs-doctag">@gmail</span>.com
  */</span>
+
 <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskResources</span> </span>{</pre></div></div>
             
         </li>
@@ -98,20 +111,20 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> $typeMap = <span class="hljs-keyword">array</span>(
-        <span class="hljs-string">'jsx'</span> =&gt; <span class="hljs-string">'js'</span>,
-        <span class="hljs-string">'js'</span> =&gt; <span class="hljs-string">'js'</span>,
-        <span class="hljs-string">'coffee'</span> =&gt; <span class="hljs-string">'js'</span>,
-        <span class="hljs-string">'ts'</span> =&gt; <span class="hljs-string">'js'</span>,
-        <span class="hljs-string">'less'</span> =&gt; <span class="hljs-string">'css'</span>,
-        <span class="hljs-string">'css'</span> =&gt; <span class="hljs-string">'css'</span>,
-        <span class="hljs-string">'scss'</span> =&gt; <span class="hljs-string">'css'</span>,
-        <span class="hljs-string">'png'</span> =&gt; <span class="hljs-string">'img'</span>,
-        <span class="hljs-string">'jpg'</span> =&gt; <span class="hljs-string">'img'</span>,
-        <span class="hljs-string">'jpeg'</span> =&gt; <span class="hljs-string">'img'</span>,
-        <span class="hljs-string">'webp'</span> =&gt; <span class="hljs-string">'img'</span>,
-        <span class="hljs-string">'bmp'</span> =&gt; <span class="hljs-string">'img'</span>,
-    );</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> $typeMap = <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'jsx'</span> =&gt; <span class="hljs-string">'js'</span>,
+    <span class="hljs-string">'js'</span> =&gt; <span class="hljs-string">'js'</span>,
+    <span class="hljs-string">'coffee'</span> =&gt; <span class="hljs-string">'js'</span>,
+    <span class="hljs-string">'ts'</span> =&gt; <span class="hljs-string">'js'</span>,
+    <span class="hljs-string">'less'</span> =&gt; <span class="hljs-string">'css'</span>,
+    <span class="hljs-string">'css'</span> =&gt; <span class="hljs-string">'css'</span>,
+    <span class="hljs-string">'scss'</span> =&gt; <span class="hljs-string">'css'</span>,
+    <span class="hljs-string">'png'</span> =&gt; <span class="hljs-string">'img'</span>,
+    <span class="hljs-string">'jpg'</span> =&gt; <span class="hljs-string">'img'</span>,
+    <span class="hljs-string">'jpeg'</span> =&gt; <span class="hljs-string">'img'</span>,
+    <span class="hljs-string">'webp'</span> =&gt; <span class="hljs-string">'img'</span>,
+    <span class="hljs-string">'bmp'</span> =&gt; <span class="hljs-string">'img'</span>,
+  );</pre></div></div>
             
         </li>
         
@@ -126,7 +139,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>;</pre></div></div>
             
         </li>
         
@@ -141,7 +154,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceData</span><span class="hljs-params">($name)</span></span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceData</span><span class="hljs-params">($name)</span></span>;</pre></div></div>
             
         </li>
         
@@ -156,9 +169,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceModifiedTime</span><span class="hljs-params">($name)</span> </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceModifiedTime</span><span class="hljs-params">($name)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+  }</pre></div></div>
             
         </li>
         
@@ -173,10 +186,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceType</span><span class="hljs-params">($path)</span> </span>{
-        $suffix = end(explode(<span class="hljs-string">'.'</span>, $path));
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::$typeMap[$suffix];
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceType</span><span class="hljs-params">($path)</span> </span>{
+    $suffix = end(explode(<span class="hljs-string">'.'</span>, $path));
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::$typeMap[$suffix];
+  }</pre></div></div>
             
         </li>
         
@@ -191,9 +204,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadMap</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>();
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadMap</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>();
+  }</pre></div></div>
             
         </li>
         
@@ -208,9 +221,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPackages</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>();
-    }
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPackages</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>();
+  }
 }</pre></div></div>
             
         </li>

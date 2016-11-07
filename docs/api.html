@@ -111,7 +111,7 @@
  * <span class="hljs-doctag">@param</span> string $source_name 项目命名空间
  * <span class="hljs-doctag">@return</span> void
  */</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">require_static</span><span class="hljs-params">($name, $source_name)</span> </span>{
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">require_static</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{
   $response = BriskAPI::staticResourceResponse();
   $response-&gt;requireResource($name, $source_name);
 }</pre></div></div>
@@ -137,34 +137,51 @@
  * <span class="hljs-doctag">@param</span> string $source_name 项目命名空间
  * <span class="hljs-doctag">@return</span> string 将一个资源数据内联式立即输出
  */</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">inline_static</span><span class="hljs-params">($name, $source_name)</span> </span>{
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">inline_static</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{
   $response = BriskAPI::staticResourceResponse();
   <span class="hljs-keyword">echo</span> $response-&gt;inlineResource($name, $source_name);
-}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>输出收集的css</p>
 
-
-<span class="hljs-comment">/**
- * 输出所有外链css
- */</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render_css_block</span><span class="hljs-params">()</span> </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render_css_block</span><span class="hljs-params">()</span> </span>{
   $response = BriskAPI::staticResourceResponse();
   $content = $response-&gt;renderResourcesOfType(<span class="hljs-string">'css'</span>);
   <span class="hljs-keyword">echo</span> $content-&gt;getHTMLContent();
-}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>输出收集的js</p>
 
-
-<span class="hljs-comment">/**
- * 输出所有外链js
- */</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render_js_block</span><span class="hljs-params">()</span> </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render_js_block</span><span class="hljs-params">()</span> </span>{
   $response = BriskAPI::staticResourceResponse();
   $content = $response-&gt;renderResourcesOfType(<span class="hljs-string">'js'</span>);
   <span class="hljs-keyword">echo</span> $content-&gt;getHTMLContent();
 }
 
-
 <span class="hljs-comment">/**
- * Get the versioned URI for a raw resource, like an image.
+ * 获取一个资源的线上路径
  * <span class="hljs-doctag">@param</span>  string $name 资源名称.
  * <span class="hljs-doctag">@param</span>  string $source_name 项目命名空间
  * <span class="hljs-doctag">@return</span> string
@@ -174,6 +191,23 @@
   $map = BriskResourceMap::getNamedInstance($source_name);
   $response = BriskAPI::staticResourceResponse();
   <span class="hljs-keyword">return</span> $response-&gt;getURI($map, $name);
+}
+
+<span class="hljs-comment">/**
+ * Translate a string. It uses a translator set by
+ * `PhutilTranslator::setInstance()` or translations specified by
+ * `PhutilTranslator::getInstance()-&gt;setTranslations()` and language rules set
+ * by `PhutilTranslator::getInstance()-&gt;setLocale()`.
+ *
+ * <span class="hljs-doctag">@param</span> string Translation identifier with `sprintf()` placeholders.
+ * <span class="hljs-doctag">@param</span> mixed Value to select the variant from (e.g. singular or plural).
+ * <span class="hljs-doctag">@param</span> ... Next values referenced from $text.
+ * <span class="hljs-doctag">@return</span> string Translated string with substituted values.
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pht</span><span class="hljs-params">($text, $variant = null <span class="hljs-comment">/* , ... */</span>)</span> </span>{
+  $args = func_get_args();
+  $translator = PhutilTranslator::getInstance();
+  <span class="hljs-keyword">return</span> call_user_func_array(<span class="hljs-keyword">array</span>($translator, <span class="hljs-string">'translate'</span>), $args);
 }</pre></div></div>
             
         </li>

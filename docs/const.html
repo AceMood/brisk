@@ -128,6 +128,41 @@ define(<span class="hljs-string">'MAP_ALL'</span>, <span class="hljs-number">980
             
         </li>
         
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>页面的三种渲染模式, 对于bigpipe目前依赖于服务端实现.
+在渲染曾里面不会涉及真正并行的数据获取, 而是通过pagelet的优先级优先刷新缓存.
+ajaxpipe和normal是通过get参数加以区分的. 默认页面渲染模式是normal.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define(<span class="hljs-string">'RENDER_NORMAL'</span>, <span class="hljs-number">9800005</span>);
+define(<span class="hljs-string">'RENDER_AJAXPIPE'</span>, <span class="hljs-number">9800006</span>);
+define(<span class="hljs-string">'RENDER_BIGPIPE'</span>, <span class="hljs-number">9800007</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>组件的三种渲染模式, normal, bigrender和lazyrender</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define(<span class="hljs-string">'RENDER_BIGRENDER'</span>, <span class="hljs-number">9800009</span>);
+define(<span class="hljs-string">'RENDER_LAZYRENDER'</span>, <span class="hljs-number">9800010</span>);</pre></div></div>
+            
+        </li>
+        
     </ul>
   </div>
 </body>
