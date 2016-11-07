@@ -16,23 +16,29 @@
  * @param string $source_name 项目命名空间
  * @return void
  */
-function require_static($name, $source_name) {
+function require_static($name, $source_name = 'brisk') {
   $response = BriskAPI::staticResourceResponse();
   $response->requireResource($name, $source_name);
 }
 
+
+// 很方便的api. 根据资源名称渲染行内的CSS或JS. 不会计算依赖, 而是把这个资源直接输出.
+// 适合一些统计脚本或者小片段的脚本, 并且这样的脚本也可以在编译时压缩, 样式表也完全适合.
+// 对于要由服务端数据决定的脚本, 可以直接通过`BriskUtils::renderInlineStyle`和
+// `BriskUtils::renderInlineScript`输出, 但是不会做压缩.
 /**
  * @param string $name 资源路径名
  * @param string $source_name 项目命名空间
  * @return string 将一个资源数据内联式立即输出
  */
-function inline_static($name, $source_name) {
+function inline_static($name, $source_name = 'brisk') {
   $response = BriskAPI::staticResourceResponse();
-  return $response->inlineResource($name, $source_name);
+  echo $response->inlineResource($name, $source_name);
 }
 
+
 /**
- * 输出所有外链css
+ * 输出所有css
  */
 function render_css_block() {
   $response = BriskAPI::staticResourceResponse();
@@ -40,8 +46,9 @@ function render_css_block() {
   echo $content->getHTMLContent();
 }
 
+
 /**
- * 输出所有外链js
+ * 输出所有js
  */
 function render_js_block() {
   $response = BriskAPI::staticResourceResponse();
@@ -49,14 +56,16 @@ function render_js_block() {
   echo $content->getHTMLContent();
 }
 
+
 /**
- * Get the versioned URI for a raw resource, like an image.
- * @param   string  $resource Path to the raw image.
- * @return  string  Versioned path to the image, if one is available.
+ * 获取一个资源的线上路径
+ * @param  string $name 资源名称.
+ * @param  string $source_name 项目命名空间
+ * @return string
  */
-function get_resource_uri($resource, $source_name = 'brisk') {
-  $resource = ltrim($resource, '/');
+function get_resource_uri($name, $source_name = 'brisk') {
+  $name = ltrim($name, '/');
   $map = BriskResourceMap::getNamedInstance($source_name);
   $response = BriskAPI::staticResourceResponse();
-  return $response->getURI($map, $resource);
+  return $response->getURI($map, $name);
 }
