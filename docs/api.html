@@ -191,23 +191,108 @@
   $map = BriskResourceMap::getNamedInstance($source_name);
   $response = BriskAPI::staticResourceResponse();
   <span class="hljs-keyword">return</span> $response-&gt;getURI($map, $name);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>这个函数直接从原类库拷贝, 原目的在于国际化的翻译文本. 在本库中暂且不考虑国际化的功能.
+函数保留但简单返回最初的文本, 方便日后国际化时扩展.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@param</span> string $text Translation identifier with `sprintf()` placeholders.
+ * <span class="hljs-doctag">@param</span> mixed Value to select the variant from (e.g. singular or plural).
+ * <span class="hljs-doctag">@param</span> ... Next values referenced from $text.
+ * <span class="hljs-doctag">@return</span> string 返回翻译后的文本.
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pht</span><span class="hljs-params">($text, $variant = null <span class="hljs-comment">/* , ... */</span>)</span> </span>{
+  <span class="hljs-keyword">return</span> $text;
+<span class="hljs-comment">/*
+    $args = func_get_args();
+    $translator = PhutilTranslator::getInstance();
+    return call_user_func_array(array($translator, 'translate'), $args);
+*/</span>
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>同一函数. 返回参数的值.
+有一些php语法会导致错误, 如下:
+  new Thing()-&gt;doStuff();
+但是这样是可以的:
+  id(new Thing())-&gt;doStuff();
+本函数就为此目的</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@param</span>  wild $x 任何参数.
+ * <span class="hljs-doctag">@return</span> wild 无任何改变的形参.
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">id</span><span class="hljs-params">($x)</span> </span>{
+  <span class="hljs-keyword">return</span> $x;
 }
 
 <span class="hljs-comment">/**
- * Translate a string. It uses a translator set by
- * `PhutilTranslator::setInstance()` or translations specified by
- * `PhutilTranslator::getInstance()-&gt;setTranslations()` and language rules set
- * by `PhutilTranslator::getInstance()-&gt;setLocale()`.
- *
- * <span class="hljs-doctag">@param</span> string Translation identifier with `sprintf()` placeholders.
- * <span class="hljs-doctag">@param</span> mixed Value to select the variant from (e.g. singular or plural).
- * <span class="hljs-doctag">@param</span> ... Next values referenced from $text.
- * <span class="hljs-doctag">@return</span> string Translated string with substituted values.
+ * 取得数组在索引处的值, 不会发出警告.
+ * <span class="hljs-doctag">@param</span>  array  $array 取值的数组.
+ * <span class="hljs-doctag">@param</span>  scalar $key 取值的索引.
+ * <span class="hljs-doctag">@param</span>  wild   $default 没有找打返回此默认值.
+ * <span class="hljs-doctag">@return</span> wild   If `$array[$key]` exists, that value is returned. If not,
+ *                $default is returned without raising a warning.
  */</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pht</span><span class="hljs-params">($text, $variant = null <span class="hljs-comment">/* , ... */</span>)</span> </span>{
-  $args = func_get_args();
-  $translator = PhutilTranslator::getInstance();
-  <span class="hljs-keyword">return</span> call_user_func_array(<span class="hljs-keyword">array</span>($translator, <span class="hljs-string">'translate'</span>), $args);
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">idx</span><span class="hljs-params">(array $array, $key, $default = null)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>isset() is a micro-optimization - it is fast but fails for null values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>($array[$key])) {
+    <span class="hljs-keyword">return</span> $array[$key];
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Comparing $default is also a micro-optimization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> ($default === <span class="hljs-keyword">null</span> || array_key_exists($key, $array)) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+  }
+
+  <span class="hljs-keyword">return</span> $default;
 }</pre></div></div>
             
         </li>

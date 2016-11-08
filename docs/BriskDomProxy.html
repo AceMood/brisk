@@ -30,6 +30,11 @@
                 </a>
               
                 
+                <a class="source" href="BriskSafeHTMLProducerInterface.html">
+                  BriskSafeHTMLProducerInterface.php
+                </a>
+              
+                
                 <a class="source" href="BriskResources.html">
                   BriskResources.php
                 </a>
@@ -122,29 +127,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskDomProxy</span> </span>{
-  <span class="hljs-comment">/**
-   * Render an HTML tag in a way that treats user content as unsafe by default.
-   *
-   * Tag rendering has some special logic which implements security features:
-   *
-   *   - When rendering `&lt;a&gt;` tags, if the `rel` attribute is not specified, it
-   *     is interpreted as `rel="noreferrer"`.
-   *   - When rendering `&lt;a&gt;` tags, the `href` attribute may not begin with
-   *     `javascript:`.
-   *
-   * These special cases can not be disabled.
-   *
-   * IMPORTANT: The `$tag` attribute and the keys of the `$attributes` array are
-   * trusted blindly, and not escaped. You should not pass user data in these
-   * parameters.
-   *
-   * <span class="hljs-doctag">@param</span> string $tag 要创建的dom标签.
-   * <span class="hljs-doctag">@param</span> map&lt;string, string&gt; 一个包含dom属性的哈希结构.
-   * <span class="hljs-doctag">@param</span> wild $content Content to put in the tag.
-   * <span class="hljs-doctag">@return</span> BriskSafeHTML Tag object.
-   */</span>
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tag</span><span class="hljs-params">($tag, array $attributes = array<span class="hljs-params">()</span>, $content = null)</span> </span>{</pre></div></div>
+<span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskDomProxy</span> </span>{</pre></div></div>
             
         </li>
         
@@ -154,6 +137,38 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Render an HTML tag in a way that treats user content as unsafe by default.</p>
+<p>Tag rendering has some special logic which implements security features:</p>
+<ul>
+<li>When rendering <code>&lt;a&gt;</code> tags, if the <code>rel</code> attribute is not specified, it
+is interpreted as <code>rel=&quot;noreferrer&quot;</code>.</li>
+<li>When rendering <code>&lt;a&gt;</code> tags, the <code>href</code> attribute may not begin with
+<code>javascript:</code>.</li>
+</ul>
+<p>These special cases can not be disabled.</p>
+<p>IMPORTANT: The <code>$tag</code> attribute and the keys of the <code>$attributes</code> array are
+trusted blindly, and not escaped. You should not pass user data in these
+parameters.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * <span class="hljs-doctag">@param</span> string $tag 要创建的dom标签.
+   * <span class="hljs-doctag">@param</span> map&lt;string, string&gt; 一个包含dom属性的哈希结构.
+   * <span class="hljs-doctag">@param</span> wild $content 标签内所包含的内容.
+   * <span class="hljs-doctag">@return</span> BriskSafeHTML Tag对象.
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tag</span><span class="hljs-params">($tag, array $attributes = array<span class="hljs-params">()</span>, $content = null)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>If the <code>href</code> attribute is present:</p>
 <ul>
@@ -169,11 +184,11 @@ add <code>rel=&quot;nofollow&quot;</code> by default.</li>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>This might be a URI object, so cast it to a string.</p>
 
@@ -187,11 +202,11 @@ add <code>rel=&quot;nofollow&quot;</code> by default.</li>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Is this a link to a resource on the same domain? The second part of
 this excludes “///evil.com/“ protocol-relative hrefs.</p>
@@ -204,11 +219,11 @@ this excludes “///evil.com/“ protocol-relative hrefs.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>If the <code>rel</code> attribute is not specified, fill in <code>rel=&quot;noreferrer&quot;</code>.
 Effectively, this serves to make the default behavior for offsite
@@ -228,11 +243,11 @@ some non-null <code>rel</code> will skip this.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Block ‘javascript:’ hrefs at the tag level: no well-designed
 application should ever use them, and they are a potent attack vector.</p>
@@ -242,11 +257,11 @@ application should ever use them, and they are a potent attack vector.</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>This function is deep in the core and performance sensitive, so we’re
 doing a cheap version of this test first to avoid calling preg_match()
@@ -260,11 +275,11 @@ in Phabricator.</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Chrome 33 and IE 11 both interpret “javascript\n:” as a Javascript
 URI, and all browsers interpret “  javascript:” as a Javascript URI,
@@ -291,11 +306,11 @@ section of the string.</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>For tags which can’t self-close, treat null as the empty string – for
 example, always render <code>&lt;div&gt;&lt;/div&gt;</code>, never <code>&lt;div /&gt;</code>.</p>
@@ -327,7 +342,7 @@ example, always render <code>&lt;div&gt;&lt;/div&gt;</code>, never <code>&lt;div
       <span class="hljs-keyword">if</span> ($v === <span class="hljs-keyword">null</span>) {
         <span class="hljs-keyword">continue</span>;
       }
-      $v = phutil_escape_html($v);
+      $v = <span class="hljs-keyword">self</span>::escapeHtml($v);
       $attr_string .= <span class="hljs-string">' '</span>.$k.<span class="hljs-string">'="'</span>.$v.<span class="hljs-string">'"'</span>;
     }
 
@@ -338,54 +353,100 @@ example, always render <code>&lt;div&gt;&lt;/div&gt;</code>, never <code>&lt;div
         $content = <span class="hljs-string">''</span>;
       }
     } <span class="hljs-keyword">else</span> {
-      $content = phutil_escape_html($content);
+      $content = <span class="hljs-keyword">self</span>::escapeHtml($content);
     }
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> PhutilSafeHTML(<span class="hljs-string">'&lt;'</span>.$tag.$attr_string.<span class="hljs-string">'&gt;'</span>.$content.<span class="hljs-string">'&lt;/'</span>.$tag.<span class="hljs-string">'&gt;'</span>);
-  }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BriskSafeHTML(<span class="hljs-string">'&lt;'</span>.$tag.$attr_string.<span class="hljs-string">'&gt;'</span>.$content.<span class="hljs-string">'&lt;/'</span>.$tag.<span class="hljs-string">'&gt;'</span>);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>原类库的<code>phutil_safe_html</code>, 整合后调用<code>BriskDomProxy::safeHtml</code>完成同样的操作.
+将字符串封装为安全字符串对象返回, 可直接用在html中.</p>
 
-  <span class="hljs-comment">/**
-   * Mark string as safe for use in HTML.
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * <span class="hljs-doctag">@param</span> mixed $string
+   * <span class="hljs-doctag">@return</span> BriskSafeHTML|string
    */</span>
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">phutil_safe_html</span><span class="hljs-params">($string)</span> </span>{
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">safeHtml</span><span class="hljs-params">($string)</span> </span>{
     <span class="hljs-keyword">if</span> ($string == <span class="hljs-string">''</span>) {
       <span class="hljs-keyword">return</span> $string;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($string <span class="hljs-keyword">instanceof</span> PhutilSafeHTML) {
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($string <span class="hljs-keyword">instanceof</span> BriskSafeHTML) {
       <span class="hljs-keyword">return</span> $string;
     } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> PhutilSafeHTML($string);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BriskSafeHTML($string);
     }
-  }
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>原类库的<code>phutil_escape_html</code>方法, 整合后调用<code>BriskDomProxy::escapeHtml</code>
+完成同样的操作. 对字符串进行html编码, 返回安全的html对象</p>
 
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">phutil_escape_html</span><span class="hljs-params">($string)</span> </span>{
-    <span class="hljs-keyword">if</span> ($string <span class="hljs-keyword">instanceof</span> PhutilSafeHTML) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">escapeHtml</span><span class="hljs-params">($string)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>本身是安全的html对象则直接返回</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ($string <span class="hljs-keyword">instanceof</span> BriskSafeHTML) {
       <span class="hljs-keyword">return</span> $string;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($string <span class="hljs-keyword">instanceof</span> PhutilSafeHTMLProducerInterface) {
-      $result = $string-&gt;producePhutilSafeHTML();
-      <span class="hljs-keyword">if</span> ($result <span class="hljs-keyword">instanceof</span> PhutilSafeHTML) {
-        <span class="hljs-keyword">return</span> phutil_escape_html($result);
+    }
+
+    <span class="hljs-keyword">if</span> ($string <span class="hljs-keyword">instanceof</span> BriskSafeHTMLProducerInterface) {
+      $result = $string-&gt;produceBriskSafeHTML();
+      <span class="hljs-keyword">if</span> ($result <span class="hljs-keyword">instanceof</span> BriskSafeHTML) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::escapeHtml($result);
       } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (is_array($result)) {
-        <span class="hljs-keyword">return</span> phutil_escape_html($result);
-      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($result <span class="hljs-keyword">instanceof</span> PhutilSafeHTMLProducerInterface) {
-        <span class="hljs-keyword">return</span> phutil_escape_html($result);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::escapeHtml($result);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($result <span class="hljs-keyword">instanceof</span> BriskSafeHTMLProducerInterface) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::escapeHtml($result);
       } <span class="hljs-keyword">else</span> {
         <span class="hljs-keyword">try</span> {
-          assert_stringlike($result);
-          <span class="hljs-keyword">return</span> phutil_escape_html((string)$result);
+          <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::escapeHtml((string)$result);
         } <span class="hljs-keyword">catch</span> (<span class="hljs-keyword">Exception</span> $ex) {
           <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(
             pht(
               <span class="hljs-string">"Object (of class '%s') implements %s but did not return anything "</span>.
               <span class="hljs-string">"renderable from %s."</span>,
               get_class($string),
-              <span class="hljs-string">'PhutilSafeHTMLProducerInterface'</span>,
-              <span class="hljs-string">'producePhutilSafeHTML()'</span>));
+              <span class="hljs-string">'BriskSafeHTMLProducerInterface'</span>,
+              <span class="hljs-string">'produceBriskSafeHTML()'</span>));
         }
       }
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (is_array($string)) {
+    }
+
+    <span class="hljs-keyword">if</span> (is_array($string)) {
       $result = <span class="hljs-string">''</span>;
       <span class="hljs-keyword">foreach</span> ($string <span class="hljs-keyword">as</span> $item) {
-        $result .= phutil_escape_html($item);
+        $result .= <span class="hljs-keyword">self</span>::escapeHtml($item);
       }
       <span class="hljs-keyword">return</span> $result;
     }

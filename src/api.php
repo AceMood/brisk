@@ -94,13 +94,10 @@ function id($x) {
 }
 
 /**
- * Access an array index, retrieving the value stored there if it exists or
- * a default if it does not. This function allows you to concisely access an
- * index which may or may not exist without raising a warning.
- *
+ * 取得数组在索引处的值, 不会发出警告.
  * @param  array  $array 取值的数组.
  * @param  scalar $key 取值的索引.
- * @param  wild   $default 没有找打返回此默认值
+ * @param  wild   $default 没有找打返回此默认值.
  * @return wild   If `$array[$key]` exists, that value is returned. If not,
  *                $default is returned without raising a warning.
  */

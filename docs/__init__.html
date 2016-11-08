@@ -75,7 +75,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__autoload</span><span class="hljs-params">($className)</span> </span>{
   $dir = dirname(<span class="hljs-keyword">__FILE__</span>);
-  $sub_dirs = [<span class="hljs-string">'/'</span>, <span class="hljs-string">'/resources/'</span>, <span class="hljs-string">'/response/'</span>, <span class="hljs-string">'/view/'</span>];
+  $sub_dirs = [<span class="hljs-string">'/'</span>, <span class="hljs-string">'/resources/'</span>, <span class="hljs-string">'/response/'</span>, <span class="hljs-string">'/view/'</span>, <span class="hljs-string">'/dom/'</span>];
 
   <span class="hljs-keyword">foreach</span> ($sub_dirs <span class="hljs-keyword">as</span> $sub_dir) {
     $path = $dir . $sub_dir . $className . <span class="hljs-string">'.php'</span>;
