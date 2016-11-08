@@ -9,22 +9,22 @@
 //----------------
 
 final class BriskDomProxy {
+
+  //    * Render an HTML tag in a way that treats user content as unsafe by default.
+  //
+  // Tag rendering has some special logic which implements security features:
+  //
+  //   - When rendering `<a>` tags, if the `rel` attribute is not specified, it
+  //     is interpreted as `rel="noreferrer"`.
+  //   - When rendering `<a>` tags, the `href` attribute may not begin with
+  //     `javascript:`.
+  //
+  // These special cases can not be disabled.
+  //
+  // IMPORTANT: The `$tag` attribute and the keys of the `$attributes` array are
+  // trusted blindly, and not escaped. You should not pass user data in these
+  // parameters.
   /**
-   * Render an HTML tag in a way that treats user content as unsafe by default.
-   *
-   * Tag rendering has some special logic which implements security features:
-   *
-   *   - When rendering `<a>` tags, if the `rel` attribute is not specified, it
-   *     is interpreted as `rel="noreferrer"`.
-   *   - When rendering `<a>` tags, the `href` attribute may not begin with
-   *     `javascript:`.
-   *
-   * These special cases can not be disabled.
-   *
-   * IMPORTANT: The `$tag` attribute and the keys of the `$attributes` array are
-   * trusted blindly, and not escaped. You should not pass user data in these
-   * parameters.
-   *
    * @param string $tag 要创建的dom标签.
    * @param map<string, string> 一个包含dom属性的哈希结构.
    * @param wild $content Content to put in the tag.
@@ -131,10 +131,13 @@ final class BriskDomProxy {
     return new BriskSafeHTML('<'.$tag.$attr_string.'>'.$content.'</'.$tag.'>');
   }
 
+  // 原类库的`phutil_safe_html`, 整合后调用`BriskDomProxy::safeHtml`完成同样的操作.
+  // 将字符串封装为安全字符串对象返回, 可直接用在html中.
   /**
-   * Mark string as safe for use in HTML.
+   * @param mixed $string
+   * @return BriskSafeHTML|string
    */
-  public static function phutil_safe_html($string) {
+  public static function safeHtml($string) {
     if ($string == '') {
       return $string;
     } else if ($string instanceof BriskSafeHTML) {
@@ -144,32 +147,38 @@ final class BriskDomProxy {
     }
   }
 
+  // 原类库的`phutil_escape_html`方法, 整合后调用`BriskDomProxy::escapeHtml`
+  // 完成同样的操作. 对字符串进行html编码, 返回安全的html对象
   public static function escapeHtml($string) {
-    if ($string instanceof PhutilSafeHTML) {
+    // 本身是安全的html对象则直接返回
+    if ($string instanceof BriskSafeHTML) {
       return $string;
-    } else if ($string instanceof PhutilSafeHTMLProducerInterface) {
-      $result = $string->producePhutilSafeHTML();
-      if ($result instanceof PhutilSafeHTML) {
-        return phutil_escape_html($result);
+    }
+
+    if ($string instanceof BriskSafeHTMLProducerInterface) {
+      $result = $string->produceBriskSafeHTML();
+      if ($result instanceof BriskSafeHTML) {
+        return self::escapeHtml($result);
       } else if (is_array($result)) {
-        return phutil_escape_html($result);
-      } else if ($result instanceof PhutilSafeHTMLProducerInterface) {
-        return phutil_escape_html($result);
+        return self::escapeHtml($result);
+      } else if ($result instanceof BriskSafeHTMLProducerInterface) {
+        return self::escapeHtml($result);
       } else {
         try {
-          assert_stringlike($result);
-          return phutil_escape_html((string)$result);
+          return self::escapeHtml((string)$result);
         } catch (Exception $ex) {
           throw new Exception(
             pht(
               "Object (of class '%s') implements %s but did not return anything ".
               "renderable from %s.",
               get_class($string),
-              'PhutilSafeHTMLProducerInterface',
-              'producePhutilSafeHTML()'));
+              'BriskSafeHTMLProducerInterface',
+              'produceBriskSafeHTML()'));
         }
       }
-    } else if (is_array($string)) {
+    }
+
+    if (is_array($string)) {
       $result = '';
       foreach ($string as $item) {
         $result .= self::escapeHtml($item);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file BriskSafeHTML
+ * @file BriskSafeHTML对于安全的html进行封装
  */
 
 //---------------
@@ -24,7 +24,7 @@ final class BriskSafeHTML {
 
   public function appendHTML($html /* , ... */) {
     foreach (func_get_args() as $html) {
-      $this->content .= phutil_escape_html($html);
+      $this->content .= BriskDomProxy::escapeHtml($html);
     }
     return $this;
   }
@@ -33,7 +33,7 @@ final class BriskSafeHTML {
     $args = func_get_args();
     array_shift($args);
     $args = array_map('phutil_escape_html', $args);
-    return new PhutilSafeHTML(call_user_func_array($function, $args));
+    return new BriskSafeHTML(call_user_func_array($function, $args));
   }
 
 // Requires http://pecl.php.net/operator.

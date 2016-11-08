@@ -30,12 +30,13 @@ final class BriskUtils {
   }
 
   /**
-   * 根据内容渲染内联style
-   * @param $data
+   * 根据内容渲染内联style标签, 返回安全的html封装对象
+   * @param string $data css的内容
+   * @param array|null $attributes dom上内联的属性
    * @return BriskSafeHTML
    * @throws Exception
    */
-  public static function renderInlineStyle($data) {
+  public static function renderInlineStyle($data, $attributes = array()) {
     if (stripos($data, '</style>') !== false) {
       throw new Exception(pht(
         'Literal %s is not allowed inside inline style.',
@@ -48,20 +49,17 @@ final class BriskUtils {
     }
     // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
     // would need to send the document with XHTML content type.
-    return BriskDomProxy::tag(
-      'style',
-      array(),
-      phutil_safe_html($data)
-    );
+    return BriskDomProxy::tag('style', $attributes, BriskDomProxy::safeHtml($data));
   }
 
   /**
    * 根据内容渲染内联script
-   * @param $data
-   * @return PhutilSafeHTML
+   * @param string $data script的内容
+   * @param array|null $attributes dom上内联的属性
+   * @return BriskSafeHTML
    * @throws Exception
    */
-  public static function renderInlineScript($data) {
+  public static function renderInlineScript($data, $attributes = array()) {
     if (stripos($data, '</script>') !== false) {
       throw new Exception(pht(
         'Literal %s is not allowed inside inline script.',
@@ -72,13 +70,12 @@ final class BriskUtils {
         'Literal %s is not allowed inside inline script.',
         '<!'));
     }
+
+    $attributes = array_merge($attributes, array('type' => 'text/javascript'));
+
     // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
     // would need to send the document with XHTML content type.
-    return BriskDomProxy::tag(
-      'script',
-      array('type' => 'text/javascript'),
-      phutil_safe_html($data)
-    );
+    return BriskDomProxy::tag('script', $attributes, BriskDomProxy::safeHtml($data));
   }
 }
 
