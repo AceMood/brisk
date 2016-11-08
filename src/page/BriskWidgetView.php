@@ -9,7 +9,7 @@
  *    依据初始化时指定的模式渲染, normal, bigrender 或者lazyrender
  * 2. 顶级页面通过quickling渲染, 部件提供renderAsJSON方法
  */
-abstract class BriskWidgetView extends Phobject {
+abstract class BriskWidgetView {
 
     private static $mode_bigrender = 'bigrender';
     private static $mode_lazyrender = 'lazyrender';
