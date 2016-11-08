@@ -62,22 +62,21 @@ function get_resource_uri($name, $source_name = 'brisk') {
   return $response->getURI($map, $name);
 }
 
+// 这个函数直接从原类库拷贝, 原目的在于国际化的翻译文本. 在本库中暂且不考虑国际化的功能.
+// 函数保留但简单返回最初的文本, 方便日后国际化时扩展.
 /**
- * Translate a string. It uses a translator set by
- * `PhutilTranslator::setInstance()` or translations specified by
- * `PhutilTranslator::getInstance()->setTranslations()` and language rules set
- * by `PhutilTranslator::getInstance()->setLocale()`.
- *
- * @param string Translation identifier with `sprintf()` placeholders.
+ * @param string $text Translation identifier with `sprintf()` placeholders.
  * @param mixed Value to select the variant from (e.g. singular or plural).
  * @param ... Next values referenced from $text.
- * @return string Translated string with substituted values.
+ * @return string 返回翻译后的文本.
  */
 function pht($text, $variant = null /* , ... */) {
   return $text;
-//  $args = func_get_args();
-//  $translator = PhutilTranslator::getInstance();
-//  return call_user_func_array(array($translator, 'translate'), $args);
+/*
+    $args = func_get_args();
+    $translator = PhutilTranslator::getInstance();
+    return call_user_func_array(array($translator, 'translate'), $args);
+*/
 }
 
 /**

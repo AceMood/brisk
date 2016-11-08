@@ -47,8 +47,8 @@ final class BriskUtils {
         'Literal %s is not allowed inside inline style.',
         '<!'));
     }
-    // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
-    // would need to send the document with XHTML content type.
+    // 不允许在html中出现character data, 这种形式<![CDATA[ ]]> 会被html解释器忽略.
+    // 要遵循严格html内容格式.
     return BriskDomProxy::tag('style', $attributes, BriskDomProxy::safeHtml($data));
   }
 
@@ -73,8 +73,8 @@ final class BriskUtils {
 
     $attributes = array_merge($attributes, array('type' => 'text/javascript'));
 
-    // We don't use <![CDATA[ ]]> because it is ignored by HTML parsers. We
-    // would need to send the document with XHTML content type.
+    // 不允许在html中出现character data, 这种形式<![CDATA[ ]]> 会被html解释器忽略.
+    // 要遵循严格html内容格式.
     return BriskDomProxy::tag('script', $attributes, BriskDomProxy::safeHtml($data));
   }
 }

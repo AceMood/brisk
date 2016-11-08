@@ -10,7 +10,7 @@
 
 final class BriskDomProxy {
 
-  //    * Render an HTML tag in a way that treats user content as unsafe by default.
+  // Render an HTML tag in a way that treats user content as unsafe by default.
   //
   // Tag rendering has some special logic which implements security features:
   //
@@ -27,8 +27,8 @@ final class BriskDomProxy {
   /**
    * @param string $tag 要创建的dom标签.
    * @param map<string, string> 一个包含dom属性的哈希结构.
-   * @param wild $content Content to put in the tag.
-   * @return BriskSafeHTML Tag object.
+   * @param wild $content 标签内所包含的内容.
+   * @return BriskSafeHTML Tag对象.
    */
   public static function tag($tag, array $attributes = array(), $content = null) {
     // If the `href` attribute is present:
