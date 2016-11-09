@@ -5,6 +5,7 @@
  * @{function:require_static}, and then builds appropriate HTML or
  * Ajax responses.
  * @file
+ * @author AceMood
  * @email zmike86@gmail.com
  */
 
@@ -13,20 +14,25 @@
 class BriskStaticResourceResponse {
   // 动态设置cdn
   protected $cdn = '';
+
   // 默认打印全部资源表
   protected $printType = MAP_ALL;
 
   // 收集所有打印的外链资源唯一路径
   protected $symbols = array();
+
   // 记录打印的内联资源唯一id
   protected $inlined = array();
+
   // 是否需要对收集的资源进行解析
   protected $needsResolve = true;
+
   // 命名空间划分,记录外链引用的资源
   protected $packaged;
 
   // 记录一些元数据
   protected $metadata = array();
+
   // 页面初始化需要的行为
   protected $behaviors = array();
 

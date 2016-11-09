@@ -237,16 +237,6 @@ abstract class BriskPagelet implements BriskPageletInterface {
     return $html;
   }
 
-  /**
-   * 渲染部件视图为json
-   * @return array
-   * @throws Exception
-   */
-  function renderAsJSON() {
-    $this->willRender();
-    return $this->produceHTML();
-  }
-
   // 当组件引用静态资源的时候记录下来
   function recordDependentResource($name, $source_name) {
     // 首先确认资源表存在

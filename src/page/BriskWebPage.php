@@ -13,21 +13,24 @@ abstract class BriskWebPage implements BriskWebPageInterface {
 
   // 页面标题
   private $title = '';
+
   // 页面渲染模式
   private $mode = null;
+
   // 页面需然渲染的分片id
-  private $pagelets = array();
+  private $pageletIds = array();
+
   // 页面分片的部件
   private $widgets = array();
 
-  //当前请求页面关联的response对象
+  // 当前请求页面关联的response对象
   private $response = null;
 
   function __construct($title = '') {
     $this->setTitle($title);
     if (BriskUtils::isAjaxPipe()) {
       $this->mode = RENDER_AJAXPIPE;
-      $this->setPagelets($_GET['pagelets']);
+      $this->setPageletIds($_GET['pagelets']);
       $this->response = new BriskAjaxResponse();
     } else {
       $this->mode = RENDER_NORMAL;
@@ -40,6 +43,21 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this;
   }
 
+  function setMode($mode) {
+    if ($mode === RENDER_AJAXPIPE) {
+      $this->mode = $mode;
+    } else if ($mode === RENDER_BIGPIPE) {
+      $this->mode = $mode;
+    } else {
+      $this->mode = RENDER_NORMAL;
+    }
+    return $this;
+  }
+
+  function getMode() {
+    return $this->mode;
+  }
+
   function setTitle($title) {
     $this->title = $title;
     return $this;
@@ -49,55 +67,40 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this->title;
   }
 
-  // 暂时不考虑bigpipe模式
-  function setMode($mode) {
-    if ($mode === RENDER_AJAXPIPE) {
-      $this->mode = $mode;
-    } else {
-      $this->mode = RENDER_NORMAL;
+  function setPageletIds($ids) {
+    if (!is_array($ids)) {
+      $ids = array($ids);
+    }
+    foreach ($ids as $id) {
+      $this->pageletIds[] = $id;
     }
     return $this;
   }
 
-  final function getMode() {
-    return $this->mode;
+  function getPageletIds() {
+    return $this->pageletIds;
   }
 
-  /**
-   * 设置当前页面的pagelets
-   * @param {array|string} $pagelets
-   * @return mixed
-   */
-  final function setPagelets($pagelets) {
-    if (!is_array($pagelets)) {
-      $pagelets = array($pagelets);
-    }
-    foreach ($pagelets as $id) {
-      $this->pagelets[] = $id;
-    }
-    return $this;
-  }
-
-  final function getPagelets() {
-    return $this->pagelets;
-  }
-
-  final function setCDN($cdn) {
+  function setCDN($cdn) {
     $this->response->setCDN($cdn);
     return $this;
   }
 
-  final function getCDN() {
+  function getCDN() {
     return $this->response->getCDN();
   }
 
-  /**
-   * 设置资源表打印类型
-   * @param integer $type
-   */
-  final function setPrintType($type) {
+  function setPrintType($type) {
+    // 这个方法主要用于测试打印资源表的效果
+    // 一般不需要手动调用
     if (isset($this->response)) {
       $this->response->setPrintType($type);
+    }
+  }
+
+  function getPrintType() {
+    if (isset($this->response)) {
+      return $this->response->getPrintType();
     }
   }
 
@@ -107,7 +110,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
    * @param BriskPagelet $widget
    * @return BriskSafeHTML|$this
    */
-  final function loadWidget($widget) {
+  function loadWidget($widget) {
     $widget->setParentView($this);
     if ($this->mode === RENDER_NORMAL) {
       return $widget->renderAsHTML();
@@ -117,7 +120,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     }
   }
 
-  final function getWidgets() {
+  function getWidgets() {
     return $this->widgets;
   }
 
@@ -128,7 +131,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
    * @return mixed $this
    * @throws Exception
    */
-  final function requireResource($name, $source_name = 'brisk') {
+  function requireResource($name, $source_name = 'brisk') {
     return $this->response->requireResource($name, $source_name);
   }
 
