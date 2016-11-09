@@ -28,15 +28,27 @@ interface BriskPageletInterface {
   // 渲染当前页面分片
   public function produceHTML();
 
-  //
+  // 获取当前分片的css
+  public function getDependentCss();
+
+  // 获取当前分片的js
+  public function getDependentJs();
+
+  // 记录当前部件需要的静态资源
   public function requireResource($name, $source_name);
 
-  //
+  // 部件主动获取需要的数据对象
+  public function fetchDataSource();
+
+  // 设置本部件需要的数据对象
   public function setDataSource($data);
 
+  // 获取本部件需要的数据对象
   public function getDataSource();
 
-  //
-  public function render();
+  // 以html的方式进行输出, 用于一般的请求
+  public function renderAsHTML();
 
+  // 以json的方式进行输出, 用于ajaxpipe方式的请求中
+  public function renderAsJSON();
 }

@@ -2,29 +2,52 @@
 
 /**
  * @class BriskPagelet
- * @file 所有页面分片部件的基类.
- * 同一个部件类的不同实例可在多个页面通过id,以及mode区分
- * WidgetView对不用渲染模式需要提供两个方法进行渲染,
- * 1. 顶级页面正常渲染, 部件提供renderAsHTML方法,
- *    依据初始化时指定的模式渲染, normal, bigrender 或者lazyrender
- * 2. 顶级页面通过quickling渲染, 部件提供renderAsJSON方法
+ * @file 所有页面分片部件的基类. 同一个部件类的不同实例可在多个页面通过id,以及mode区分.
+ *       WidgetView对不用渲染模式需要提供两个方法进行渲染,
+ *       1. 顶级页面正常渲染, 部件提供renderAsHTML方法,
+ *          依据初始化时指定的模式渲染, normal, bigrender 或者lazyrender
+ *       2. 顶级页面通过ajaxpipe渲染, 部件提供renderAsJSON方法
+ *       3. 目前pagelet不支持嵌套, 各pagelet都是平行的组件关系 todo
+ * @author AceMood
+ * @email zmike86@gmail.com
  */
+
+//-------------
+
 abstract class BriskPagelet implements BriskPageletInterface {
 
-  private static $mode_bigrender = 'bigrender';
-  private static $mode_lazyrender = 'lazyrender';
-  private static $mode_normal = 'normal';
-
-  //当前部件的id, 用于替换页面中同样id的div
+  // 当前部件的id, 用于替换页面中同样id的div
   private $id = '';
-  //当前部件的渲染模式
-  private $mode = null;
-  //当前部件的父级视图
-  private $parentView = null;
-  //当前部件包含的子部件
-  private $widgets = array();
 
-  public function __construct($id = '', $mode = null) {
+  // 部件优先级
+  private $priority = 0;
+
+  // 当前部件的渲染模式
+  private $mode = null;
+
+  // 分片外层dom需要的自定义属性
+  private $attributes = array();
+
+  // 当前部件的父级视图
+  private $parentView = null;
+
+  // 当前部件依赖的css, 不区分行内还是外链
+  private $dependentCss = array();
+
+  // 当前部件依赖的js, 不区分行内还是外链
+  private $dependentJs = array();
+
+  //
+  private $dataSource = null;
+
+  // 包含的子部件
+  private $pagelets = array();
+
+  function isPagelet() {
+    return true;
+  }
+
+  function __construct($id = '', $mode = null) {
     if (empty($id)) {
       $id = BriskUtils::generateUniqueId();
     }
@@ -32,7 +55,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
     $this->setId($id)->setMode($mode);
   }
 
-  final function setMode($mode) {
+  function setMode($mode) {
     if (in_array($mode, array(
       RENDER_BIGRENDER,
       RENDER_LAZYRENDER
@@ -44,52 +67,44 @@ abstract class BriskPagelet implements BriskPageletInterface {
     return $this;
   }
 
-  final function getMode() {
+  function getMode() {
     return $this->mode;
   }
 
-  final function setId($id) {
+  function setId($id) {
     $this->id = BriskDomProxy::escapeHtml($id);
     return $this;
   }
 
-  final function getId() {
+  function getId() {
     return $this->id;
   }
 
-  final function isPagelet() {
-    return true;
+  function setDomAttributes($attributes) {
+    $this->attributes = $attributes;
+    return $this;
+  }
+
+  function getDomAttributes() {
+    return $this->attributes;
   }
 
   /**
-   * 渲染期间加载对应的部件
-   * @param BriskPagelet $widget
-   * @return BriskSafeHTML|$this
+   * 生成html部分, 此方法可在子类重写
+   * @return string
    */
-  final function loadWidget($widget) {
-    $widget->setParentView($this);
-    //正常渲染则直接输出部件html内容
-    if ($this->mode === self::$mode_normal) {
-      return $widget->renderAsHTML();
-    }
-    //否则记录页面部件
-    else {
-      $this->widgets[] = $widget;
-      return $this;
-    }
+  function produceHTML() {
+    return (string)hsprintf(
+      new BriskSafeHTML($this->getTemplateString())
+    );
   }
 
-  final function getWidgets() {
-    return $this->widgets;
+  function getDependentCss() {
+    return $this->dependentCss;
   }
 
-  //设置当前部件的父级视图
-  final function setParentView($parent) {
-    $this->parentView = $parent;
-  }
-
-  final function getParentView() {
-    return $this->parentView;
+  function getDependentJs() {
+    return $this->dependentJs;
   }
 
   /**
@@ -98,19 +113,45 @@ abstract class BriskPagelet implements BriskPageletInterface {
    * @param string|null $source_name
    * @throws Exception
    */
-  final function requireResource($name, $source_name = 'brisk') {
-    if (!isset($this->parentView)) {
+  function requireResource($name, $source_name = 'brisk') {
+    $parent = $this->getParentView();
+    if (!isset($parent)) {
       throw new Exception(pht(
         'Could not invoke requireResource with no parentView set. %s',
         __CLASS__
       ));
     }
 
-    //直接记录在最顶层的page view中
-    $topView = $this->getTopLevelView();
-    if (isset($topView)) {
-      $topView->requireResource($name, $source_name);
+    $this->recordDependentResource($name, $source_name);
+
+    // 直接记录在最顶层的webpage中
+    $web_page = $this->getTopLevelView();
+    if (isset($web_page)) {
+      $web_page->requireResource($name, $source_name);
     }
+  }
+
+  function setDataSource($data) {
+    $this->dataSource = $data;
+  }
+
+  function getDataSource() {
+    return $this->dataSource;
+  }
+
+  // 组件主动获取数据源. 保留这个方法作为bigpipe实现时的具体实现.
+  // `fetchDataSource`调用后应直接调用render方法进行输出.
+  function fetchDataSource() {
+    ob_flush();
+    flush();
+  }
+
+  function setParentView($parent) {
+    $this->parentView = $parent;
+  }
+
+  function getParentView() {
+    return $this->parentView;
   }
 
   /**
@@ -119,28 +160,31 @@ abstract class BriskPagelet implements BriskPageletInterface {
    * @param string|null $source_name
    * @throws Exception
    */
-  final function inlineResource($name, $source_name = 'brisk') {
-    if (!isset($this->parentView)) {
+  function inlineResource($name, $source_name = 'brisk') {
+    $parent = $this->getParentView();
+    if (!isset($parent)) {
       throw new Exception(pht(
         'Could not invoke requireResource with no parentView set. %s',
         __CLASS__
       ));
     }
 
-    //直接记录在最顶层的page view中
-    $topView = $this->getTopLevelView();
-    if (isset($topView)) {
-      $topView->inlineResource($name, $source_name);
+    $this->recordDependentResource($name, $source_name);
+
+    // 直接记录在最顶层的webpage中
+    $web_page = $this->getTopLevelView();
+    if (isset($web_page)) {
+      $web_page->inlineResource($name, $source_name);
     }
   }
 
   /**
    * 获取顶层的pageview对象
-   * @return BriskPageView
+   * @return BriskWebPage|null
    */
-  final function getTopLevelView() {
+  function getTopLevelView() {
     $parent = $this->getParentView();
-    while (isset($parent) && $parent->isPagelet()) {
+    while (isset($parent) && isset($parent->isPagelet) && $parent->isPagelet()) {
       $parent = $parent->getParentView();
     }
     return $parent;
@@ -150,7 +194,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
    * 渲染本视图
    * @return string
    */
-  public function renderAsHTML() {
+  function renderAsHTML() {
     $html = '';
     switch ($this->mode) {
       case RENDER_NORMAL:
@@ -205,7 +249,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
    * @return array
    * @throws Exception
    */
-  public function renderAsJSON() {
+  function renderAsJSON() {
     if (!isset($this->parentView)) {
       throw new Exception(pht(
         'Could not invoke requireResource with no parentView set. %s',
@@ -217,22 +261,37 @@ abstract class BriskPagelet implements BriskPageletInterface {
     return $this->produceHTML();
   }
 
-  /**
-   * 生成html部分, 此方法可在子类重写
-   * @return string
-   */
-  protected function produceHTML() {
-    return (string)hsprintf(
-      new PhutilSafeHTML($this->getTemplateString())
-    );
+  //
+  protected function recordDependentResource($name, $source_name) {
+    // 首先确认资源表存在
+    $map = BriskResourceMap::getNamedInstance($source_name);
+    $symbol = id($map->getNameMap())[$name];
+    if (!isset($symbol)) {
+      throw new Exception(pht(
+        'No resource with name "%s" exists in source "%s"!',
+        $name,
+        $source_name
+      ));
+    }
+
+    $resource_type = $map->getResourceTypeForName($name);
+    switch ($resource_type) {
+      case 'css':
+        if (!in_array(id($this->dependentCss)[$source_name], $name)) {
+          $this->dependentCss[$source_name][] = $name;
+        }
+        break;
+      case 'js':
+        if (!in_array(id($this->dependentJs)[$source_name], $name)) {
+          $this->dependentJs[$source_name][] = $name;
+        }
+        break;
+    }
   }
 
-  //渲染前触发, 子类可重写
+  // 渲染前触发, 子类可重写
   protected function willRender() {}
 
-  /**
-   * 返回部件的模版字符串, 各子类具体实现
-   * @return string
-   */
+  // 返回部件的模版字符串, 各子类具体实现
   abstract function getTemplateString();
 }

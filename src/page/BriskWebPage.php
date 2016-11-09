@@ -4,7 +4,7 @@
  * Class BriskPageView
  * 渲染页面的抽象类
  */
-abstract class BriskPageView {
+abstract class BriskWebPage {
 
   // 页面标题
   private $title = '';
@@ -106,8 +106,8 @@ abstract class BriskPageView {
   /**
    * 渲染期间加载对应的部件.
    * 正常渲染则直接输出部件html内容, 否则记录页面部件
-   * @param BriskWidgetView $widget
-   * @return PhutilSafeHTML|$this
+   * @param BriskPagelet $widget
+   * @return BriskSafeHTML|$this
    */
   final function loadWidget($widget) {
     $widget->setParentView($this);
