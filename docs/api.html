@@ -293,6 +293,34 @@
   }
 
   <span class="hljs-keyword">return</span> $default;
+}
+
+<span class="hljs-comment">/**
+ * Format a HTML code. This function behaves like `sprintf()`, except that all
+ * the normal conversions (like %s) will be properly escaped.
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hsprintf</span><span class="hljs-params">($html <span class="hljs-comment">/* , ... */</span>)</span> </span>{
+  $args = func_get_args();
+  array_shift($args);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>需要对参数进行安全编码</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $arr_args = <span class="hljs-keyword">array</span>();
+  <span class="hljs-keyword">foreach</span> ($args <span class="hljs-keyword">as</span> $arg) {
+    $arr_args[] = BriskDomProxy::escapeHtml($arg);
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BriskSafeHTML(vsprintf($html, $arr_args));
 }</pre></div></div>
             
         </li>

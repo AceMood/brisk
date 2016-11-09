@@ -5,7 +5,7 @@
  * @email zmike86@gmail.com
  */
 
-interface BriskPageletInterface {
+interface BriskWebPageInterface {
 
   // 设置分片的渲染模式
   public function setMode($mode);

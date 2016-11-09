@@ -1,10 +1,15 @@
 <?php
 
 /**
- * Class BriskPageView
- * 渲染页面的抽象类
+ * @class BriskWebPage
+ * @file 渲染页面的抽象类
+ * @author AceMood
+ * @email zmike86@gmail.com
  */
-abstract class BriskWebPage {
+
+//---------------
+
+abstract class BriskWebPage implements BriskWebPageInterface {
 
   // 页面标题
   private $title = '';

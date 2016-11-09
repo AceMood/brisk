@@ -35,6 +35,26 @@
                 </a>
               
                 
+                <a class="source" href="BriskPagelet.html">
+                  BriskPagelet.php
+                </a>
+              
+                
+                <a class="source" href="BriskPageletInterface.html">
+                  BriskPageletInterface.php
+                </a>
+              
+                
+                <a class="source" href="BriskWebPage.html">
+                  BriskWebPage.php
+                </a>
+              
+                
+                <a class="source" href="BriskWebPageInterface.html">
+                  BriskWebPageInterface.php
+                </a>
+              
+                
                 <a class="source" href="BriskResources.html">
                   BriskResources.php
                 </a>
@@ -57,16 +77,6 @@
                 
                 <a class="source" href="BriskStaticResourceResponse.html">
                   BriskStaticResourceResponse.php
-                </a>
-              
-                
-                <a class="source" href="BriskPageView.html">
-                  BriskPageView.php
-                </a>
-              
-                
-                <a class="source" href="BriskWidgetView.html">
-                  BriskWidgetView.php
                 </a>
               
             </div>
@@ -150,10 +160,7 @@
 
   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">applyFunction</span><span class="hljs-params">($function, $string <span class="hljs-comment">/* , ... */</span>)</span> </span>{
     $args = func_get_args();
-    array_shift($args);
-    $args = array_map(<span class="hljs-string">'phutil_escape_html'</span>, $args);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BriskSafeHTML(call_user_func_array($function, $args));
-  }</pre></div></div>
+    array_shift($args);</pre></div></div>
             
         </li>
         
@@ -163,6 +170,26 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>需要对参数进行安全编码</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $arr_args = <span class="hljs-keyword">array</span>();
+    <span class="hljs-keyword">foreach</span> ($args <span class="hljs-keyword">as</span> $arg) {
+      $arr_args[] = BriskDomProxy::escapeHtml($arg);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BriskSafeHTML(call_user_func_array($function, $arr_args));
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Requires <a href="http://pecl.php.net/operator">http://pecl.php.net/operator</a>.</p>
 
