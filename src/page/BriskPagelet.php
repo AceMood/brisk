@@ -202,42 +202,35 @@ abstract class BriskPagelet implements BriskPageletInterface {
         $html = $this->produceHTML();
         break;
       case RENDER_BIGRENDER:
+        // bigrender模式下也依赖于前端js库的实现, 具体做法就是取出textarea中的html片段,
+        // 放到随后的div中并移除textarea元素. 这里面注意如果html片段中有行内script, 直接
+        // 设置innerHTML是不行的, 所以`produceHTML`产出的html不应该包含行内script, 而
+        // style是没有这个问题的.
         $this->willRender();
         $html = BriskDomProxy::tag(
           'textarea',
           array(
-            'class' => 'g_soi_bigrender',
+            'class' => 'g_brisk_bigrender',
             'style' => 'display:none;',
             'data-bigrender' => 1,
             'data-pageletId' => $this->id
           ),
           $this->produceHTML()
         );
-        $html->appendHTML(phutil_tag(
-          'div',
-          array(
-            'id' => $this->id
-          )
-        ));
+        $html->appendHTML(BriskDomProxy::tag('div', array('id' => $this->id)));
         break;
       case RENDER_LAZYRENDER:
-        $html = phutil_tag(
+        // 此处将异步加载的js代码直接输出到textarea中. 具体实现依赖于浏览器端的js库,
+        // 这里可以根据项目修改, 目前假设前端库提供`BigPipe.asyncLoad`方法.
+        $html = BriskDomProxy::tag(
           'textarea',
           array(
-            'class' => 'g_soi_lazyrender',
+            'class' => 'g_brisk_lazyrender',
             'style' => 'display:none;'
           ),
-          hsprintf(
-            'BigPipe.asyncLoad({id: "%s"});',
-            $this->id
-          )
+          hsprintf('BigPipe.asyncLoad({id: "%s"});', $this->id)
         );
-        $html->appendHTML(phutil_tag(
-          'div',
-          array(
-            'id' => $this->id
-          )
-        ));
+        $html->appendHTML(BriskDomProxy::tag('div', array('id' => $this->id)));
         break;
     }
 
@@ -250,19 +243,12 @@ abstract class BriskPagelet implements BriskPageletInterface {
    * @throws Exception
    */
   function renderAsJSON() {
-    if (!isset($this->parentView)) {
-      throw new Exception(pht(
-        'Could not invoke requireResource with no parentView set. %s',
-        __CLASS__
-      ));
-    }
-
     $this->willRender();
     return $this->produceHTML();
   }
 
-  //
-  protected function recordDependentResource($name, $source_name) {
+  // 当组件引用静态资源的时候记录下来
+  function recordDependentResource($name, $source_name) {
     // 首先确认资源表存在
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = id($map->getNameMap())[$name];
@@ -289,7 +275,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
     }
   }
 
-  // 渲染前触发, 子类可重写
+  // 渲染前触发, 子类可重写. 一般在此处引用组件需要的静态资源
   protected function willRender() {}
 
   // 返回部件的模版字符串, 各子类具体实现

@@ -5,6 +5,21 @@
     <title>Title</title>
 </head>
 <body>
+<div id="container"></div>
+<script>
+    var $c = document.getElementById('container');
+    var s0 = document.createElement('script');
+    s0.appendChild(document.createTextNode('alert(100)'));
+    var s1 = document.createElement('script');
+    s1.appendChild(document.createTextNode('alert(200)'));
 
+    $c.appendChild(s0);
+    $c.appendChild(s1);
+
+    var t = Date.now();
+    while (Date.now() - t < 3000) {
+
+    }
+</script>
 </body>
 </html>

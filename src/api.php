@@ -122,6 +122,10 @@ function idx(array $array, $key, $default = null) {
 function hsprintf($html /* , ... */) {
   $args = func_get_args();
   array_shift($args);
-  return new PhutilSafeHTML(
-    vsprintf($html, array_map('phutil_escape_html', $args)));
+  // 需要对参数进行安全编码
+  $arr_args = array();
+  foreach ($args as $arg) {
+    $arr_args[] = BriskDomProxy::escapeHtml($arg);
+  }
+  return new BriskSafeHTML(vsprintf($html, $arr_args));
 }

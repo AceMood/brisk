@@ -26,25 +26,26 @@ abstract class BriskWebPage {
       $this->response = new BriskAjaxResponse();
     } else {
       $this->mode = RENDER_NORMAL;
-      $this->response = new BriskStaticResourceResponse();
+      $this->response = BriskAPI::staticResourceResponse();
     }
   }
 
-  final function addMetadata($metadata) {
+  function addMetadata($metadata) {
     $this->response->addMetadata($metadata);
     return $this;
   }
 
-  final function setTitle($title) {
+  function setTitle($title) {
     $this->title = $title;
     return $this;
   }
 
-  final function getTitle() {
+  function getTitle() {
     return $this->title;
   }
 
-  final function setMode($mode) {
+  // 暂时不考虑bigpipe模式
+  function setMode($mode) {
     if ($mode === RENDER_AJAXPIPE) {
       $this->mode = $mode;
     } else {
@@ -83,14 +84,6 @@ abstract class BriskWebPage {
 
   final function getCDN() {
     return $this->response->getCDN();
-  }
-
-  /**
-   * 组件类型是页面
-   * @return bool
-   */
-  final function isPage() {
-    return true;
   }
 
   /**
