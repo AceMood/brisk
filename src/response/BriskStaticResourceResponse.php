@@ -126,7 +126,7 @@ class BriskStaticResourceResponse {
    * @return mixed $this
    * @throws Exception
    */
-  public function requireResource($name, $source_name) {
+  function requireResource($name, $source_name) {
     //首先确认资源表存在
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
@@ -146,7 +146,7 @@ class BriskStaticResourceResponse {
     $symbols = $this->symbols[$source_name];
     $resource_type = $map->getResourceTypeForName($name);
 
-    //之前渲染过,不区分外链还是内联
+    // 之前渲染过,不区分外链还是内联
     if (array_search($name, $symbols, true) > -1 ||
       isset($this->inlined[$source_name][$resource_type][$name])) {
       return $this;
@@ -162,11 +162,11 @@ class BriskStaticResourceResponse {
    * 资源内联
    * @param string $name 资源在工程目录的路径
    * @param string $source_name 项目空间
-   * @return PhutilSafeHTML|string
+   * @return BriskSafeHTML|string
    * @throws Exception
    */
-  public function inlineResource($name, $source_name) {
-    //首先确认资源存在
+  function inlineResource($name, $source_name) {
+    // 首先确认资源存在
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
     if ($symbol === null) {
@@ -179,12 +179,12 @@ class BriskStaticResourceResponse {
 
     $resource_type = $map->getResourceTypeForName($name);
 
-    //之前已经内联渲染过
+    // 之前已经内联渲染过
     if (isset($this->inlined[$source_name][$resource_type][$name])) {
       return '';
     }
 
-    //立即渲染,不优化输出位置
+    // 立即渲染,不优化输出位置
     $fileContent = $map->getResourceDataForName($name, $source_name);
     $this->inlined[$source_name][$resource_type][$name] = $fileContent;
     if ($resource_type === 'js') {
@@ -203,7 +203,7 @@ class BriskStaticResourceResponse {
    * @return mixed
    * @throws Exception
    */
-  public function generateDataURI($name, $source_name = 'brisk') {
+  function generateDataURI($name, $source_name = 'brisk') {
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
     if ($symbol === null) {
@@ -217,8 +217,8 @@ class BriskStaticResourceResponse {
     return $map->generateDataURI($name);
   }
 
-  //单独渲染一个外链资源
-  public function renderSingleResource($name, $source_name) {
+  // 单独渲染一个外链资源
+  function renderSingleResource($name, $source_name) {
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
     if ($symbol === null) {
@@ -235,11 +235,11 @@ class BriskStaticResourceResponse {
   /**
    * 渲染输出一种资源类型的html片段
    * @param string $type 资源类型
-   * @return PhutilSafeHTML
+   * @return BriskSafeHTML
    * @throws Exception
    */
-  public function renderResourcesOfType($type) {
-    //更新$this->packaged
+  function renderResourcesOfType($type) {
+    // 更新$this->packaged
     $this->resolveResources();
     $result = array();
 

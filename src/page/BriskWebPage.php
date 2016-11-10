@@ -10,7 +10,6 @@
 //---------------
 
 abstract class BriskWebPage implements BriskWebPageInterface {
-
   // 页面标题
   protected $title = '';
 
@@ -75,7 +74,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   }
 
   function setTitle($title) {
-    $this->title = (string)hsprintf($title);
+    $this->title = $title;
     return $this;
   }
 
@@ -155,44 +154,34 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $html;
   }
 
-  /**
-   * 渲染页面成html
-   * @return string
-   * @throws Exception
-   */
   protected function renderAsHTML() {
+    // 这个方法在正常请求的时候输出页面全部的html, 这个可被复写的方法.
+    // 希望以此为接口实现不同的模板渲染, 或者直接由php输出.
+    // `getTemplateString`可以使用也可以不使用, 并不强制.
     return (string)hsprintf(
       $this->getTemplateString(),
-      phutil_escape_html($this->title),
-      $this->response->renderResourcesOfType('css'),
-      new PhutilSafeHTML(''),
-      $this->response->renderResourcesOfType('js')
+      BriskDomProxy::escapeHtml($this->title),
+      $this->renderResourcesOfType('css'),
+      new BriskSafeHTML(''),
+      $this->renderResourcesOfType('js')
     );
   }
 
-  /**
-   * 渲染页面成json
-   * @return array
-   * @throws Exception
-   */
   protected function renderAsJSON() {
-    $res = array(
-      'payload' => array()
-    );
+    $res = array('payload' => array());
 
-    //挑选需要渲染的部件
-    foreach ($this->pagelets as $pageletId) {
-      if (!isset($this->getWidgets()[$pageletId])) {
+    // 挑选需要渲染的部件
+    foreach ($this->pagelets as $pagelet_id) {
+      if (!isset($this->getPagelets()[$pagelet_id])) {
         throw new Exception(pht(
           'No widget with id %s found in %s',
-          $pageletId,
+          $pagelet_id,
           __CLASS__
         ));
       }
 
-      $widget = $this->getWidgets()[$pageletId];
-
-      $res['payload'][$pageletId] = $widget->renderAsJSON();
+      $pagelet = id($this->getPagelets())[$pagelet_id];
+      $res['payload'][$pagelet_id] = $pagelet->renderAsHTML();
       $res['js'] = $this->response->renderResourcesOfType('js');
       $res['css'] = $this->response->renderResourcesOfType('css');
       $res['script'] = $this->response->produceScript();
@@ -208,10 +197,6 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return json_encode($res);
   }
 
-  /**
-   * 获取默认的页面模板,可在子类复写
-   * @return string
-   */
   protected function getTemplateString() {
     return
 <<<EOTEMPLATE
