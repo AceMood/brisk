@@ -21,7 +21,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   private $pageletIds = array();
 
   // 页面分片的部件
-  private $widgets = array();
+  private $pagelets = array();
 
   // 当前请求页面关联的response对象
   private $response = null;
@@ -110,18 +110,18 @@ abstract class BriskWebPage implements BriskWebPageInterface {
    * @param BriskPagelet $widget
    * @return BriskSafeHTML|$this
    */
-  function loadWidget($widget) {
+  function loadPagelet($widget) {
     $widget->setParentView($this);
     if ($this->mode === RENDER_NORMAL) {
       return $widget->renderAsHTML();
     } else {
-      $this->widgets[$widget->getId()] = $widget;
+      $this->pagelets[$widget->getId()] = $widget;
       return $this;
     }
   }
 
-  function getWidgets() {
-    return $this->widgets;
+  function getPagelets() {
+    return $this->pagelets;
   }
 
   /**
@@ -142,7 +142,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
    * @return mixed
    * @throws Exception
    */
-  final function inlineResource($name, $source_name = 'brisk') {
+  function inlineResource($name, $source_name = 'brisk') {
     return $this->response->inlineResource($name, $source_name);
   }
 

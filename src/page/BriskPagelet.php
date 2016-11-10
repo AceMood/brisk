@@ -37,7 +37,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
   // 当前部件依赖的js, 不区分行内还是外链
   private $dependentJs = array();
 
-  //
+  // 包含的数据对象, 和服务端商定字段和格式
   private $dataSource = null;
 
   // 包含的子部件
@@ -90,7 +90,8 @@ abstract class BriskPagelet implements BriskPageletInterface {
   }
 
   /**
-   * 生成html部分, 此方法可在子类重写
+   * 生成html部分, `getTemplateString`方法应在各个子类重写.
+   * 结合`$this->dataSource`生成html.
    * @return string
    */
   function produceHTML() {
@@ -107,14 +108,14 @@ abstract class BriskPagelet implements BriskPageletInterface {
     return $this->dependentJs;
   }
 
-  /**
-   * 部件中加载静态资源
-   * @param string $name
-   * @param string|null $source_name
-   * @throws Exception
-   */
   function requireResource($name, $source_name = 'brisk') {
-    $parent = $this->getParentView();
+    // 部件中提供`requireResource`的目的是可以记录每个部件依赖的静态资源.
+    // 如果不调用实例方法, 而是直接调用`require_static`可以加载资源, 但是不会记录
+    // 本部件和资源的关系, 推荐使用`$pagelet->requireResource($name, $ns)`.
+    $this->recordDependentResource($name, $source_name);
+    require_static($name, $source_name);
+
+    /*$parent = $this->getParentView();
     if (!isset($parent)) {
       throw new Exception(pht(
         'Could not invoke requireResource with no parentView set. %s',
@@ -122,13 +123,11 @@ abstract class BriskPagelet implements BriskPageletInterface {
       ));
     }
 
-    $this->recordDependentResource($name, $source_name);
-
     // 直接记录在最顶层的webpage中
     $web_page = $this->getTopLevelView();
     if (isset($web_page)) {
       $web_page->requireResource($name, $source_name);
-    }
+    }*/
   }
 
   function setDataSource($data) {
@@ -154,14 +153,14 @@ abstract class BriskPagelet implements BriskPageletInterface {
     return $this->parentView;
   }
 
-  /**
-   * 部件中内联静态资源
-   * @param string $name
-   * @param string|null $source_name
-   * @throws Exception
-   */
   function inlineResource($name, $source_name = 'brisk') {
-    $parent = $this->getParentView();
+    // 部件中提供`inlineResource`的目的是可以记录每个部件依赖的静态资源.
+    // 如果不调用实例方法, 而是直接调用`inline_static`可以加载资源, 但是不会记录
+    // 本部件和资源的关系, 推荐使用`$pagelet->inlineResource($name, $ns)`.
+    $this->recordDependentResource($name, $source_name);
+    inline_static($name, $source_name);
+
+    /*$parent = $this->getParentView();
     if (!isset($parent)) {
       throw new Exception(pht(
         'Could not invoke requireResource with no parentView set. %s',
@@ -169,13 +168,11 @@ abstract class BriskPagelet implements BriskPageletInterface {
       ));
     }
 
-    $this->recordDependentResource($name, $source_name);
-
     // 直接记录在最顶层的webpage中
     $web_page = $this->getTopLevelView();
     if (isset($web_page)) {
       $web_page->inlineResource($name, $source_name);
-    }
+    }*/
   }
 
   /**
@@ -191,7 +188,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
   }
 
   /**
-   * 渲染本视图
+   * 渲染视图
    * @return string
    */
   function renderAsHTML() {
@@ -209,11 +206,14 @@ abstract class BriskPagelet implements BriskPageletInterface {
         $this->willRender();
         $html = BriskDomProxy::tag(
           'textarea',
-          array(
-            'class' => 'g_brisk_bigrender',
-            'style' => 'display:none;',
-            'data-bigrender' => 1,
-            'data-pageletId' => $this->id
+          array_merge(
+            array(
+              'class' => 'g_brisk_bigrender',
+              'style' => 'display:none;',
+              'data-bigrender' => 1,
+              'data-pageletId' => $this->id
+            ),
+            $this->getDomAttributes()
           ),
           $this->produceHTML()
         );
@@ -224,9 +224,12 @@ abstract class BriskPagelet implements BriskPageletInterface {
         // 这里可以根据项目修改, 目前假设前端库提供`BigPipe.asyncLoad`方法.
         $html = BriskDomProxy::tag(
           'textarea',
-          array(
-            'class' => 'g_brisk_lazyrender',
-            'style' => 'display:none;'
+          array_merge(
+            array(
+              'class' => 'g_brisk_lazyrender',
+              'style' => 'display:none;'
+            ),
+            $this->getDomAttributes()
           ),
           hsprintf('BigPipe.asyncLoad({id: "%s"});', $this->id)
         );
