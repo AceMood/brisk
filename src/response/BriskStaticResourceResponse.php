@@ -16,7 +16,7 @@ class BriskStaticResourceResponse {
   protected $cdn = '';
 
   // 默认打印全部资源表
-  protected $printType = MAP_ALL;
+  protected $printType = MAP_ASYNC;
 
   // 收集所有打印的外链资源唯一路径
   protected $symbols = array();

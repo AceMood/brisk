@@ -17,31 +17,31 @@
 abstract class BriskPagelet implements BriskPageletInterface {
 
   // 当前部件的id, 用于替换页面中同样id的div
-  private $id = '';
+  protected $id = '';
 
   // 部件优先级
-  private $priority = 0;
+  protected $priority = 0;
 
   // 当前部件的渲染模式
-  private $mode = null;
+  protected $mode = null;
 
   // 分片外层dom需要的自定义属性
-  private $attributes = array();
+  protected $attributes = array();
 
   // 当前部件的父级视图
-  private $parentView = null;
+  protected $parentView = null;
 
   // 当前部件依赖的css, 不区分行内还是外链
-  private $dependentCss = array();
+  protected $dependentCss = array();
 
   // 当前部件依赖的js, 不区分行内还是外链
-  private $dependentJs = array();
+  protected $dependentJs = array();
 
   // 包含的数据对象, 和服务端商定字段和格式
-  private $dataSource = null;
+  protected $dataSource = null;
 
   // 包含的子部件
-  private $pagelets = array();
+  protected $pagelets = array();
 
   function isPagelet() {
     return true;

@@ -12,22 +12,25 @@
 abstract class BriskWebPage implements BriskWebPageInterface {
 
   // 页面标题
-  private $title = '';
+  protected $title = '';
 
   // 页面渲染模式
-  private $mode = null;
+  protected $mode = null;
+
+  // 页面的浏览设备分类, pc或mobile
+  protected $device = DEVICE_MOBILE;
 
   // 页面需然渲染的分片id
-  private $pageletIds = array();
+  protected $pageletIds = array();
 
   // 页面分片的部件
-  private $pagelets = array();
+  protected $pagelets = array();
 
   // 当前请求页面关联的response对象
-  private $response = null;
+  protected $response = null;
 
-  function __construct($title = '') {
-    $this->setTitle($title);
+  function __construct($title = '', $device = DEVICE_MOBILE) {
+    $this->setTitle($title)->setDevice($device);
     if (BriskUtils::isAjaxPipe()) {
       $this->mode = RENDER_AJAXPIPE;
       $this->setPageletIds($_GET['pagelets']);
@@ -58,8 +61,21 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this->mode;
   }
 
+  function setDevice($device) {
+    if (in_array($device, array(
+      DEVICE_PC, DEVICE_MOBILE
+    ))) {
+      $this->device = $device;
+    }
+    return $this;
+  }
+
+  function getDevice() {
+    return $this->device;
+  }
+
   function setTitle($title) {
-    $this->title = $title;
+    $this->title = (string)hsprintf($title);
     return $this;
   }
 
@@ -81,15 +97,6 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this->pageletIds;
   }
 
-  function setCDN($cdn) {
-    $this->response->setCDN($cdn);
-    return $this;
-  }
-
-  function getCDN() {
-    return $this->response->getCDN();
-  }
-
   function setPrintType($type) {
     // 这个方法主要用于测试打印资源表的效果
     // 一般不需要手动调用
@@ -104,18 +111,22 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     }
   }
 
+  function getResponseObject() {
+    // 提供获取私有reponse的方法, 方便调用设置cdn等功能
+    return $this->response;
+  }
+
   /**
-   * 渲染期间加载对应的部件.
-   * 正常渲染则直接输出部件html内容, 否则记录页面部件
-   * @param BriskPagelet $widget
+   * 渲染期间加载对应的部件. 正常渲染则直接输出部件html内容, 否则记录页面部件
+   * @param BriskPagelet $pagelet
    * @return BriskSafeHTML|$this
    */
-  function loadPagelet($widget) {
-    $widget->setParentView($this);
+  function loadPagelet($pagelet) {
+    $pagelet->setParentView($this);
     if ($this->mode === RENDER_NORMAL) {
-      return $widget->renderAsHTML();
+      return $pagelet->renderAsHTML();
     } else {
-      $this->pagelets[$widget->getId()] = $widget;
+      $this->pagelets[$pagelet->getId()] = $pagelet;
       return $this;
     }
   }
@@ -124,63 +135,19 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this->pagelets;
   }
 
-  /**
-   * 记录请求依赖的外链资源
-   * @param string $name 工程目录资源路径
-   * @param string $source_name 空间
-   * @return mixed $this
-   * @throws Exception
-   */
-  function requireResource($name, $source_name = 'brisk') {
-    return $this->response->requireResource($name, $source_name);
-  }
-
-  /**
-   * 内联资源
-   * @param string $name 工程目录资源路径
-   * @param string $source_name 空间
-   * @return mixed
-   * @throws Exception
-   */
-  function inlineResource($name, $source_name = 'brisk') {
-    return $this->response->inlineResource($name, $source_name);
-  }
-
-  /**
-   * 返回图片内联为dataUri的方式
-   * @param $name
-   * @param $source_name
-   * @return mixed
-   * @throws Exception
-   */
-  final function generateDataURI($name, $source_name = 'brisk') {
-    return $this->response->generateDataURI($name, $source_name);
-  }
-
-  /**
-   * 将一种类型的资源输出到页面
-   * @param string $type 资源类型如js, css
-   * @return PhutilSafeHTML
-   */
-  final function renderResourcesOfType($type) {
+  function renderResourcesOfType($type) {
     return $this->response->renderResourcesOfType($type);
   }
 
-  /**
-   * 渲染本视图
-   * @return string
-   */
-  final function render() {
+  function render() {
     $html = '';
     switch ($this->mode) {
       case RENDER_AJAXPIPE:
-        //这里不需要加载页面全局的资源, 不再调用loadGlobalResources
-        $this->willRender();
+        // 这里不需要加载页面全局的资源, 不再调用`willRender`
         $html = $this->renderAsJSON();
         break;
       case RENDER_NORMAL:
         $this->willRender();
-        $this->loadGlobalResources();
         $html = $this->renderAsHTML();
         break;
     }
@@ -247,8 +214,8 @@ abstract class BriskWebPage implements BriskWebPageInterface {
    */
   protected function getTemplateString() {
     return
-      <<<EOTEMPLATE
-      <!DOCTYPE html>
+<<<EOTEMPLATE
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
@@ -261,10 +228,6 @@ abstract class BriskWebPage implements BriskWebPageInterface {
 EOTEMPLATE;
   }
 
-  //渲染前触发, 子类可重写
+  // 渲染前触发, 子类可重写, 一般是加载关键资源
   protected function willRender() {}
-
-  //全页面渲染的时候加载页面级别的资源
-  abstract function loadGlobalResources();
-
 }
