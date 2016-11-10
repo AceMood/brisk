@@ -30,16 +30,14 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
         return array_values(array_unique($result));
     }
 
-
-
     /**
      * 资源内联
      * @param string $name
      * @param string $source_name
-     * @return PhutilSafeHTML|string
+     * @return BriskSafeHTML|string
      * @throws Exception
      */
-    public function inlineResource($name, $source_name) {
+    function inlineResource($name, $source_name) {
         //首先确认资源存在
         $map = BriskResourceMap::getNamedInstance($source_name);
         $symbol = $map->getNameMap()[$name];

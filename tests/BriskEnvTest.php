@@ -1,6 +1,6 @@
 <?php
 
-require_once 'src/BriskEnv.php';
+include_once 'src/BriskEnv.php';
 
 /**
  * Class EnvTest
