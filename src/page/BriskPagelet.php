@@ -114,20 +114,6 @@ abstract class BriskPagelet implements BriskPageletInterface {
     // 本部件和资源的关系, 推荐使用`$pagelet->requireResource($name, $ns)`.
     $this->recordDependentResource($name, $source_name);
     require_static($name, $source_name);
-
-    /*$parent = $this->getParentView();
-    if (!isset($parent)) {
-      throw new Exception(pht(
-        'Could not invoke requireResource with no parentView set. %s',
-        __CLASS__
-      ));
-    }
-
-    // 直接记录在最顶层的webpage中
-    $web_page = $this->getTopLevelView();
-    if (isset($web_page)) {
-      $web_page->requireResource($name, $source_name);
-    }*/
   }
 
   function setDataSource($data) {
@@ -159,20 +145,6 @@ abstract class BriskPagelet implements BriskPageletInterface {
     // 本部件和资源的关系, 推荐使用`$pagelet->inlineResource($name, $ns)`.
     $this->recordDependentResource($name, $source_name);
     inline_static($name, $source_name);
-
-    /*$parent = $this->getParentView();
-    if (!isset($parent)) {
-      throw new Exception(pht(
-        'Could not invoke requireResource with no parentView set. %s',
-        __CLASS__
-      ));
-    }
-
-    // 直接记录在最顶层的webpage中
-    $web_page = $this->getTopLevelView();
-    if (isset($web_page)) {
-      $web_page->inlineResource($name, $source_name);
-    }*/
   }
 
   /**
