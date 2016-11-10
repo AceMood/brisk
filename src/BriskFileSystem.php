@@ -12,7 +12,14 @@
 
 //----------------
 
-final class Filesystem {
+final class BriskFilesystem {
+
+  public static function isWindows() {
+    // We can also use PHP_OS, but that's kind of sketchy because it returns
+    // "WINNT" for Windows 7 and "Darwin" for Mac OS X. Practically, testing for
+    // DIRECTORY_SEPARATOR is more straightforward.
+    return (DIRECTORY_SEPARATOR != '/');
+  }
 
   /**
    * Read a file in a manner similar to file_get_contents(), but throw detailed
@@ -26,67 +33,12 @@ final class Filesystem {
    */
   public static function readFile($path) {
     $path = self::resolvePath($path);
-
-    self::assertExists($path);
-    self::assertIsFile($path);
-    self::assertReadable($path);
-
     $data = @file_get_contents($path);
     if ($data === false) {
-      throw new FilesystemException(
-        $path,
-        pht("Failed to read file '%s'.", $path));
+      throw new Exception(pht("Failed to read file '%s'.", $path));
     }
 
     return $data;
-  }
-
-  /**
-   * Remove a file or directory.
-   *
-   * @param  string    File to a path or directory to remove.
-   * @return void
-   *
-   * @task   file
-   */
-  public static function remove($path) {
-    if (!strlen($path)) {
-      // Avoid removing PWD.
-      throw new Exception(
-        pht(
-          'No path provided to %s.',
-          __FUNCTION__.'()'));
-    }
-
-    $path = self::resolvePath($path);
-
-    if (!file_exists($path)) {
-      return;
-    }
-
-    self::executeRemovePath($path);
-  }
-
-  /**
-   * Rename a file or directory.
-   *
-   * @param string    Old path.
-   * @param string    New path.
-   *
-   * @task file
-   */
-  public static function rename($old, $new) {
-    $old = self::resolvePath($old);
-    $new = self::resolvePath($new);
-
-    self::assertExists($old);
-
-    $ok = rename($old, $new);
-    if (!$ok) {
-      throw new FilesystemException(
-        $new,
-        pht("Failed to rename '%s' to '%s'!", $old, $new));
-    }
   }
 
   /**
@@ -99,16 +51,10 @@ final class Filesystem {
    */
   public static function getModifiedTime($path) {
     $path = self::resolvePath($path);
-    self::assertExists($path);
-    self::assertIsFile($path);
-    self::assertReadable($path);
-
     $modified_time = @filemtime($path);
 
     if ($modified_time === false) {
-      throw new FilesystemException(
-        $path,
-        pht('Failed to read modified time for %s.', $path));
+      throw new Exception(pht('Failed to read modified time for %s.', $path));
     }
 
     return $modified_time;
@@ -134,10 +80,6 @@ final class Filesystem {
     $default = 'application/octet-stream') {
 
     $path = self::resolvePath($path);
-
-    self::assertExists($path);
-    self::assertIsFile($path);
-    self::assertReadable($path);
 
     $mime_type = null;
 
@@ -191,10 +133,6 @@ final class Filesystem {
     return $mime_type;
   }
 
-
-  /* -(  Paths  )-------------------------------------------------------------- */
-
-
   /**
    * Checks if a path is specified as an absolute path.
    *
@@ -202,7 +140,7 @@ final class Filesystem {
    * @return bool
    */
   public static function isAbsolutePath($path) {
-    if (phutil_is_windows()) {
+    if (self::isWindows()) {
       return (bool)preg_match('/^[A-Za-z]+:/', $path);
     } else {
       return !strncmp($path, DIRECTORY_SEPARATOR, 1);
