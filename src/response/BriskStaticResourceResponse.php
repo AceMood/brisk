@@ -18,6 +18,9 @@ class BriskStaticResourceResponse {
   // 默认打印全部资源表
   protected $printType = MAP_ASYNC;
 
+  // 当前浏览的设备类型
+  protected $deviceType = DEVICE_MOBILE;
+
   // 收集所有打印的外链资源唯一路径
   protected $symbols = array();
 
@@ -41,8 +44,6 @@ class BriskStaticResourceResponse {
 
   protected $postprocessorKey;
 
-  public function __construct() {}
-
   final function addMetadata($metadata) {
     $id = count($this->metadata);
     $this->metadata[$id] = $metadata;
@@ -64,6 +65,7 @@ class BriskStaticResourceResponse {
 
   final function setCDN($cdn) {
     $this->cdn = $cdn;
+    return $this;
   }
 
   final function getCDN() {
@@ -76,6 +78,15 @@ class BriskStaticResourceResponse {
 
   final function getPrintType() {
     return $this->printType;
+  }
+
+  final function setDeviceType($device) {
+    if (in_array($device, array(
+      DEVICE_PC, DEVICE_MOBILE
+    ))) {
+      $this->deviceType = $device;
+    }
+    return $this;
   }
 
   /**
@@ -266,6 +277,62 @@ class BriskStaticResourceResponse {
     }
 
     return phutil_implode_html('', $result);
+  }
+
+  /**
+   * 输出行内的javascript
+   * @return array
+   */
+  public function produceScript() {
+    //更新$this->packaged
+    $this->resolveResources();
+    $result = array();
+    $res = array(
+      'resourceMap' => array(
+        'js' => array(),
+        'css' => array()
+      )
+    );
+
+    switch ($this->getPrintType()) {
+      case MAP_ALL:
+        $this->buildAllRes($res);
+        $result[] = 'require.setResourceMap('
+          . json_encode($res['resourceMap']) . ');';
+        break;
+      case MAP_ASYNC:
+        $this->buildAsyncRes($res);
+        $result[] = 'require.setResourceMap('
+          . json_encode($res['resourceMap']) . ');';
+        break;
+    }
+
+    foreach ($this->inlined as $source_name => $inlineScripts) {
+      if (!empty($inlineScripts['js'])) {
+        $scripts = $inlineScripts['js'];
+        foreach ($scripts as $script) {
+          $result[] = '(function(){' . $script . '}());';
+        }
+      }
+    }
+    return $result;
+  }
+
+  /**
+   * 输出内联css
+   * @return array
+   */
+  public function produceStyle() {
+    $result = array();
+    foreach ($this->inlined as $source_name => $inlineStyles) {
+      if (!empty($inlineStyles['css'])) {
+        $styles = $inlineStyles['css'];
+        foreach ($styles as $style) {
+          $result[] = $style;
+        }
+      }
+    }
+    return $result;
   }
 
   /**

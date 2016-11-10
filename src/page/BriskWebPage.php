@@ -29,7 +29,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   protected $response = null;
 
   function __construct($title = '', $device = DEVICE_MOBILE) {
-    $this->setTitle($title)->setDevice($device);
+    $this->setTitle($title);
     if (BriskUtils::isAjaxPipe()) {
       $this->mode = RENDER_AJAXPIPE;
       $this->setPageletIds($_GET['pagelets']);
@@ -38,6 +38,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
       $this->mode = RENDER_NORMAL;
       $this->response = BriskAPI::staticResourceResponse();
     }
+    $this->setDevice($device);
   }
 
   function addMetadata($metadata) {
@@ -66,6 +67,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     ))) {
       $this->device = $device;
     }
+    $this->response->setDeviceType($device);
     return $this;
   }
 
@@ -117,7 +119,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
 
   /**
    * 渲染期间加载对应的部件. 正常渲染则直接输出部件html内容, 否则记录页面部件
-   * @param BriskPagelet $pagelet
+   * @param BriskPageletInterface $pagelet
    * @return BriskSafeHTML|$this
    */
   function loadPagelet($pagelet) {

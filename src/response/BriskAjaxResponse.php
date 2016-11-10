@@ -30,61 +30,7 @@ class BriskAjaxResponse extends BriskStaticResourceResponse {
         return array_values(array_unique($result));
     }
 
-    /**
-     * 输出行内的javascript
-     * @return array
-     */
-    public function produceScript() {
-        //更新$this->packaged
-        $this->resolveResources();
-        $result = array();
-        $res = array(
-            'resourceMap' => array(
-                'js' => array(),
-                'css' => array()
-            )
-        );
 
-        switch ($this->getPrintType()) {
-            case MAP_ALL:
-                $this->buildAllRes($res);
-                $result[] = 'require.setResourceMap('
-                    . json_encode($res['resourceMap']) . ');';
-                break;
-            case MAP_ASYNC:
-                $this->buildAsyncRes($res);
-                $result[] = 'require.setResourceMap('
-                    . json_encode($res['resourceMap']) . ');';
-                break;
-        }
-
-        foreach ($this->inlined as $source_name => $inlineScripts) {
-            if (!empty($inlineScripts['js'])) {
-                $scripts = $inlineScripts['js'];
-                foreach ($scripts as $script) {
-                    $result[] = '(function(){' . $script . '}());';
-                }
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * 输出内联css
-     * @return array
-     */
-    public function produceStyle() {
-        $result = array();
-        foreach ($this->inlined as $source_name => $inlineStyles) {
-            if (!empty($inlineStyles['css'])) {
-                $styles = $inlineStyles['css'];
-                foreach ($styles as $style) {
-                    $result[] = $style;
-                }
-            }
-        }
-        return $result;
-    }
 
     /**
      * 资源内联
