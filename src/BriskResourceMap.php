@@ -30,7 +30,7 @@ final class BriskResourceMap {
   private $componentMap;
 
   function __construct() {
-    $this->resources = new BriskSantaResources();
+    $this->resources = new BriskStaticResources();
     $map = $this->resources->loadMap();
 
     $this->symbolMap = idx($map, 'resource', array());
