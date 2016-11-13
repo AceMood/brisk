@@ -31,12 +31,6 @@ interface BriskWebPageInterface {
   // 加载部件
   public function loadPagelet($pagelet);
 
-  // 设置分片的dom属性
-  public function setDomAttributes($attributes);
-
-  // 获取分片的dom属性
-  public function getDomAttributes();
-
   // 渲染指定类型的html
   public function renderResourcesOfType($type);
 

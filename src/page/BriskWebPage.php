@@ -10,13 +10,13 @@
 //---------------
 
 abstract class BriskWebPage implements BriskWebPageInterface {
-  // 页面标题
+  // page title in title tag
   protected $title = '';
 
-  // 页面渲染模式
+  // render mode
   protected $mode = null;
 
-  // 页面的浏览设备分类, pc或mobile
+  // pc or mobile
   protected $device = DEVICE_MOBILE;
 
   // 页面需然渲染的分片id
@@ -157,6 +157,12 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     $this->emitData($html);
   }
 
+  // set attributes on body
+  public function setDomAttributes($attributes) {}
+
+  // get attributes on body
+  public function getDomAttributes() {}
+
   protected function emitHeader($name, $value) {
     header("{$name}: {$value}", $replace = false);
   }
@@ -187,7 +193,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   protected function renderAsJSON() {
     $res = array('payload' => array());
 
-    // 挑选需要渲染的部件
+    // pick up pagelets
     foreach ($this->pagelets as $pagelet_id) {
       if (!isset($this->getPagelets()[$pagelet_id])) {
         throw new Exception(pht(
@@ -230,6 +236,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
 EOTEMPLATE;
   }
 
-  // 渲染前触发, 子类可重写, 一般是加载关键资源
+  // Triggered before rendering, overwritten by subclasses.
+  // require SR in this method
   protected function willRender() {}
 }

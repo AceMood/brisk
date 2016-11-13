@@ -16,33 +16,34 @@
 
 abstract class BriskPagelet implements BriskPageletInterface {
 
-  // 当前部件的id, 用于替换页面中同样id的div
+  // widget id, used to wrapper div or replace placeholder dom
   protected $id = '';
 
-  // 部件优先级
+  // priority
   protected $priority = 0;
 
-  // 当前部件的渲染模式
+  // render mode
   protected $mode = null;
 
-  // 分片外层dom需要的自定义属性
+  // user-defined dom attributes
   protected $attributes = array();
 
-  // 当前部件的父级视图
+  // parent pagelet or webpage
   protected $parentView = null;
 
-  // 当前部件依赖的css, 不区分行内还是外链
+  // dependent css, no matter external link or inline
   protected $dependentCss = array();
 
-  // 当前部件依赖的js, 不区分行内还是外链
+  // dependent js, no matter external link or inline
   protected $dependentJs = array();
 
-  // 包含的数据对象, 和服务端商定字段和格式
+  // Data object, negotiate with server-side
   protected $dataSource = null;
 
-  // 包含的子部件
+  // sub-pagelet collection
   protected $pagelets = array();
 
+  // always true
   public function isPagelet() {
     return true;
   }
@@ -90,8 +91,8 @@ abstract class BriskPagelet implements BriskPageletInterface {
   }
 
   /**
-   * 生成html部分, `getTemplateString`方法应在各个子类重写.
-   * 结合`$this->dataSource`生成html.
+   * template string combine with server data, use `getTemplateString`
+   * to generate html fragment.
    * @return string
    */
   public function produceHTML() {
@@ -109,9 +110,10 @@ abstract class BriskPagelet implements BriskPageletInterface {
   }
 
   public function requireResource($name, $source_name = 'brisk') {
-    // 部件中提供`requireResource`的目的是可以记录每个部件依赖的静态资源.
-    // 如果不调用实例方法, 而是直接调用`require_static`可以加载资源, 但是不会记录
-    // 本部件和资源的关系, 推荐使用`$pagelet->requireResource($name, $ns)`.
+    // pagelet provide `requireResource` method so that we can record the
+    // SR had been required. If call `require_static` directly we can also
+    // load the SR but without ant record. We recommend use `requireResource($name, $ns)`
+    // instead in a pagelet context.
     $this->recordDependentResource($name, $source_name);
     require_static($name, $source_name);
   }
@@ -127,6 +129,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
   // 组件主动获取数据源. 保留这个方法作为bigpipe实现时的具体实现.
   // `fetchDataSource`调用后应直接调用render方法进行输出.
   public function fetchDataSource() {
+    // todo
     ob_flush();
     flush();
   }
@@ -147,10 +150,6 @@ abstract class BriskPagelet implements BriskPageletInterface {
     inline_static($name, $source_name);
   }
 
-  /**
-   * 获取顶层的pageview对象
-   * @return BriskWebPage|null
-   */
   public function getTopLevelView() {
     $parent = $this->getParentView();
     while (isset($parent) && isset($parent->isPagelet) && $parent->isPagelet()) {
@@ -160,7 +159,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
   }
 
   /**
-   * 渲染视图
+   * Render the pagelet view
    * @return string
    */
   public function renderAsHTML() {
@@ -212,9 +211,9 @@ abstract class BriskPagelet implements BriskPageletInterface {
     return $html;
   }
 
-  // 当组件引用静态资源的时候记录下来
+  // record SR in current widget
   public function recordDependentResource($name, $source_name) {
-    // 首先确认资源表存在
+    // confirm to exist
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = id($map->getNameMap())[$name];
     if (!isset($symbol)) {
@@ -228,21 +227,24 @@ abstract class BriskPagelet implements BriskPageletInterface {
     $resource_type = $map->getResourceTypeForName($name);
     switch ($resource_type) {
       case 'css':
-        if (!in_array(id($this->dependentCss)[$source_name], $name)) {
+        if (isset($this->dependentCss[$source_name]) &&
+          !in_array($name, $this->dependentCss[$source_name])) {
           $this->dependentCss[$source_name][] = $name;
         }
         break;
       case 'js':
-        if (!in_array(id($this->dependentJs)[$source_name], $name)) {
+        if (isset($this->dependentJs[$source_name]) &&
+          !in_array($name, $this->dependentJs[$source_name])) {
           $this->dependentJs[$source_name][] = $name;
         }
         break;
     }
   }
 
-  // 渲染前触发, 子类可重写. 一般在此处引用组件需要的静态资源
+  // Triggered before rendering, overwritten by subclasses.
+  // require SR in this method
   protected function willRender() {}
 
-  // 返回部件的模版字符串, 各子类具体实现
+  // template string implemented by subclasses
   abstract function getTemplateString();
 }
