@@ -392,7 +392,7 @@ class BriskStaticResourceResponse {
     return $output;
   }
 
-  // 渲染单个资源
+  // Render a single static resource
   protected function renderResource(BriskResourceMap $map, $name) {
     if ($map->isPackageResource($name)) {
       $package_info = $map->getPackageMap()[$name];
@@ -532,9 +532,11 @@ class BriskStaticResourceResponse {
   protected function buildAsyncRes(&$res) {
     foreach ($this->packaged as $source_name => $resource_names) {
       $map = BriskResourceMap::getNamedInstance($source_name);
-      //记录到打印的资源表
+      // 记录到打印的资源表
       $symbolMap = $map->getSymbolMap();
-      foreach ($symbolMap['js'] as $symbol => $js) {
+      foreach ($resource_names as $resource_name) {
+        $js= $map->getResourceByName($resource_name);
+        // only javascript can require.async
         if (isset($js['asyncLoaded'])) {
           foreach ($js['asyncLoaded'] as $required_symbol) {
             $this->addJsRes($required_symbol, $symbolMap, $res);
