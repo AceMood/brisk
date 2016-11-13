@@ -404,6 +404,7 @@ class BriskStaticResourceResponse {
     }
 
     $type = $map->getResourceTypeForName($name);
+    $version = $map->getResourceVersionForName($name);
 //        $multimeter = MultimeterControl::getInstance();
 //        if ($multimeter) {
 //            $event_type = MultimeterEvent::TYPE_STATIC_RESOURCE;
@@ -419,14 +420,16 @@ class BriskStaticResourceResponse {
               'rel'   => 'stylesheet',
               'type'  => 'text/css',
               'href'  => $uri,
-              'data-modux-hash' => $symbol
+              'data-modux-hash' => $symbol,
+              'data-modux-version' => $version
             )
           );
         } else {
           return BriskDomProxy::tag(
             'style',
             array(
-              'data-modux-hash' => $symbol
+              'data-modux-hash' => $symbol,
+              'data-modux-version' => $version
             ),
             $map->getResourceDataForName($name)
           );
@@ -440,14 +443,16 @@ class BriskStaticResourceResponse {
             array(
               'type' => 'text/javascript',
               'src' => $uri,
-              'data-modux-hash' => $symbol
+              'data-modux-hash' => $symbol,
+              'data-modux-version' => $version
             )
           );
         } else {
           return BriskDomProxy::tag(
             'script',
             array(
-              'data-modux-hash' => $symbol
+              'data-modux-hash' => $symbol,
+              'data-modux-version' => $version
             ),
             $map->getResourceDataForName($name)
           );
@@ -474,25 +479,25 @@ class BriskStaticResourceResponse {
       )
     );
 
-    switch ($this->getPrintType()) {
-      case MAP_ALL:
-        $this->buildAllRes($res);
-        $json = json_encode($res['resourceMap']);
-        $code = BriskUtils::renderInlineScript(
-          'if ("undefined" !== typeof require) {require.setResourceMap('
-          . $json . ')}'
-        );
-        array_unshift($result, $code);
-        break;
-      case MAP_ASYNC:
-        $this->buildAsyncRes($res);
-        $json = json_encode($res['resourceMap']);
-        $code = BriskUtils::renderInlineScript(
-          'if ("undefined" !== typeof require) {require.setResourceMap('
-          . $json . ')}'
-        );
-        array_unshift($result, $code);
-        break;
+    $print_type = $this->getPrintType();
+
+    if ($print_type === MAP_NO) {
+      return;
+    }
+
+    if ($print_type === MAP_ALL) {
+      $this->buildAllRes($res);
+    } else if ($print_type === MAP_ASYNC) {
+      $this->buildAsyncRes($res);
+    }
+
+    $json = json_encode($res['resourceMap']);
+    if (!empty($res['resourceMap']['js'] || !empty($res['resourceMap']['css']))) {
+      $code = BriskUtils::renderInlineScript(
+        'if ("undefined" !== typeof require) {require.setResourceMap('
+        . $json . ')}'
+      );
+      array_unshift($result, $code);
     }
   }
 
@@ -530,8 +535,10 @@ class BriskStaticResourceResponse {
       //记录到打印的资源表
       $symbolMap = $map->getSymbolMap();
       foreach ($symbolMap['js'] as $symbol => $js) {
-        foreach ($js['asyncLoaded'] as $required_symbol) {
-          $this->addJsRes($required_symbol, $symbolMap, $res);
+        if (isset($js['asyncLoaded'])) {
+          foreach ($js['asyncLoaded'] as $required_symbol) {
+            $this->addJsRes($required_symbol, $symbolMap, $res);
+          }
         }
       }
     }

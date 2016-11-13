@@ -182,6 +182,21 @@ final class BriskResourceMap {
     }
   }
 
+  /**
+   * 根据资源工程路径, 获取资源发布版本号
+   * @param string $name
+   * @return mixed
+   */
+  public function getResourceVersionForName($name) {
+    if ($this->isPackageResource($name)) {
+      $package_info = $this->packageMap[$name];
+      return $package_info['version'];
+    } else {
+      $res = $this->getResourceByName($name);
+      return $res['version'];
+    }
+  }
+
   // 根据资源名取得资源内容
   public function getResourceDataForName($name) {
     return $this->resources->getResourceData($name);
@@ -232,6 +247,25 @@ final class BriskResourceMap {
   public function getPackagedNamesForNames(array $names) {
     $resolved = $this->resolveResources($names);
     return $this->packageResources($resolved, $names);
+  }
+
+  public function getResourceByName($name) {
+    $symbol = id($this->getNameMap())[$name];
+    $res = id($this->getSymbolMap())[$symbol];
+    if (empty($res)) {
+      throw new Exception(pht('Not found resource with name: %s', $name));
+    }
+
+    return $res;
+  }
+
+  public function getResourceBySymbol($symbol) {
+    $res = id($this->getSymbolMap())[$symbol];
+    if (empty($res)) {
+      throw new Exception(pht('Not found resource with symbol: %s', $symbol));
+    }
+
+    return $res;
   }
 
   //==========================//
