@@ -1,10 +1,8 @@
 <?php
 
 /**
- * Tracks and resolves dependencies the page declares with
- * @{function:require_static}, and then builds appropriate HTML or
- * Ajax responses.
- * @file
+ * @file Tracks and resolves dependencies the page declares with `require_static`
+ *       and then builds appropriate HTML or Ajax responses.
  * @author AceMood
  * @email zmike86@gmail.com
  */
@@ -290,7 +288,7 @@ class BriskStaticResourceResponse {
 
       if ($type === 'js') {
         $this->printResourceMap($result);
-        // modux插入到最前面
+        // modux prepend to all js resources
         $name = id($map->getSymbolMap())['js']['modux']['path'];
         if (!isset($this->hasRendered[$name])) {
           array_unshift($result, $this->renderResource($map, $name));
@@ -549,18 +547,27 @@ class BriskStaticResourceResponse {
   protected function addJsRes($required_symbol, $map, &$res) {
     if (!isset($res['resourceMap']['js'][$required_symbol])) {
       $required_js = $map['js'][$required_symbol];
+      $required_css = array();
+      if (isset($required_js['css'])) {
+        $required_css = $required_js['css'];
+      }
       $res['resourceMap']['js'][$required_symbol] = array(
         'type' => 'js',
         'uri' => self::getCDN() . $required_js['uri'],
         'deps' => $required_js['deps'],
-        'css' => $required_js['css']
+        'css' => $required_css
       );
-      // 加载$required_js的依赖
-      foreach ($required_js['css'] as $required_css_symbol) {
-        $this->addCssRes($required_css_symbol, $map, $res);
+
+      if (!empty($required_css)) {
+        foreach ($required_css as $required_css_symbol) {
+          $this->addCssRes($required_css_symbol, $map, $res);
+        }
       }
-      foreach ($required_js['asyncLoaded'] as $required_js_symbol) {
-        $this->addJsRes($required_js_symbol, $map, $res);
+
+      if (isset($required_js['asyncLoaded'])) {
+        foreach ($required_js['asyncLoaded'] as $required_js_symbol) {
+          $this->addJsRes($required_js_symbol, $map, $res);
+        }
       }
     }
   }
