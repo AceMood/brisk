@@ -41,7 +41,7 @@ abstract class BriskResourcesOnDisk extends BriskResources {
 
   public function loadResourceMap() {
     if ($this->map === null) {
-      $mapPath = $this->getPathToMap();
+      $mapPath = $this->getPathToResourceMap();
       $data = BriskFilesystem::readFile($mapPath);
       $this->map = json_decode($data, true);
     }

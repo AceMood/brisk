@@ -29,9 +29,9 @@ final class BriskResourceMap {
   // symbol => package symbol
   private $componentMap;
 
-  function __construct() {
+  public function __construct() {
     $this->resources = new BriskStaticResources();
-    $map = $this->resources->loadMap();
+    $map = $this->resources->loadResourceMap();
 
     $this->symbolMap = idx($map, 'resource', array());
     $this->nameMap = idx($map, 'paths', array());

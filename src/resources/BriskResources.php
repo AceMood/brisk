@@ -51,7 +51,9 @@ abstract class BriskResources {
 
   // 获取资源类型 如js,css,img
   public function getResourceType($path) {
-    $suffix = end(explode('.', $path));
+    $arr = explode('.', $path);
+    // `end`只能传变量
+    $suffix = end($arr);
     return self::$typeMap[$suffix];
   }
 
