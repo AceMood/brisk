@@ -251,18 +251,10 @@ final class BriskResourceMap {
 
   public function getResourceByName($name) {
     $symbol = id($this->getNameMap())[$name];
-    $res = id($this->getSymbolMap())[$symbol];
+    $resource_type = $this->getResourceTypeForName($name);
+    $res = id($this->getSymbolMap())[$resource_type][$symbol];
     if (empty($res)) {
       throw new Exception(pht('Not found resource with name: %s', $name));
-    }
-
-    return $res;
-  }
-
-  public function getResourceBySymbol($symbol) {
-    $res = id($this->getSymbolMap())[$symbol];
-    if (empty($res)) {
-      throw new Exception(pht('Not found resource with symbol: %s', $symbol));
     }
 
     return $res;
