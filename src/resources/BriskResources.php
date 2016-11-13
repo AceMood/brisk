@@ -45,12 +45,12 @@ abstract class BriskResources {
   abstract public function getResourceData($name);
 
   // 获取文件mtime
-  function getResourceModifiedTime($name) {
+  public function getResourceModifiedTime($name) {
     return 0;
   }
 
   // 获取资源类型 如js,css,img
-  function getResourceType($path) {
+  public function getResourceType($path) {
     $suffix = end(explode('.', $path));
     return self::$typeMap[$suffix];
   }

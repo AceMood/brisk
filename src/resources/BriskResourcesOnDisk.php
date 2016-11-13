@@ -44,10 +44,6 @@ abstract class BriskResourcesOnDisk extends BriskResources {
       $mapPath = $this->getPathToMap();
       $data = BriskFilesystem::readFile($mapPath);
       $this->map = json_decode($data, true);
-      // 设置编译资源的目标目录
-      if (isset(id($this->map)['root'])) {
-        $this->distDirectory = id($this->map)['root'];
-      }
     }
     return $this->map;
   }
