@@ -33,11 +33,10 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     if (BriskUtils::isAjaxPipe()) {
       $this->mode = RENDER_AJAXPIPE;
       $this->setPageletIds($_GET['pagelets']);
-      $this->response = new BriskAjaxResponse();
     } else {
       $this->mode = RENDER_NORMAL;
-      $this->response = BriskAPI::staticResourceResponse();
     }
+    $this->response = BriskAPI::staticResourceResponse();
     $this->setDevice($device);
   }
 
