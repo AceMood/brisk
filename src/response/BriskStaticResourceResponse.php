@@ -44,43 +44,43 @@ class BriskStaticResourceResponse {
 
   protected $postprocessorKey;
 
-  final function addMetadata($metadata) {
+  public function addMetadata($metadata) {
     $id = count($this->metadata);
     $this->metadata[$id] = $metadata;
     return $this;
   }
 
-  final function getMetadata() {
+  public function getMetadata() {
     return $this->metadata;
   }
 
-  final function setPostprocessorKey($postprocessor_key) {
+  public function setPostprocessorKey($postprocessor_key) {
     $this->postprocessorKey = $postprocessor_key;
     return $this;
   }
 
-  final function getPostprocessorKey() {
+  public function getPostprocessorKey() {
     return $this->postprocessorKey;
   }
 
-  final function setCDN($cdn) {
+  public function setCDN($cdn) {
     $this->cdn = $cdn;
     return $this;
   }
 
-  final function getCDN() {
+  public function getCDN() {
     return $this->cdn;
   }
 
-  final function setPrintType($type) {
+  public function setPrintType($type) {
     $this->printType = $type;
   }
 
-  final function getPrintType() {
+  public function getPrintType() {
     return $this->printType;
   }
 
-  final function setDeviceType($device) {
+  public function setDeviceType($device) {
     if (in_array($device, array(
       DEVICE_PC, DEVICE_MOBILE
     ))) {
@@ -97,7 +97,7 @@ class BriskStaticResourceResponse {
    * is initialized multiple times. If `$config` is nonempty, the behavior will
    * be invoked once for each configuration.
    */
-  final function initBehavior($behavior, array $config = array(), $source_name = null) {
+  public function initBehavior($behavior, array $config = array(), $source_name = null) {
     $this->requireResource($behavior, $source_name);
     if (empty($this->behaviors[$behavior])) {
       $this->behaviors[$behavior] = array();
@@ -108,7 +108,7 @@ class BriskStaticResourceResponse {
     return $this;
   }
 
-  final function getBehavior() {
+  public function getBehavior() {
     return $this->behaviors;
   }
 
@@ -118,7 +118,7 @@ class BriskStaticResourceResponse {
    * @param $name
    * @return string
    */
-  final function getURI(BriskResourceMap $map, $name) {
+  public function getURI(BriskResourceMap $map, $name) {
     $uri = $map->getURIForName($name);
 
     // If we have a postprocessor selected, add it to the URI.
@@ -137,7 +137,7 @@ class BriskStaticResourceResponse {
    * @return mixed $this
    * @throws Exception
    */
-  function requireResource($name, $source_name) {
+  public function requireResource($name, $source_name) {
     //首先确认资源表存在
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
@@ -176,7 +176,7 @@ class BriskStaticResourceResponse {
    * @return BriskSafeHTML|string
    * @throws Exception
    */
-  function inlineResource($name, $source_name) {
+  public function inlineResource($name, $source_name) {
     // 首先确认资源存在
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
@@ -214,7 +214,7 @@ class BriskStaticResourceResponse {
    * @return mixed
    * @throws Exception
    */
-  function generateDataURI($name, $source_name = 'brisk') {
+  public function generateDataURI($name, $source_name = 'brisk') {
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
     if ($symbol === null) {
@@ -229,7 +229,7 @@ class BriskStaticResourceResponse {
   }
 
   // 单独渲染一个外链资源
-  function renderSingleResource($name, $source_name) {
+  public function renderSingleResource($name, $source_name) {
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
     if ($symbol === null) {
@@ -249,7 +249,7 @@ class BriskStaticResourceResponse {
    * @return BriskSafeHTML
    * @throws Exception
    */
-  function renderResourcesOfType($type) {
+  public function renderResourcesOfType($type) {
     // 更新$this->packaged
     $this->resolveResources();
     $result = array();

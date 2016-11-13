@@ -49,7 +49,7 @@ final class BriskResourceMap {
   }
 
   // 获取指定名称的资源表
-  static function getNamedInstance($source_name) {
+  public static function getNamedInstance($source_name) {
     if (empty(self::$instances[$source_name])) {
       $instance = new BriskResourceMap();
       self::$instances[$source_name] = $instance;
@@ -59,17 +59,17 @@ final class BriskResourceMap {
   }
 
   // path为主键的资源表
-  function getNameMap() {
+  public function getNameMap() {
     return $this->nameMap;
   }
 
   // id为主键的资源表
-  function getSymbolMap() {
+  public function getSymbolMap() {
     return $this->symbolMap;
   }
 
   // 打包资源信息
-  function getPackageMap() {
+  public function getPackageMap() {
     return $this->packageMap;
   }
 
@@ -80,7 +80,7 @@ final class BriskResourceMap {
    * @return string|null 返回资源唯一路径.
    * @throws Exception
    */
-  function getResourceNameForSymbol($type, $symbol) {
+  public function getResourceNameForSymbol($type, $symbol) {
     $resource = $this->symbolMap[$type][$symbol];
     if (!isset($resource)) {
       throw new Exception(pht(
@@ -100,13 +100,13 @@ final class BriskResourceMap {
    * @param string $symbol 资源id.
    * @return string|null Resource URI, or null if the symbol is unknown.
    */
-  function getURIForSymbol($type, $symbol) {
+  public function getURIForSymbol($type, $symbol) {
     $resource = idx($this->symbolMap[$type], $symbol);
     return $resource['uri'];
   }
 
   // 给一个包资源名,获取包含的所有资源名
-  function getResourceNamesForPackageName($package_name) {
+  public function getResourceNamesForPackageName($package_name) {
     $package = idx($this->packageMap, $package_name);
     if (!$package) {
       return null;
@@ -126,7 +126,7 @@ final class BriskResourceMap {
     return $resource_names;
   }
 
-  function isPackageResource($name) {
+  public function isPackageResource($name) {
     return isset($this->packageMap[$name]);
   }
 
@@ -135,8 +135,8 @@ final class BriskResourceMap {
    * @param string  Resource name to attempt to generate a data URI for.
    * @return string|null Data URI, or null if we declined to generate one.
    */
-  function generateDataURI($resource_name) {
-    $suffix = last(explode('.', $resource_name));
+  public function generateDataURI($resource_name) {
+    $suffix = end(explode('.', $resource_name));
     switch ($suffix) {
       case 'png':
         $type = 'image/png';
@@ -173,7 +173,7 @@ final class BriskResourceMap {
    * @param string $name
    * @return mixed
    */
-  function getResourceTypeForName($name) {
+  public function getResourceTypeForName($name) {
     if ($this->isPackageResource($name)) {
       $package_info = $this->packageMap[$name];
       return $package_info['type'];
@@ -183,7 +183,7 @@ final class BriskResourceMap {
   }
 
   // 根据资源名取得资源内容
-  function getResourceDataForName($name) {
+  public function getResourceDataForName($name) {
     return $this->resources->getResourceData($name);
   }
 
@@ -192,7 +192,7 @@ final class BriskResourceMap {
    * @param string $name
    * @return null|string
    */
-  function getURIForName($name) {
+  public function getURIForName($name) {
     if ($this->isPackageResource($name)) {
       $package_info = $this->packageMap[$name];
       return $package_info['uri'];
@@ -208,7 +208,7 @@ final class BriskResourceMap {
    * @param string $name
    * @return array(js: array, css: array)|null
    */
-  function getRequiredSymbolsForName($name) {
+  public function getRequiredSymbolsForName($name) {
     $symbol = idx($this->nameMap, $name);
     if ($symbol === null) {
       return null;
@@ -229,7 +229,7 @@ final class BriskResourceMap {
    * @param array $names
    * @return array
    */
-  function getPackagedNamesForNames(array $names) {
+  public function getPackagedNamesForNames(array $names) {
     $resolved = $this->resolveResources($names);
     return $this->packageResources($resolved, $names);
   }

@@ -41,12 +41,12 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     $this->setDevice($device);
   }
 
-  function addMetadata($metadata) {
+  public function addMetadata($metadata) {
     $this->response->addMetadata($metadata);
     return $this;
   }
 
-  function setMode($mode) {
+  public function setMode($mode) {
     if ($mode === RENDER_AJAXPIPE) {
       $this->mode = $mode;
     } else if ($mode === RENDER_BIGPIPE) {
@@ -57,11 +57,11 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this;
   }
 
-  function getMode() {
+  public function getMode() {
     return $this->mode;
   }
 
-  function setDevice($device) {
+  public function setDevice($device) {
     if (in_array($device, array(
       DEVICE_PC, DEVICE_MOBILE
     ))) {
@@ -71,20 +71,20 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this;
   }
 
-  function getDevice() {
+  public function getDevice() {
     return $this->device;
   }
 
-  function setTitle($title) {
+  public function setTitle($title) {
     $this->title = $title;
     return $this;
   }
 
-  function getTitle() {
+  public function getTitle() {
     return $this->title;
   }
 
-  function setPageletIds($ids) {
+  public function setPageletIds($ids) {
     if (!is_array($ids)) {
       $ids = array($ids);
     }
@@ -94,11 +94,11 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this;
   }
 
-  function getPageletIds() {
+  public function getPageletIds() {
     return $this->pageletIds;
   }
 
-  function setPrintType($type) {
+  public function setPrintType($type) {
     // 这个方法主要用于测试打印资源表的效果
     // 一般不需要手动调用
     if (isset($this->response)) {
@@ -106,13 +106,13 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     }
   }
 
-  function getPrintType() {
+  public function getPrintType() {
     if (isset($this->response)) {
       return $this->response->getPrintType();
     }
   }
 
-  function getResponseObject() {
+  public function getResponseObject() {
     // 提供获取私有reponse的方法, 方便调用设置cdn等功能
     return $this->response;
   }
@@ -122,7 +122,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
    * @param BriskPageletInterface $pagelet
    * @return BriskSafeHTML|$this
    */
-  function loadPagelet($pagelet) {
+  public function loadPagelet($pagelet) {
     $pagelet->setParentView($this);
     if ($this->mode === RENDER_NORMAL) {
       return $pagelet->renderAsHTML();
@@ -132,15 +132,15 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     }
   }
 
-  function getPagelets() {
+  public function getPagelets() {
     return $this->pagelets;
   }
 
-  function renderResourcesOfType($type) {
+  public function renderResourcesOfType($type) {
     return $this->response->renderResourcesOfType($type);
   }
 
-  function render() {
+  public function render() {
     $html = '';
     switch ($this->mode) {
       case RENDER_AJAXPIPE:

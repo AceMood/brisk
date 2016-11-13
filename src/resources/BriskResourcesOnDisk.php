@@ -16,36 +16,30 @@ abstract class BriskResourcesOnDisk extends BriskResources {
   // packages.json转换来的资源表
   private $packages;
 
-  // 编译后资源的存放目录, 对应编译时工具设置的`dir`属性.
-  private $distDirectory = '';
-
   // 获取resource.json所在位置
-  abstract public function getPathToMap();
+  abstract public function getPathToResourceMap();
 
   // 获取packages.json位置
   abstract public function getPathToPackageMap();
 
-  // 这个方法在原类库中取的是源码文件的目录, 请求时动态用一个php的工具对代码做压缩.
-  // 觉得这样比较低效, 编译时产出了压缩后的代码, 所以这里应该加载最终代码的所处目录.
-  function getPathToResources() {
-    return $this->distDirectory;
-  }
+  // 获取编译后代码目录
+  abstract public function getPathToResources();
 
   /**
    * 读取文件内容
-   * @param $name
+   * @param string $name 资源的工程路径
    * @return string
    * @throws Exception
    */
-  function getResourceData($name) {
+  public function getResourceData($name) {
     return BriskFilesystem::readFile($this->getPathToResource($name));
   }
 
-  function getResourceModifiedTime($name) {
+  public function getResourceModifiedTime($name) {
     return (int)filemtime($this->getPathToResource($name));
   }
 
-  function loadMap() {
+  public function loadResourceMap() {
     if ($this->map === null) {
       $mapPath = $this->getPathToMap();
       $data = BriskFilesystem::readFile($mapPath);
@@ -58,7 +52,7 @@ abstract class BriskResourcesOnDisk extends BriskResources {
     return $this->map;
   }
 
-  function loadPackages() {
+  public function loadPackages() {
     if ($this->packages === null) {
       $mapPath = $this->getPathToPackageMap();
       $data = BriskFilesystem::readFile($mapPath);
@@ -71,8 +65,9 @@ abstract class BriskResourcesOnDisk extends BriskResources {
   private function getPathToResource($name) {
     // 如`getPathToResources`所解释的那样, 希望直接读取编译后的最终代码.
     // 要知道两个参数:
-    // a. 代码在本地的目录
-    // b. 代码的最终名字
+    // a. 编译代码在本地的存放目录
+    // b. 代码的相对路径
+    // 其中第二项在编译时由每个资源的`localPathName`已经指定
     $symbolMap = idx($this->map, 'resource', array());
     $nameMap = idx($this->map, 'paths', array());
     $symbol = $nameMap[$name];

@@ -12,18 +12,22 @@ final class BriskStaticResources extends BriskResourcesOnDisk {
 
   private $mapPath = 'dist/resource.json';
 
+  // 编译后资源的存放目录, 对应编译时工具设置的`dir`属性.
+  private $distDirectory = '';
+
+  // 这个方法在原类库中取的是源码文件的目录, 请求时动态用一个php的工具对代码做压缩.
+  // 觉得这样比较低效, 编译时产出了压缩后的代码, 所以这里应该加载最终代码的所处目录.
+  function getPathToResources() {
+    return $this->distDirectory;
+  }
+
   // 项目名用作命名空间
   function getName() {
     return 'brisk';
   }
 
-  // 设置resource.json路径
-  public function setPathToMap($path) {
-    return $this->mapPath = $path;
-  }
-
   // 获取resource.json
-  function getPathToMap() {
+  function getPathToResourceMap() {
     return $this->getProjectPath($this->mapPath);
   }
 

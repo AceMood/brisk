@@ -56,12 +56,12 @@ abstract class BriskResources {
   }
 
   // 加载资源表
-  function loadMap() {
+  public function loadResourceMap() {
     return array();
   }
 
   // 加载打包信息
-  function loadPackages() {
+  public function loadPackages() {
     return array();
   }
 }

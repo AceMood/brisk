@@ -43,7 +43,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
   // 包含的子部件
   protected $pagelets = array();
 
-  function isPagelet() {
+  public function isPagelet() {
     return true;
   }
 
@@ -55,7 +55,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
     $this->setId($id)->setMode($mode);
   }
 
-  function setMode($mode) {
+  public function setMode($mode) {
     if (in_array($mode, array(
       RENDER_BIGRENDER,
       RENDER_LAZYRENDER
@@ -67,25 +67,25 @@ abstract class BriskPagelet implements BriskPageletInterface {
     return $this;
   }
 
-  function getMode() {
+  public function getMode() {
     return $this->mode;
   }
 
-  function setId($id) {
+  public function setId($id) {
     $this->id = BriskDomProxy::escapeHtml($id);
     return $this;
   }
 
-  function getId() {
+  public function getId() {
     return $this->id;
   }
 
-  function setDomAttributes($attributes) {
+  public function setDomAttributes($attributes) {
     $this->attributes = $attributes;
     return $this;
   }
 
-  function getDomAttributes() {
+  public function getDomAttributes() {
     return $this->attributes;
   }
 
@@ -94,21 +94,21 @@ abstract class BriskPagelet implements BriskPageletInterface {
    * 结合`$this->dataSource`生成html.
    * @return string
    */
-  function produceHTML() {
+  public function produceHTML() {
     return (string)hsprintf(
       new BriskSafeHTML($this->getTemplateString())
     );
   }
 
-  function getDependentCss() {
+  public function getDependentCss() {
     return $this->dependentCss;
   }
 
-  function getDependentJs() {
+  public function getDependentJs() {
     return $this->dependentJs;
   }
 
-  function requireResource($name, $source_name = 'brisk') {
+  public function requireResource($name, $source_name = 'brisk') {
     // 部件中提供`requireResource`的目的是可以记录每个部件依赖的静态资源.
     // 如果不调用实例方法, 而是直接调用`require_static`可以加载资源, 但是不会记录
     // 本部件和资源的关系, 推荐使用`$pagelet->requireResource($name, $ns)`.
@@ -116,30 +116,30 @@ abstract class BriskPagelet implements BriskPageletInterface {
     require_static($name, $source_name);
   }
 
-  function setDataSource($data) {
+  public function setDataSource($data) {
     $this->dataSource = $data;
   }
 
-  function getDataSource() {
+  public function getDataSource() {
     return $this->dataSource;
   }
 
   // 组件主动获取数据源. 保留这个方法作为bigpipe实现时的具体实现.
   // `fetchDataSource`调用后应直接调用render方法进行输出.
-  function fetchDataSource() {
+  public function fetchDataSource() {
     ob_flush();
     flush();
   }
 
-  function setParentView($parent) {
+  public function setParentView($parent) {
     $this->parentView = $parent;
   }
 
-  function getParentView() {
+  public function getParentView() {
     return $this->parentView;
   }
 
-  function inlineResource($name, $source_name = 'brisk') {
+  public function inlineResource($name, $source_name = 'brisk') {
     // 部件中提供`inlineResource`的目的是可以记录每个部件依赖的静态资源.
     // 如果不调用实例方法, 而是直接调用`inline_static`可以加载资源, 但是不会记录
     // 本部件和资源的关系, 推荐使用`$pagelet->inlineResource($name, $ns)`.
@@ -151,7 +151,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
    * 获取顶层的pageview对象
    * @return BriskWebPage|null
    */
-  function getTopLevelView() {
+  public function getTopLevelView() {
     $parent = $this->getParentView();
     while (isset($parent) && isset($parent->isPagelet) && $parent->isPagelet()) {
       $parent = $parent->getParentView();
@@ -163,7 +163,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
    * 渲染视图
    * @return string
    */
-  function renderAsHTML() {
+  public function renderAsHTML() {
     $html = '';
     switch ($this->mode) {
       case RENDER_NORMAL:
@@ -213,7 +213,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
   }
 
   // 当组件引用静态资源的时候记录下来
-  function recordDependentResource($name, $source_name) {
+  public function recordDependentResource($name, $source_name) {
     // 首先确认资源表存在
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = id($map->getNameMap())[$name];
