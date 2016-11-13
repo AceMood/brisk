@@ -10,10 +10,10 @@
 //-------------
 
 class BriskStaticResourceResponse {
-  // 动态设置cdn
+  // SR cdn
   protected $cdn = '';
 
-  // 默认打印全部资源表
+  // Default only print asyncLoaded resources
   protected $printType = MAP_ASYNC;
 
   // 当前浏览的设备类型
@@ -563,6 +563,12 @@ class BriskStaticResourceResponse {
       if (!empty($required_css)) {
         foreach ($required_css as $required_css_symbol) {
           $this->addCssRes($required_css_symbol, $map, $res);
+        }
+      }
+
+      if (isset($required_js['deps'])) {
+        foreach ($required_js['deps'] as $required_js_symbol) {
+          $this->addJsRes($required_js_symbol, $map, $res);
         }
       }
 

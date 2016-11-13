@@ -194,7 +194,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     $res = array('payload' => array());
 
     // pick up pagelets
-    foreach ($this->pagelets as $pagelet_id) {
+    foreach ($this->pageletIds as $pagelet_id) {
       if (!isset($this->getPagelets()[$pagelet_id])) {
         throw new Exception(pht(
           'No widget with id %s found in %s',
