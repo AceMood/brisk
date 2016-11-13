@@ -28,7 +28,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   // 当前请求页面关联的response对象
   protected $response = null;
 
-  function __construct($title = '', $device = DEVICE_MOBILE) {
+  public function __construct($title = '', $device = DEVICE_MOBILE) {
     $this->setTitle($title);
     if (BriskUtils::isAjaxPipe()) {
       $this->mode = RENDER_AJAXPIPE;

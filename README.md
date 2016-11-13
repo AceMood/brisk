@@ -11,7 +11,7 @@ native utility functions. We've already included it in the lib folder.
 
 ``` php
 <?php
-require_once('path/to/brisk/__init__.php');
+include_once('path/to/brisk/__init__.php');
 ```
 
 Then you can use any Classes Brisk provided. The most important for view-rendering is 

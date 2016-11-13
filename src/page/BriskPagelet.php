@@ -47,7 +47,7 @@ abstract class BriskPagelet implements BriskPageletInterface {
     return true;
   }
 
-  function __construct($id = '', $mode = null) {
+  public function __construct($id = '', $mode = null) {
     if (empty($id)) {
       $id = BriskUtils::generateUniqueId();
     }
