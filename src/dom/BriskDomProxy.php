@@ -10,12 +10,11 @@
 
 final class BriskDomProxy {
 
-  // Render an HTML tag in a way that treats user content as unsafe by default.
+  // 输出html元素的标签和内部内容, 默认认为其内部内容不安全, 需要进行转义.
   //
   // Tag rendering has some special logic which implements security features:
   //
-  //   - When rendering `<a>` tags, if the `rel` attribute is not specified, it
-  //     is interpreted as `rel="noreferrer"`.
+  //   - 对于`<a>`标签, 如果没指定`rel`属性, 浏览器会当做`rel="noreferrer"`.
   //   - When rendering `<a>` tags, the `href` attribute may not begin with
   //     `javascript:`.
   //
@@ -28,9 +27,15 @@ final class BriskDomProxy {
    * @param string $tag 要创建的dom标签.
    * @param map<string, string> 一个包含dom属性的哈希结构.
    * @param wild $content 标签内所包含的内容.
+   * @param bool $escape 是否对内容进行转义
    * @return BriskSafeHTML Tag对象.
    */
-  public static function tag($tag, array $attributes = array(), $content = null) {
+  public static function tag(
+    $tag,
+    array $attributes = array(),
+    $content = null,
+    $escape = true
+  ) {
     // If the `href` attribute is present:
     //   - make sure it is not a "javascript:" URI. We never permit these.
     //   - if the tag is an `<a>` and the link is to some foreign resource,
@@ -125,7 +130,9 @@ final class BriskDomProxy {
         $content = '';
       }
     } else {
-      $content = self::escapeHtml($content);
+      if ($escape) {
+        $content = self::escapeHtml($content);
+      }
     }
 
     return new BriskSafeHTML('<'.$tag.$attr_string.'>'.$content.'</'.$tag.'>');
@@ -190,7 +197,7 @@ final class BriskDomProxy {
   }
 
   /**
-   * HTML safe version of `implode()`.
+   * 加强了原生`implode()`函数, 对html进行转义.
    */
   public static function implodeHtml($glue, array $pieces) {
     $glue = self::escapeHtml($glue);

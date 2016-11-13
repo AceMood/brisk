@@ -431,7 +431,8 @@ class BriskStaticResourceResponse {
               'data-modux-hash' => $symbol,
               'data-modux-version' => $version
             ),
-            $map->getResourceDataForName($name)
+            $map->getResourceDataForName($name),
+            false
           );
         }
 
@@ -454,7 +455,8 @@ class BriskStaticResourceResponse {
               'data-modux-hash' => $symbol,
               'data-modux-version' => $version
             ),
-            $map->getResourceDataForName($name)
+            $map->getResourceDataForName($name),
+            false
           );
         }
     }
