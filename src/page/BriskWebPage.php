@@ -143,16 +143,32 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     $html = '';
     switch ($this->mode) {
       case RENDER_AJAXPIPE:
+        $this->emitHeader('Content-Type', 'application/json');
         // 这里不需要加载页面全局的资源, 不再调用`willRender`
         $html = $this->renderAsJSON();
         break;
       case RENDER_NORMAL:
+        $this->emitHeader('Content-Type', 'text/html');
         $this->willRender();
         $html = $this->renderAsHTML();
         break;
     }
 
-    return $html;
+    $this->emitData($html);
+  }
+
+  protected function emitHeader($name, $value) {
+    header("{$name}: {$value}", $replace = false);
+  }
+
+  protected function emitData($data) {
+    echo $data;
+
+    // NOTE: We don't call flush() here because it breaks HTTPS under Apache.
+    // See T7620 for discussion. Even without an explicit flush, PHP appears to
+    // have reasonable behavior here: the echo will block if internal buffers
+    // are full, and data will be sent to the client once enough of it has
+    // been buffered.
   }
 
   protected function renderAsHTML() {
