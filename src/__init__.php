@@ -3,7 +3,7 @@
 // 渲染层的代码尽可能简单, 这里直接遍历包含源码的目录
 function __autoload($className) {
   $dir = dirname(__FILE__);
-  $sub_dirs = ['/', '/resources/', '/response/', '/page/', '/dom/'];
+  $sub_dirs = ['/', '/resources/', '/page/', '/dom/'];
 
   foreach ($sub_dirs as $sub_dir) {
     $path = $dir . $sub_dir . $className . '.php';

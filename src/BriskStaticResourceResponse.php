@@ -177,7 +177,7 @@ class BriskStaticResourceResponse {
    * @throws Exception
    */
   public function inlineResource($name, $source_name) {
-    // 首先确认资源存在
+    //首先确认资源存在
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
     if ($symbol === null) {
@@ -195,16 +195,21 @@ class BriskStaticResourceResponse {
       return '';
     }
 
-    // 立即渲染,不优化输出位置
     $fileContent = $map->getResourceDataForName($name, $source_name);
     $this->inlined[$source_name][$resource_type][$name] = $fileContent;
-    if ($resource_type === 'js') {
-      return BriskUtils::renderInlineScript($fileContent);
-    } else if ($resource_type === 'css') {
-      return BriskUtils::renderInlineStyle($fileContent);
-    }
 
-    return '';
+    if (BriskUtils::isAjaxPipe()) {
+      return $this;
+    } else {
+      // 立即渲染,不优化输出位置
+      if ($resource_type === 'js') {
+        return BriskUtils::renderInlineScript($fileContent);
+      } else if ($resource_type === 'css') {
+        return BriskUtils::renderInlineStyle($fileContent);
+      }
+
+      return '';
+    }
   }
 
   /**
@@ -254,29 +259,46 @@ class BriskStaticResourceResponse {
     $this->resolveResources();
     $result = array();
 
-    foreach ($this->packaged as $source_name => $resource_names) {
-      $map = BriskResourceMap::getNamedInstance($source_name);
-      $resources_of_type = array();
-      foreach ($resource_names as $resource_name) {
-        $resource_type = $map->getResourceTypeForName($resource_name);
-        if ($resource_type == $type) {
-          $resources_of_type[] = $resource_name;
+    // ajaxpipe方式输出外链资源名称的json格式,
+    // 如 ['base-style', 'dialog-style']
+    if (BriskUtils::isAjaxPipe()) {
+      foreach ($this->packaged as $source_name => $resource_names) {
+        $map = BriskResourceMap::getNamedInstance($source_name);
+        foreach ($resource_names as $resource_name) {
+          $resource_type = $map->getResourceTypeForName($resource_name);
+          if ($resource_type === $type) {
+            $resource_symbol = $map->getNameMap()[$resource_name];
+            $result[] = $resource_symbol;
+          }
         }
       }
 
-      $result[] = $this->renderPackagedResources($map, $resources_of_type);
-    }
+      return array_values(array_unique($result));
+    } else {
+      foreach ($this->packaged as $source_name => $resource_names) {
+        $map = BriskResourceMap::getNamedInstance($source_name);
+        $resources_of_type = array();
+        foreach ($resource_names as $resource_name) {
+          $resource_type = $map->getResourceTypeForName($resource_name);
+          if ($resource_type == $type) {
+            $resources_of_type[] = $resource_name;
+          }
+        }
 
-    if ($type === 'js') {
-      $this->printResourceMap($result);
-      // todo modux插入到最前面
-      $name = $map->getSymbolMap()['js']['modux']['path'];
-      if (!isset($this->hasRendered[$name])) {
-        array_unshift($result, $this->renderResource($map, $name));
+        $result[] = $this->renderPackagedResources($map, $resources_of_type);
       }
-    }
 
-    return phutil_implode_html('', $result);
+      if ($type === 'js') {
+        $this->printResourceMap($result);
+        // modux插入到最前面
+        $name = id($map->getSymbolMap())['js']['modux']['path'];
+        if (!isset($this->hasRendered[$name])) {
+          array_unshift($result, $this->renderResource($map, $name));
+        }
+      }
+
+      return BriskDomProxy::implodeHtml('', $result);
+    }
   }
 
   /**
@@ -372,7 +394,7 @@ class BriskStaticResourceResponse {
     return $output;
   }
 
-  //渲染单个资源
+  // 渲染单个资源
   protected function renderResource(BriskResourceMap $map, $name) {
     if ($map->isPackageResource($name)) {
       $package_info = $map->getPackageMap()[$name];
@@ -381,7 +403,6 @@ class BriskStaticResourceResponse {
       $symbol = $map->getNameMap()[$name];
     }
 
-    $uri = $this->getURI($map, $name);
     $type = $map->getResourceTypeForName($name);
 //        $multimeter = MultimeterControl::getInstance();
 //        if ($multimeter) {
@@ -390,24 +411,47 @@ class BriskStaticResourceResponse {
 //        }
     switch ($type) {
       case 'css':
-        return phutil_tag(
-          'link',
-          array(
-            'rel'   => 'stylesheet',
-            'type'  => 'text/css',
-            'href'  => $uri,
-            'data-modux-hash' => $symbol
-          )
-        );
+        if ($this->deviceType === DEVICE_PC) {
+          $uri = $this->getURI($map, $name);
+          return BriskDomProxy::tag(
+            'link',
+            array(
+              'rel'   => 'stylesheet',
+              'type'  => 'text/css',
+              'href'  => $uri,
+              'data-modux-hash' => $symbol
+            )
+          );
+        } else {
+          return BriskDomProxy::tag(
+            'style',
+            array(
+              'data-modux-hash' => $symbol
+            ),
+            $map->getResourceDataForName($name)
+          );
+        }
+
       case 'js':
-        return phutil_tag(
-          'script',
-          array(
-            'type'  => 'text/javascript',
-            'src'   => $uri,
-            'data-modux-hash' => $symbol
-          )
-        );
+        if ($this->deviceType === DEVICE_PC) {
+          $uri = $this->getURI($map, $name);
+          return BriskDomProxy::tag(
+            'script',
+            array(
+              'type' => 'text/javascript',
+              'src' => $uri,
+              'data-modux-hash' => $symbol
+            )
+          );
+        } else {
+          return BriskDomProxy::tag(
+            'script',
+            array(
+              'data-modux-hash' => $symbol
+            ),
+            $map->getResourceDataForName($name)
+          );
+        }
     }
 
     throw new Exception(pht(

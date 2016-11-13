@@ -39,7 +39,7 @@ abstract class BriskResources {
   );
 
   // 项目名称作为命名空间
-  abstract public function getName();
+  abstract public function getProjectName();
 
   // 获取文件内容
   abstract public function getResourceData($name);

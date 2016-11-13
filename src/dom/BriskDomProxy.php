@@ -188,4 +188,17 @@ final class BriskDomProxy {
 
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
   }
+
+  /**
+   * HTML safe version of `implode()`.
+   */
+  public static function implodeHtml($glue, array $pieces) {
+    $glue = self::escapeHtml($glue);
+
+    foreach ($pieces as $k => $piece) {
+      $pieces[$k] = self::escapeHtml($piece);
+    }
+
+    return self::safeHtml(implode($glue, $pieces));
+  }
 }
