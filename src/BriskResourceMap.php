@@ -1,9 +1,10 @@
 <?php
 
 /**
- * @file SR资源表的操作类, 提供加载资源表, 打印资源信息, 打包信息等.
- *       一般不建议直接调用此类的方法, 而是通过暴露出去的`BriskWebPage`
- *       和`BriskPagelet`两个类来间接操作.
+ * @file SR manipulation class, provide api to load resource map,
+ *       print resource map and packages map. You should not call
+ *       method of it directly, but through `BriskWebPage` and
+ *       `BriskPagelet` instance methods.
  * @author AceMood
  * @email zmike86@gmail.com
  */
@@ -11,7 +12,10 @@
 //---------------
 
 final class BriskResourceMap {
-  //根据空间存储资源表
+  // According to namespace, store each ResourceMap.
+  // We still need to consider how to update the cache,
+  // so that whenever resource.json changed, we can request
+  // with a new versioned resource file.
   private static $instances = array();
 
   // resources array
@@ -48,7 +52,7 @@ final class BriskResourceMap {
     }
   }
 
-  // 获取指定名称的资源表
+  // Get resource map through namespace
   public static function getNamedInstance($source_name) {
     if (empty(self::$instances[$source_name])) {
       $instance = new BriskResourceMap();
@@ -58,17 +62,16 @@ final class BriskResourceMap {
     return self::$instances[$source_name];
   }
 
-  // path为主键的资源表
+  // path as key
   public function getNameMap() {
     return $this->nameMap;
   }
 
-  // id为主键的资源表
+  // symbol id as key
   public function getSymbolMap() {
     return $this->symbolMap;
   }
 
-  // 打包资源信息
   public function getPackageMap() {
     return $this->packageMap;
   }

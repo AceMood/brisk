@@ -16,7 +16,7 @@ class BriskStaticResourceResponse {
   // Default only print asyncLoaded resources
   protected $printType = MAP_ASYNC;
 
-  // 当前浏览的设备类型
+  // device type
   protected $deviceType = DEVICE_MOBILE;
 
   // 收集所有打印的外链资源唯一路径
@@ -111,7 +111,7 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 根据资源名获取线上路径
+   * Get uri online
    * @param BriskResourceMap $map
    * @param $name
    * @return string
@@ -129,14 +129,14 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 记录请求依赖的外链资源
-   * @param string $name 工程目录资源路径
-   * @param string $source_name 空间
+   * Record the resource required
+   * @param string $name engineering path
+   * @param string $source_name project namespace
    * @return mixed $this
    * @throws Exception
    */
   public function requireResource($name, $source_name) {
-    //首先确认资源表存在
+    // confirm exist
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
 
@@ -155,7 +155,7 @@ class BriskStaticResourceResponse {
     $symbols = $this->symbols[$source_name];
     $resource_type = $map->getResourceTypeForName($name);
 
-    // 之前渲染过,不区分外链还是内联
+    // have been rendered, not distinguish external linked or inline
     if (array_search($name, $symbols, true) > -1 ||
       isset($this->inlined[$source_name][$resource_type][$name])) {
       return $this;
@@ -168,9 +168,9 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 资源内联
-   * @param string $name 资源在工程目录的路径
-   * @param string $source_name 项目空间
+   * Inline a resource
+   * @param string $name engineering path
+   * @param string $source_name project namespace
    * @return BriskSafeHTML|string
    * @throws Exception
    */
