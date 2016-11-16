@@ -19,10 +19,10 @@ class BriskStaticResourceResponse {
   // device type
   protected $deviceType = DEVICE_MOBILE;
 
-  // 收集所有打印的外链资源唯一路径
+  // external linked resource's ids
   protected $symbols = array();
 
-  // 记录打印的内联资源唯一id
+  // inlined resource's ids
   protected $inlined = array();
 
   // 是否需要对收集的资源进行解析
@@ -31,13 +31,13 @@ class BriskStaticResourceResponse {
   // 命名空间划分,记录外链引用的资源
   protected $packaged;
 
-  // 记录一些元数据
+  // add metadata
   protected $metadata = array();
 
   // 页面初始化需要的行为
   protected $behaviors = array();
 
-  // 记录是否被渲染过
+  // resources have been rendered
   protected $hasRendered = array();
 
   protected $postprocessorKey;
