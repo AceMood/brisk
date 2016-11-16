@@ -300,7 +300,7 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 输出行内的javascript
+   * Output all inline javascript
    * @return array
    */
   public function produceScript() {
@@ -339,7 +339,7 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 输出内联css
+   * Output all inline css
    * @return array
    */
   public function produceStyle() {
@@ -467,7 +467,7 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 输出打印资源表信息
+   * Print Resource Map to web page
    * @param array $result
    * @throws Exception
    */
@@ -504,8 +504,8 @@ class BriskStaticResourceResponse {
   protected function buildAllRes(&$res) {
     foreach ($this->packaged as $source_name => $resource_names) {
       $map = BriskResourceMap::getNamedInstance($source_name);
-      //记录到打印的资源表
       $symbolMap = $map->getSymbolMap();
+
       foreach ($symbolMap['js'] as $symbol => $js) {
         unset($js['path']);
         unset($js['within']);
@@ -532,8 +532,8 @@ class BriskStaticResourceResponse {
   protected function buildAsyncRes(&$res) {
     foreach ($this->packaged as $source_name => $resource_names) {
       $map = BriskResourceMap::getNamedInstance($source_name);
-      // 记录到打印的资源表
       $symbolMap = $map->getSymbolMap();
+
       foreach ($resource_names as $resource_name) {
         $js= $map->getResourceByName($resource_name);
         // only javascript can require.async
@@ -550,26 +550,28 @@ class BriskStaticResourceResponse {
     if (!isset($res['resourceMap']['js'][$required_symbol])) {
       $required_js = $map['js'][$required_symbol];
       $required_css = array();
+      $deps = array();
+
       if (isset($required_js['css'])) {
         $required_css = $required_js['css'];
       }
+      if (isset($required_js['deps'])) {
+        $deps = $required_js['deps'];
+      }
+
       $res['resourceMap']['js'][$required_symbol] = array(
         'type' => 'js',
         'uri' => self::getCDN() . $required_js['uri'],
-        'deps' => $required_js['deps'],
+        'deps' => $deps,
         'css' => $required_css
       );
 
-      if (!empty($required_css)) {
-        foreach ($required_css as $required_css_symbol) {
-          $this->addCssRes($required_css_symbol, $map, $res);
-        }
+      foreach ($required_css as $required_css_symbol) {
+        $this->addCssRes($required_css_symbol, $map, $res);
       }
 
-      if (isset($required_js['deps'])) {
-        foreach ($required_js['deps'] as $required_js_symbol) {
-          $this->addJsRes($required_js_symbol, $map, $res);
-        }
+      foreach ($deps as $required_js_symbol) {
+        $this->addJsRes($required_js_symbol, $map, $res);
       }
 
       if (isset($required_js['asyncLoaded'])) {
