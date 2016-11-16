@@ -25,16 +25,16 @@ class BriskStaticResourceResponse {
   // inlined resource's ids
   protected $inlined = array();
 
-  // 是否需要对收集的资源进行解析
+  // need to analyze resources again
   protected $needsResolve = true;
 
-  // 命名空间划分,记录外链引用的资源
+  // Separated by namespace, record each resource
   protected $packaged;
 
   // add metadata
   protected $metadata = array();
 
-  // 页面初始化需要的行为
+  // todo add come behaviours when page being init
   protected $behaviors = array();
 
   // resources have been rendered
@@ -188,7 +188,7 @@ class BriskStaticResourceResponse {
 
     $resource_type = $map->getResourceTypeForName($name);
 
-    // 之前已经内联渲染过
+    // have been inline-rendered
     if (isset($this->inlined[$source_name][$resource_type][$name])) {
       return '';
     }
@@ -212,8 +212,8 @@ class BriskStaticResourceResponse {
 
   /**
    * 将图片内联为dataUri的方式
-   * @param $name
-   * @param $source_name
+   * @param string $name resource name
+   * @param string $source_name project namespace
    * @return mixed
    * @throws Exception
    */
@@ -231,7 +231,7 @@ class BriskStaticResourceResponse {
     return $map->generateDataURI($name);
   }
 
-  // 单独渲染一个外链资源
+  // Render a single resource
   public function renderSingleResource($name, $source_name) {
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
@@ -288,7 +288,7 @@ class BriskStaticResourceResponse {
 
       if ($type === 'js') {
         $this->printResourceMap($result);
-        // modux prepend to all js resources
+        // modux.js prepend to all js resources
         $name = id($map->getSymbolMap())['js']['modux']['path'];
         if (!isset($this->hasRendered[$name])) {
           array_unshift($result, $this->renderResource($map, $name));
@@ -304,7 +304,7 @@ class BriskStaticResourceResponse {
    * @return array
    */
   public function produceScript() {
-    //更新$this->packaged
+    // update $this->packaged
     $this->resolveResources();
     $result = array();
     $res = array(
