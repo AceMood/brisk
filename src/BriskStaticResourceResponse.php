@@ -245,7 +245,8 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * Output resources of specific type, html fragment
+   * Output resources of specific type, html fragment.
+   * For full-page requests.
    * @param string $type resource type, `js` or `css`
    * @return BriskSafeHTML
    * @throws Exception
@@ -255,46 +256,61 @@ class BriskStaticResourceResponse {
     $this->resolveResources();
     $result = array();
 
+    foreach ($this->packaged as $source_name => $resource_names) {
+      $map = BriskResourceMap::getNamedInstance($source_name);
+      $resources_of_type = array();
+      foreach ($resource_names as $resource_name) {
+        $resource_type = $map->getResourceTypeForName($resource_name);
+        if ($resource_type == $type) {
+          $resources_of_type[] = $resource_name;
+        }
+      }
+
+      $result[] = $this->renderPackagedResources($map, $resources_of_type);
+    }
+
+    if ($type === 'js') {
+      $this->printResourceMap($result);
+      // modux.js prepend to all js resources
+      $name = id($map->getSymbolMap())['js']['modux']['path'];
+      if (!isset($this->hasRendered[$name])) {
+        array_unshift($result, $this->renderResource($map, $name));
+      }
+    }
+
+    return BriskDomProxy::implodeHtml('', $result);
+  }
+
+  /**
+   * Output resources of specific type, html fragment.
+   * For ajaxpipe requests.
+   * @param string $type resource type, `js` or `css`
+   * @return array
+   * @throws Exception
+   */
+  public function renderAjaxResponseResourcesOfType($type) {
+    // update $this->packaged
+    $this->resolveResources();
+    $result = array();
+
+    if ($this->deviceType === DEVICE_MOBILE) {
+      return $result;
+    }
+
     // ajaxpipe方式输出外链资源名称的json格式,
     // 如 ['base-style', 'dialog-style']
-    if (BriskUtils::isAjaxPipe()) {
-      foreach ($this->packaged as $source_name => $resource_names) {
-        $map = BriskResourceMap::getNamedInstance($source_name);
-        foreach ($resource_names as $resource_name) {
-          $resource_type = $map->getResourceTypeForName($resource_name);
-          if ($resource_type === $type) {
-            $resource_symbol = $map->getNameMap()[$resource_name];
-            $result[] = $resource_symbol;
-          }
+    foreach ($this->packaged as $source_name => $resource_names) {
+      $map = BriskResourceMap::getNamedInstance($source_name);
+      foreach ($resource_names as $resource_name) {
+        $resource_type = $map->getResourceTypeForName($resource_name);
+        if ($resource_type === $type) {
+          $resource_symbol = $map->getNameMap()[$resource_name];
+          $result[] = $resource_symbol;
         }
       }
-
-      return array_values(array_unique($result));
-    } else {
-      foreach ($this->packaged as $source_name => $resource_names) {
-        $map = BriskResourceMap::getNamedInstance($source_name);
-        $resources_of_type = array();
-        foreach ($resource_names as $resource_name) {
-          $resource_type = $map->getResourceTypeForName($resource_name);
-          if ($resource_type == $type) {
-            $resources_of_type[] = $resource_name;
-          }
-        }
-
-        $result[] = $this->renderPackagedResources($map, $resources_of_type);
-      }
-
-      if ($type === 'js') {
-        $this->printResourceMap($result);
-        // modux.js prepend to all js resources
-        $name = id($map->getSymbolMap())['js']['modux']['path'];
-        if (!isset($this->hasRendered[$name])) {
-          array_unshift($result, $this->renderResource($map, $name));
-        }
-      }
-
-      return BriskDomProxy::implodeHtml('', $result);
     }
+
+    return array_values(array_unique($result));
   }
 
   /**
@@ -312,17 +328,14 @@ class BriskStaticResourceResponse {
       )
     );
 
-    switch ($this->getPrintType()) {
-      case MAP_ALL:
-        $this->buildAllRes($res);
-        $result[] = 'require.setResourceMap('
-          . json_encode($res['resourceMap']) . ');';
-        break;
-      case MAP_ASYNC:
-        $this->buildAsyncRes($res);
-        $result[] = 'require.setResourceMap('
-          . json_encode($res['resourceMap']) . ');';
-        break;
+    if ($this->getPrintType() === MAP_ALL || BriskUtils::isAjaxPipe()) {
+      $this->buildAllRes($res);
+      $result[] = 'require.setResourceMap(' .
+        json_encode($res['resourceMap']) . ');';
+    } else if ($this->getPrintType() === MAP_ASYNC) {
+      $this->buildAsyncRes($res);
+      $result[] = 'require.setResourceMap(' .
+        json_encode($res['resourceMap']) . ');';
     }
 
     foreach ($this->inlined as $source_name => $inlineScripts) {

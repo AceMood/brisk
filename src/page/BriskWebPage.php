@@ -213,8 +213,8 @@ abstract class BriskWebPage implements BriskWebPageInterface {
 
       $pagelet = id($this->getPagelets())[$pagelet_id];
       $res['payload'][$pagelet_id] = $pagelet->renderAsHTML();
-      $res['js'] = $this->response->renderResourcesOfType('js');
-      $res['css'] = $this->response->renderResourcesOfType('css');
+      $res['js'] = $this->response->renderAjaxResponseResourcesOfType('js');
+      $res['css'] = $this->response->renderAjaxResponseResourcesOfType('css');
       $res['script'] = $this->response->produceScript();
       $res['style'] = $this->response->produceStyle();
     }
