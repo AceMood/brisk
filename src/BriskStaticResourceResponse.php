@@ -13,6 +13,9 @@ class BriskStaticResourceResponse {
   // SR cdn
   protected $cdn = '';
 
+  // host web page
+  protected $page = null;
+
   // Default only print asyncLoaded resources
   protected $printType = MAP_ASYNC;
 
@@ -41,6 +44,17 @@ class BriskStaticResourceResponse {
   protected $hasRendered = array();
 
   protected $postprocessorKey;
+
+  public function setHostWebPage($page) {
+    if ($page instanceof BriskWebPage) {
+      $this->page = $page;
+      return $this;
+    }
+
+    throw new Exception(pht(
+      'setHostWebPage with an object not instance of BriskWebPage'
+    ));
+  }
 
   public function addMetadata($metadata) {
     $id = count($this->metadata);
@@ -194,10 +208,11 @@ class BriskStaticResourceResponse {
     $fileContent = $map->getResourceDataForName($name, $source_name);
     $this->inlined[$source_name][$resource_type][$name] = $fileContent;
 
+    // If is an ajaxpipe request, we record it. Otherwise,
+    // render immediately whatever current page position now
     if (BriskUtils::isAjaxPipe()) {
       return $this;
     } else {
-      // render immediately, whatever current page position now
       if ($resource_type === 'js') {
         return BriskUtils::renderInlineScript($fileContent);
       } else if ($resource_type === 'css') {
@@ -338,15 +353,9 @@ class BriskStaticResourceResponse {
       )
     );
 
-    if ($this->getPrintType() === MAP_ALL || BriskUtils::isAjaxPipe()) {
-      $this->buildAllRes($res);
-      $result[] = 'require.setResourceMap(' .
-        json_encode($res['resourceMap']) . ');';
-    } else if ($this->getPrintType() === MAP_ASYNC) {
-      $this->buildAsyncRes($res);
-      $result[] = 'require.setResourceMap(' .
-        json_encode($res['resourceMap']) . ');';
-    }
+    $this->buildAllRes($res);
+    $result[] = 'require.setResourceMap(' .
+      json_encode($res['resourceMap']) . ');';
 
     foreach ($this->inlined as $source_name => $inlineScripts) {
       if (!empty($inlineScripts['js'])) {

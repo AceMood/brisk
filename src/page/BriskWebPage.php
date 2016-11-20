@@ -38,6 +38,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
       $this->mode = RENDER_NORMAL;
     }
     $this->response = BriskAPI::staticResourceResponse();
+    $this->response->setHostWebPage($this);
     $this->setDevice($device);
   }
 
@@ -197,7 +198,13 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   }
 
   protected function renderAsJSON() {
-    $res = array('payload' => array());
+    $res = array(
+      'payload' => array(),
+      'js' => array(),
+      'css' => array(),
+      'script' => array(),
+      'style' => array()
+    );
 
     // pick up pagelets
     foreach ($this->pageletIds as $pagelet_id) {
@@ -211,8 +218,14 @@ abstract class BriskWebPage implements BriskWebPageInterface {
 
       $pagelet = id($this->getPagelets())[$pagelet_id];
       $res['payload'][$pagelet_id] = $pagelet->renderAsHTML();
-      $res['js'] = $this->response->renderAjaxResponseResourcesOfType('js');
-      $res['css'] = $this->response->renderAjaxResponseResourcesOfType('css');
+      $res['js'] = array_merge(
+        $res['js'],
+        $this->response->renderAjaxResponseResourcesOfType('js')
+      );
+      $res['css'] = array_merge(
+        $res['css'],
+        $this->response->renderAjaxResponseResourcesOfType('css')
+      );
       $res['script'] = $this->response->produceAjaxScript();
       $res['style'] = $this->response->produceAjaxStyle();
     }
