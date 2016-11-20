@@ -324,7 +324,7 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * Output all inline javascript
+   * Output all inline javascript content for ajaxpipe request
    * @return array
    */
   public function produceAjaxScript() {
@@ -360,7 +360,7 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * Output all inline css
+   * Output all inline css content for ajaxpipe request
    * @return array
    */
   public function produceAjaxStyle() {

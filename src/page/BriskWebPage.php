@@ -99,8 +99,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   }
 
   public function setPrintType($type) {
-    // 这个方法主要用于测试打印资源表的效果
-    // 一般不需要手动调用
+    // For testing. Do not call it directly.
     if (isset($this->response)) {
       $this->response->setPrintType($type);
     }

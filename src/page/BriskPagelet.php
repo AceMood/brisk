@@ -2,7 +2,7 @@
 
 /**
  * @class BriskPagelet
- * @file 所有页面分片部件的基类. 同一个部件类的不同实例可在多个页面通过id,以及mode区分.
+ * @file Base Class for pagelet. Differ from each other through id and mode.
  *       WidgetView对不用渲染模式需要提供两个方法进行渲染,
  *       1. 顶级页面正常渲染, 部件提供renderAsHTML方法,
  *          依据初始化时指定的模式渲染, normal, bigrender 或者lazyrender
