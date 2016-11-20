@@ -220,7 +220,6 @@ abstract class BriskWebPage implements BriskWebPageInterface {
       $res['style'] = $this->response->produceStyle();
     }
 
-    // 需要元数据但不需要behavior
     $metadata = $this->response->getMetadata();
     if (!empty($metadata)) {
       $res['metadata'] = $metadata;
