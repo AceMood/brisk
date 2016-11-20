@@ -2,7 +2,7 @@
 
 /**
  * @class BriskWebPage
- * @file 渲染页面的抽象类
+ * @file Abstract Class represents a single web page
  * @author AceMood
  * @email zmike86@gmail.com
  */
@@ -110,6 +110,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     if (isset($this->response)) {
       return $this->response->getPrintType();
     }
+    return MAP_ASYNC;
   }
 
   public function getResponseObject() {
@@ -187,9 +188,7 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   }
 
   protected function renderAsHTML() {
-    // 这个方法在正常请求的时候输出页面全部的html, 这个可被复写的方法.
-    // 希望以此为接口实现不同的模板渲染, 或者直接由php输出.
-    // `getTemplateString`可以使用也可以不使用, 并不强制.
+    // Used to render full-page request html, should be override.
     return (string)hsprintf(
       $this->getTemplateString(),
       BriskDomProxy::escapeHtml($this->title),

@@ -2,7 +2,7 @@
 
 /**
  * @file Tracks and resolves dependencies the page declares with `require_static`
- *       and then builds appropriate HTML or Ajax responses.
+ * and then builds appropriate HTML or Ajax responses.
  * @author AceMood
  * @email zmike86@gmail.com
  */
@@ -79,9 +79,7 @@ class BriskStaticResourceResponse {
   }
 
   public function setDeviceType($device) {
-    if (in_array($device, array(
-      DEVICE_PC, DEVICE_MOBILE
-    ))) {
+    if (in_array($device, array(DEVICE_PC, DEVICE_MOBILE))) {
       $this->deviceType = $device;
     }
     return $this;
@@ -175,7 +173,7 @@ class BriskStaticResourceResponse {
    * @throws Exception
    */
   public function inlineResource($name, $source_name) {
-    //首先确认资源存在
+    // confirm exist first
     $map = BriskResourceMap::getNamedInstance($source_name);
     $symbol = $map->getNameMap()[$name];
     if ($symbol === null) {
@@ -199,7 +197,7 @@ class BriskStaticResourceResponse {
     if (BriskUtils::isAjaxPipe()) {
       return $this;
     } else {
-      // 立即渲染,不优化输出位置
+      // render immediately, whatever current page position now
       if ($resource_type === 'js') {
         return BriskUtils::renderInlineScript($fileContent);
       } else if ($resource_type === 'css') {
@@ -211,7 +209,7 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 将图片内联为dataUri的方式
+   * inline an image using data uri
    * @param string $name resource name
    * @param string $source_name project namespace
    * @return mixed
@@ -247,13 +245,13 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 渲染输出一种资源类型的html片段
-   * @param string $type 资源类型
+   * Output resources of specific type, html fragment
+   * @param string $type resource type, `js` or `css`
    * @return BriskSafeHTML
    * @throws Exception
    */
   public function renderResourcesOfType($type) {
-    // 更新$this->packaged
+    // update $this->packaged
     $this->resolveResources();
     $result = array();
 
@@ -356,7 +354,7 @@ class BriskStaticResourceResponse {
   }
 
   /**
-   * 更新$this->packaged, $this->needsResolve标示false
+   * update $this->packaged, $this->needsResolve set to false
    * @return $this
    * @throws Exception
    */

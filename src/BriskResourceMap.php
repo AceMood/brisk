@@ -2,9 +2,9 @@
 
 /**
  * @file SR manipulation class, provide api to load resource map,
- *       print resource map and packages map. You should not call
- *       method of it directly, but through `BriskWebPage` and
- *       `BriskPagelet` instance methods.
+ * print resource map and packages map. You should not call method
+ * of it directly, but through `BriskWebPage` and `BriskPagelet`
+ * instance methods.
  * @author AceMood
  * @email zmike86@gmail.com
  */
@@ -263,9 +263,9 @@ final class BriskResourceMap {
     return $res;
   }
 
-  //==========================//
-  //======= 以下私有方法 =======//
-  //==========================//
+  //==============================//
+  //======= private method =======//
+  //==============================//
 
   // 给一组有顺序的资源路径, 返回所有需要打包的有序资源数组
   private function resolveResources(array $names) {

@@ -4,8 +4,8 @@ modified it for fitting our project.
 
 ## Dependency
 
-**Brisk Library** depends on [Libphutil](https://github.com/phacility/libphutil/), which provides
-native utility functions. We've already included it in the lib folder.
+**Brisk Library** extract utility functions from [Libphutil](https://github.com/phacility/libphutil/), 
+without requiring it. We've removed it in the lib folder.
 
 ## Usage
 
@@ -15,8 +15,8 @@ include_once('path/to/brisk/__init__.php');
 ```
 
 Then you can use any Classes Brisk provided. The most important for view-rendering is 
-**BriskPageView** and **BriskWidgetView**, you can visit [Demo](https://github.com/Saber-Team/demo-todomvc-react-soi) 
-for more information.
+**BriskWebPage** as an abstract class of all web pages, and **BriskPagelet**, you can visit 
+[Demo](https://github.com/Saber-Team/demo-todomvc-react-soi) for more information.
 
 ## Test
 
