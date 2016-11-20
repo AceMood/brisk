@@ -10,7 +10,7 @@
 //---------------
 
 abstract class BriskWebPage implements BriskWebPageInterface {
-  // page title in title tag
+  // page title in document tag
   protected $title = '';
 
   // render mode
@@ -114,7 +114,6 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   }
 
   public function getResponseObject() {
-    // 提供获取私有reponse的方法, 方便调用设置cdn等功能
     return $this->response;
   }
 
@@ -215,8 +214,8 @@ abstract class BriskWebPage implements BriskWebPageInterface {
       $res['payload'][$pagelet_id] = $pagelet->renderAsHTML();
       $res['js'] = $this->response->renderAjaxResponseResourcesOfType('js');
       $res['css'] = $this->response->renderAjaxResponseResourcesOfType('css');
-      $res['script'] = $this->response->produceScript();
-      $res['style'] = $this->response->produceStyle();
+      $res['script'] = $this->response->produceAjaxScript();
+      $res['style'] = $this->response->produceAjaxStyle();
     }
 
     $metadata = $this->response->getMetadata();

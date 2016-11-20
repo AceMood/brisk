@@ -293,12 +293,22 @@ class BriskStaticResourceResponse {
     $this->resolveResources();
     $result = array();
 
-    if ($this->deviceType === DEVICE_MOBILE) {
-      return $result;
-    }
+    // In mobile device mode, we should inline all resources.
+    // But it conflict with a fact that, we do not know what
+    // resources have been included from previous request and
+    // older requests, which means the same resource may be
+    // included more than once. We called it a `Wasted Bytes`.
+    // There are two solution for this question:
+    // I.   We return all the resource id needed and related
+    //      ResourceMap object. Module loader decide how to load
+    //      the resource and remove duplicated ones. Further more,
+    //      loader can combo to one request through server interface.
+    // II.  We use cookie to record which resource have been
+    //      loaded, but the cookie is not safe, we can not depend
+    //      on it completely. At present, we do not implement
+    //      resource cookie recorder for user first visit.
 
-    // ajaxpipe方式输出外链资源名称的json格式,
-    // 如 ['base-style', 'dialog-style']
+    // ajaxpipe  eg: ['base-style', 'dialog-style']
     foreach ($this->packaged as $source_name => $resource_names) {
       $map = BriskResourceMap::getNamedInstance($source_name);
       foreach ($resource_names as $resource_name) {
@@ -317,7 +327,7 @@ class BriskStaticResourceResponse {
    * Output all inline javascript
    * @return array
    */
-  public function produceScript() {
+  public function produceAjaxScript() {
     // update $this->packaged
     $this->resolveResources();
     $result = array();
@@ -353,7 +363,7 @@ class BriskStaticResourceResponse {
    * Output all inline css
    * @return array
    */
-  public function produceStyle() {
+  public function produceAjaxStyle() {
     $result = array();
     foreach ($this->inlined as $source_name => $inlineStyles) {
       if (!empty($inlineStyles['css'])) {
