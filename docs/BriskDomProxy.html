@@ -65,18 +65,8 @@
                 </a>
               
                 
-                <a class="source" href="BriskSantaResources.html">
-                  BriskSantaResources.php
-                </a>
-              
-                
-                <a class="source" href="BriskAjaxResponse.html">
-                  BriskAjaxResponse.php
-                </a>
-              
-                
-                <a class="source" href="BriskStaticResourceResponse.html">
-                  BriskStaticResourceResponse.php
+                <a class="source" href="BriskStaticResources.html">
+                  BriskStaticResources.php
                 </a>
               
             </div>
@@ -148,11 +138,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Render an HTML tag in a way that treats user content as unsafe by default.</p>
+              <p>输出html元素的标签和内部内容, 默认认为其内部内容不安全, 需要进行转义.</p>
 <p>Tag rendering has some special logic which implements security features:</p>
 <ul>
-<li>When rendering <code>&lt;a&gt;</code> tags, if the <code>rel</code> attribute is not specified, it
-is interpreted as <code>rel=&quot;noreferrer&quot;</code>.</li>
+<li>对于<code>&lt;a&gt;</code>标签, 如果没指定<code>rel</code>属性, 浏览器会当做<code>rel=&quot;noreferrer&quot;</code>.</li>
 <li>When rendering <code>&lt;a&gt;</code> tags, the <code>href</code> attribute may not begin with
 <code>javascript:</code>.</li>
 </ul>
@@ -167,9 +156,15 @@ parameters.</p>
    * <span class="hljs-doctag">@param</span> string $tag 要创建的dom标签.
    * <span class="hljs-doctag">@param</span> map&lt;string, string&gt; 一个包含dom属性的哈希结构.
    * <span class="hljs-doctag">@param</span> wild $content 标签内所包含的内容.
+   * <span class="hljs-doctag">@param</span> bool $escape 是否对内容进行转义
    * <span class="hljs-doctag">@return</span> BriskSafeHTML Tag对象.
    */</span>
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tag</span><span class="hljs-params">($tag, array $attributes = array<span class="hljs-params">()</span>, $content = null)</span> </span>{</pre></div></div>
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tag</span><span class="hljs-params">(
+    $tag,
+    array $attributes = array<span class="hljs-params">()</span>,
+    $content = null,
+    $escape = true
+  )</span> </span>{</pre></div></div>
             
         </li>
         
@@ -363,7 +358,9 @@ example, always render <code>&lt;div&gt;&lt;/div&gt;</code>, never <code>&lt;div
         $content = <span class="hljs-string">''</span>;
       }
     } <span class="hljs-keyword">else</span> {
-      $content = <span class="hljs-keyword">self</span>::escapeHtml($content);
+      <span class="hljs-keyword">if</span> ($escape) {
+        $content = <span class="hljs-keyword">self</span>::escapeHtml($content);
+      }
     }
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BriskSafeHTML(<span class="hljs-string">'&lt;'</span>.$tag.$attr_string.<span class="hljs-string">'&gt;'</span>.$content.<span class="hljs-string">'&lt;/'</span>.$tag.<span class="hljs-string">'&gt;'</span>);
@@ -462,6 +459,19 @@ example, always render <code>&lt;div&gt;&lt;/div&gt;</code>, never <code>&lt;div
     }
 
     <span class="hljs-keyword">return</span> htmlspecialchars($string, ENT_QUOTES, <span class="hljs-string">'UTF-8'</span>);
+  }
+
+  <span class="hljs-comment">/**
+   * 加强了原生`implode()`函数, 对html进行转义.
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">implodeHtml</span><span class="hljs-params">($glue, array $pieces)</span> </span>{
+    $glue = <span class="hljs-keyword">self</span>::escapeHtml($glue);
+
+    <span class="hljs-keyword">foreach</span> ($pieces <span class="hljs-keyword">as</span> $k =&gt; $piece) {
+      $pieces[$k] = <span class="hljs-keyword">self</span>::escapeHtml($piece);
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::safeHtml(implode($glue, $pieces));
   }
 }</pre></div></div>
             

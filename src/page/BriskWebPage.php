@@ -19,15 +19,16 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   // pc or mobile
   protected $device = DEVICE_MOBILE;
 
-  // 页面需然渲染的分片id
+  // all widgets ids in current page
   protected $pageletIds = array();
 
-  // 页面分片的部件
+  // all widgets in current web page
   protected $pagelets = array();
 
-  // 当前请求页面关联的response对象
+  // corresponding response object
   protected $response = null;
 
+  // default, we use mobile phone mode, which cause a inlining operation
   public function __construct($title = '', $device = DEVICE_MOBILE) {
     $this->setTitle($title);
     if (BriskUtils::isAjaxPipe()) {
@@ -117,8 +118,8 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   }
 
   /**
-   * 渲染期间加载对应的部件. 正常渲染则直接输出部件html内容, 否则记录页面部件
-   * @param BriskPageletInterface $pagelet
+   * Load pagelets during rendering.
+   * @param BriskPagelet $pagelet
    * @return BriskSafeHTML|$this
    */
   public function loadPagelet($pagelet) {
@@ -139,16 +140,22 @@ abstract class BriskWebPage implements BriskWebPageInterface {
     return $this->response->renderResourcesOfType($type);
   }
 
+  // Render web page.
+  // If current request is a ajaxpipe request (which with Get parameter ajaxify equal 1),
+  // we return json mime-type. Otherwise we return a html.
   public function render() {
     $html = '';
     switch ($this->mode) {
       case RENDER_AJAXPIPE:
         $this->emitHeader('Content-Type', 'application/json');
-        // 这里不需要加载页面全局的资源, 不再调用`willRender`
+        // Not invoke `willRender`
         $html = $this->renderAsJSON();
         break;
       case RENDER_NORMAL:
         $this->emitHeader('Content-Type', 'text/html');
+        // We need to call `willRender` here because full-page
+        // resources should be included. But not in the case of
+        // ajaxpipe.
         $this->willRender();
         $html = $this->renderAsHTML();
         break;
@@ -163,10 +170,12 @@ abstract class BriskWebPage implements BriskWebPageInterface {
   // get attributes on body
   public function getDomAttributes() {}
 
+  // set the response header once a time
   protected function emitHeader($name, $value) {
     header("{$name}: {$value}", $replace = false);
   }
 
+  // output the response content to client
   protected function emitData($data) {
     echo $data;
 
@@ -237,6 +246,6 @@ EOTEMPLATE;
   }
 
   // Triggered before rendering, overwritten by subclasses.
-  // require SR in this method
+  // require SR in this method, generally for global SR.
   protected function willRender() {}
 }

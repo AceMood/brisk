@@ -65,18 +65,8 @@
                 </a>
               
                 
-                <a class="source" href="BriskSantaResources.html">
-                  BriskSantaResources.php
-                </a>
-              
-                
-                <a class="source" href="BriskAjaxResponse.html">
-                  BriskAjaxResponse.php
-                </a>
-              
-                
-                <a class="source" href="BriskStaticResourceResponse.html">
-                  BriskStaticResourceResponse.php
+                <a class="source" href="BriskStaticResources.html">
+                  BriskStaticResources.php
                 </a>
               
             </div>
@@ -106,10 +96,11 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-comment">/**
- * Defines the location of physical static resources which exist at build time
+ * <span class="hljs-doctag">@file</span> Defines the location of physical static resources which exist at build time
  * and are precomputed into a resource map.
- */</span>
-<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskResourcesOnDisk</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BriskResources</span> </span>{</pre></div></div>
+ * <span class="hljs-doctag">@author</span> AceMood
+ * <span class="hljs-doctag">@email</span> zmike86<span class="hljs-doctag">@gmail</span>.com
+ */</span></pre></div></div>
             
         </li>
         
@@ -120,12 +111,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>resource.json转换来的资源表</p>
+              <hr>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">private</span> $map;
-    <span class="hljs-keyword">private</span> $packages;</pre></div></div>
             
         </li>
         
@@ -136,11 +124,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>获取resource.json所在位置</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToMap</span><span class="hljs-params">()</span></span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskResourcesOnDisk</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BriskResources</span> </span>{</pre></div></div>
             
         </li>
         
@@ -151,11 +139,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>获取packages.json位置</p>
+              <p>resource.json转换来的资源表</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToPackageMap</span><span class="hljs-params">()</span></span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $map;</pre></div></div>
             
         </li>
         
@@ -166,11 +154,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>return source code directory</p>
+              <p>packages.json转换来的资源表</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToResources</span><span class="hljs-params">()</span></span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $packages;</pre></div></div>
             
         </li>
         
@@ -181,15 +169,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>according to name as ‘static/a.js’, get the real file-system path</p>
+              <p>获取resource.json所在位置</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToResource</span><span class="hljs-params">($name)</span> </span>{
-        $symbolMap = idx(<span class="hljs-keyword">$this</span>-&gt;map, <span class="hljs-string">'resource'</span>, <span class="hljs-keyword">array</span>());
-        $nameMap = idx(<span class="hljs-keyword">$this</span>-&gt;map, <span class="hljs-string">'paths'</span>, <span class="hljs-keyword">array</span>());
-        $symbol = $nameMap[$name];
-        $type = <span class="hljs-keyword">$this</span>-&gt;getResourceType($name);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToResourceMap</span><span class="hljs-params">()</span></span>;</pre></div></div>
             
         </li>
         
@@ -200,24 +184,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>todo 这里假设没有通过soi指定cdn, 或者是通过pageview设置的cdn, 此时uri是编译目录的相对路径</p>
+              <p>获取packages.json位置</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $uri = preg_replace(<span class="hljs-string">'/^\//'</span>, <span class="hljs-string">''</span>, $symbolMap[$type][$symbol][<span class="hljs-string">'uri'</span>]);
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;getPathToResources() . DIRECTORY_SEPARATOR . $uri;
-    }
-
-    <span class="hljs-comment">/**
-     * 读取文件内容
-     * <span class="hljs-doctag">@param</span> $name
-     * <span class="hljs-doctag">@return</span> string
-     * <span class="hljs-doctag">@throws</span> FilesystemException
-     */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceData</span><span class="hljs-params">($name)</span> </span>{
-        <span class="hljs-keyword">return</span> Filesystem::readFile(<span class="hljs-keyword">$this</span>-&gt;getPathToResource($name));
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToPackageMap</span><span class="hljs-params">()</span></span>;</pre></div></div>
             
         </li>
         
@@ -228,41 +199,98 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>获取资源mtime</p>
+              <p>获取编译后代码目录</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceModifiedTime</span><span class="hljs-params">($name)</span> </span>{
-        <span class="hljs-keyword">return</span> (int)filemtime(<span class="hljs-keyword">$this</span>-&gt;getPathToResource($name));
-    }
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToResources</span><span class="hljs-params">()</span></span>;
 
-    <span class="hljs-comment">/**
-     * 加载resource.json并转化成php数组
-     * <span class="hljs-doctag">@return</span> mixed
-     * <span class="hljs-doctag">@throws</span> FilesystemException
-     */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadMap</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;map === <span class="hljs-keyword">null</span>) {
-            $mapPath = <span class="hljs-keyword">$this</span>-&gt;getPathToMap();
-            $data = Filesystem::readFile($mapPath);
-            <span class="hljs-keyword">$this</span>-&gt;map = json_decode($data, <span class="hljs-keyword">true</span>);
-        }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;map;
-    }
+  <span class="hljs-comment">/**
+   * 读取文件内容
+   * <span class="hljs-doctag">@param</span> string $name 资源的工程路径
+   * <span class="hljs-doctag">@return</span> string
+   * <span class="hljs-doctag">@throws</span> Exception
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceData</span><span class="hljs-params">($name)</span> </span>{
+    <span class="hljs-keyword">return</span> BriskFilesystem::readFile(<span class="hljs-keyword">$this</span>-&gt;getPathToResource($name));
+  }
 
-    <span class="hljs-comment">/**
-     * 加载packages.json并转化成php数组
-     * <span class="hljs-doctag">@return</span> mixed
-     * <span class="hljs-doctag">@throws</span> FilesystemException
-     */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPackages</span><span class="hljs-params">()</span> </span>{
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;packages === <span class="hljs-keyword">null</span>) {
-            $mapPath = <span class="hljs-keyword">$this</span>-&gt;getPathToPackageMap();
-            $data = Filesystem::readFile($mapPath);
-            <span class="hljs-keyword">$this</span>-&gt;packages = json_decode($data, <span class="hljs-keyword">true</span>);
-        }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;packages;
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceModifiedTime</span><span class="hljs-params">($name)</span> </span>{
+    <span class="hljs-keyword">return</span> (int)filemtime(<span class="hljs-keyword">$this</span>-&gt;getPathToResource($name));
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadResourceMap</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;map === <span class="hljs-keyword">null</span>) {
+      $mapPath = <span class="hljs-keyword">$this</span>-&gt;getPathToResourceMap();
+      $data = BriskFilesystem::readFile($mapPath);
+      <span class="hljs-keyword">$this</span>-&gt;map = json_decode($data, <span class="hljs-keyword">true</span>);
     }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;map;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPackages</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;packages === <span class="hljs-keyword">null</span>) {
+      $mapPath = <span class="hljs-keyword">$this</span>-&gt;getPathToPackageMap();
+      $data = BriskFilesystem::readFile($mapPath);
+      <span class="hljs-keyword">$this</span>-&gt;packages = json_decode($data, <span class="hljs-keyword">true</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;packages;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>根据工程路径名 ‘static/a.js’, 获得文件系统真实路径</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToResource</span><span class="hljs-params">($name)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>如<code>getPathToResources</code>所解释的那样, 希望直接读取编译后的最终代码.
+要知道两个参数:
+a. 编译代码在本地的存放目录
+b. 代码的相对路径
+其中第二项在编译时由每个资源的<code>localPathName</code>已经指定</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $symbolMap = idx(<span class="hljs-keyword">$this</span>-&gt;map, <span class="hljs-string">'resource'</span>, <span class="hljs-keyword">array</span>());
+    $nameMap = idx(<span class="hljs-keyword">$this</span>-&gt;map, <span class="hljs-string">'paths'</span>, <span class="hljs-keyword">array</span>());
+    $symbol = $nameMap[$name];
+    $type = <span class="hljs-keyword">$this</span>-&gt;getResourceType($name);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>这里假设没有通过编译工具指定cdn, 或者是通过pageview设置的cdn, 此时uri是编译目录的相对路径</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $path = preg_replace(<span class="hljs-string">'/^\//'</span>, <span class="hljs-string">''</span>, $symbolMap[$type][$symbol][<span class="hljs-string">'localPathName'</span>]);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;getPathToResources() . DIRECTORY_SEPARATOR . $path;
+  }
 }</pre></div></div>
             
         </li>

@@ -65,18 +65,8 @@
                 </a>
               
                 
-                <a class="source" href="BriskSantaResources.html">
-                  BriskSantaResources.php
-                </a>
-              
-                
-                <a class="source" href="BriskAjaxResponse.html">
-                  BriskAjaxResponse.php
-                </a>
-              
-                
-                <a class="source" href="BriskStaticResourceResponse.html">
-                  BriskStaticResourceResponse.php
+                <a class="source" href="BriskStaticResources.html">
+                  BriskStaticResources.php
                 </a>
               
             </div>
@@ -149,11 +139,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>页面标题</p>
+              <p>page title in title tag</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $title = <span class="hljs-string">''</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $title = <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
@@ -164,11 +154,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>页面渲染模式</p>
+              <p>render mode</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $mode = <span class="hljs-keyword">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $mode = <span class="hljs-keyword">null</span>;</pre></div></div>
             
         </li>
         
@@ -179,11 +169,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>页面需然渲染的分片id</p>
+              <p>pc or mobile</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $pagelets = <span class="hljs-keyword">array</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $device = DEVICE_MOBILE;</pre></div></div>
             
         </li>
         
@@ -194,11 +184,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>页面分片的部件</p>
+              <p>all widgets ids in current page</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $widgets = <span class="hljs-keyword">array</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $pageletIds = <span class="hljs-keyword">array</span>();</pre></div></div>
             
         </li>
         
@@ -209,37 +199,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>当前请求页面关联的response对象</p>
+              <p>all widgets in current web page</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $response = <span class="hljs-keyword">null</span>;
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($title = <span class="hljs-string">''</span>)</span> </span>{
-    <span class="hljs-keyword">$this</span>-&gt;setTitle($title);
-    <span class="hljs-keyword">if</span> (BriskUtils::isAjaxPipe()) {
-      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_AJAXPIPE;
-      <span class="hljs-keyword">$this</span>-&gt;setPagelets($_GET[<span class="hljs-string">'pagelets'</span>]);
-      <span class="hljs-keyword">$this</span>-&gt;response = <span class="hljs-keyword">new</span> BriskAjaxResponse();
-    } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_NORMAL;
-      <span class="hljs-keyword">$this</span>-&gt;response = BriskAPI::staticResourceResponse();
-    }
-  }
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addMetadata</span><span class="hljs-params">($metadata)</span> </span>{
-    <span class="hljs-keyword">$this</span>-&gt;response-&gt;addMetadata($metadata);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-  }
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setTitle</span><span class="hljs-params">($title)</span> </span>{
-    <span class="hljs-keyword">$this</span>-&gt;title = $title;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-  }
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getTitle</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;title;
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $pagelets = <span class="hljs-keyword">array</span>();</pre></div></div>
             
         </li>
         
@@ -250,131 +214,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>暂时不考虑bigpipe模式</p>
+              <p>corresponding response object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setMode</span><span class="hljs-params">($mode)</span> </span>{
-    <span class="hljs-keyword">if</span> ($mode === RENDER_AJAXPIPE) {
-      <span class="hljs-keyword">$this</span>-&gt;mode = $mode;
-    } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_NORMAL;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-  }
-
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getMode</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;mode;
-  }
-
-  <span class="hljs-comment">/**
-   * 设置当前页面的pagelets
-   * <span class="hljs-doctag">@param</span> {array|string} $pagelets
-   * <span class="hljs-doctag">@return</span> mixed
-   */</span>
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setPagelets</span><span class="hljs-params">($pagelets)</span> </span>{
-    <span class="hljs-keyword">if</span> (!is_array($pagelets)) {
-      $pagelets = <span class="hljs-keyword">array</span>($pagelets);
-    }
-    <span class="hljs-keyword">foreach</span> ($pagelets <span class="hljs-keyword">as</span> $id) {
-      <span class="hljs-keyword">$this</span>-&gt;pagelets[] = $id;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-  }
-
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPagelets</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;pagelets;
-  }
-
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setCDN</span><span class="hljs-params">($cdn)</span> </span>{
-    <span class="hljs-keyword">$this</span>-&gt;response-&gt;setCDN($cdn);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-  }
-
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getCDN</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;response-&gt;getCDN();
-  }
-
-  <span class="hljs-comment">/**
-   * 设置资源表打印类型
-   * <span class="hljs-doctag">@param</span> integer $type
-   */</span>
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setPrintType</span><span class="hljs-params">($type)</span> </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;response)) {
-      <span class="hljs-keyword">$this</span>-&gt;response-&gt;setPrintType($type);
-    }
-  }
-
-  <span class="hljs-comment">/**
-   * 渲染期间加载对应的部件.
-   * 正常渲染则直接输出部件html内容, 否则记录页面部件
-   * <span class="hljs-doctag">@param</span> BriskPagelet $widget
-   * <span class="hljs-doctag">@return</span> BriskSafeHTML|$this
-   */</span>
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadWidget</span><span class="hljs-params">($widget)</span> </span>{
-    $widget-&gt;setParentView(<span class="hljs-keyword">$this</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;mode === RENDER_NORMAL) {
-      <span class="hljs-keyword">return</span> $widget-&gt;renderAsHTML();
-    } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">$this</span>-&gt;widgets[$widget-&gt;getId()] = $widget;
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
-    }
-  }
-
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getWidgets</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;widgets;
-  }
-
-  <span class="hljs-comment">/**
-   * 记录请求依赖的外链资源
-   * <span class="hljs-doctag">@param</span> string $name 工程目录资源路径
-   * <span class="hljs-doctag">@param</span> string $source_name 空间
-   * <span class="hljs-doctag">@return</span> mixed $this
-   * <span class="hljs-doctag">@throws</span> Exception
-   */</span>
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">requireResource</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;response-&gt;requireResource($name, $source_name);
-  }
-
-  <span class="hljs-comment">/**
-   * 内联资源
-   * <span class="hljs-doctag">@param</span> string $name 工程目录资源路径
-   * <span class="hljs-doctag">@param</span> string $source_name 空间
-   * <span class="hljs-doctag">@return</span> mixed
-   * <span class="hljs-doctag">@throws</span> Exception
-   */</span>
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">inlineResource</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;response-&gt;inlineResource($name, $source_name);
-  }
-
-  <span class="hljs-comment">/**
-   * 返回图片内联为dataUri的方式
-   * <span class="hljs-doctag">@param</span> $name
-   * <span class="hljs-doctag">@param</span> $source_name
-   * <span class="hljs-doctag">@return</span> mixed
-   * <span class="hljs-doctag">@throws</span> Exception
-   */</span>
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateDataURI</span><span class="hljs-params">($name, $source_name = <span class="hljs-string">'brisk'</span>)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;response-&gt;generateDataURI($name, $source_name);
-  }
-
-  <span class="hljs-comment">/**
-   * 将一种类型的资源输出到页面
-   * <span class="hljs-doctag">@param</span> string $type 资源类型如js, css
-   * <span class="hljs-doctag">@return</span> PhutilSafeHTML
-   */</span>
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderResourcesOfType</span><span class="hljs-params">($type)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;response-&gt;renderResourcesOfType($type);
-  }
-
-  <span class="hljs-comment">/**
-   * 渲染本视图
-   * <span class="hljs-doctag">@return</span> string
-   */</span>
-  <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span><span class="hljs-params">()</span> </span>{
-    $html = <span class="hljs-string">''</span>;
-    <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">$this</span>-&gt;mode) {
-      <span class="hljs-keyword">case</span> RENDER_AJAXPIPE:</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> $response = <span class="hljs-keyword">null</span>;</pre></div></div>
             
         </li>
         
@@ -385,47 +229,80 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>这里不需要加载页面全局的资源, 不再调用loadGlobalResources</p>
+              <p>default, we use mobile phone mode, which cause a inlining operation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">$this</span>-&gt;willRender();
-        $html = <span class="hljs-keyword">$this</span>-&gt;renderAsJSON();
-        <span class="hljs-keyword">break</span>;
-      <span class="hljs-keyword">case</span> RENDER_NORMAL:
-        <span class="hljs-keyword">$this</span>-&gt;willRender();
-        <span class="hljs-keyword">$this</span>-&gt;loadGlobalResources();
-        $html = <span class="hljs-keyword">$this</span>-&gt;renderAsHTML();
-        <span class="hljs-keyword">break</span>;
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($title = <span class="hljs-string">''</span>, $device = DEVICE_MOBILE)</span> </span>{
+    <span class="hljs-keyword">$this</span>-&gt;setTitle($title);
+    <span class="hljs-keyword">if</span> (BriskUtils::isAjaxPipe()) {
+      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_AJAXPIPE;
+      <span class="hljs-keyword">$this</span>-&gt;setPageletIds($_GET[<span class="hljs-string">'pagelets'</span>]);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_NORMAL;
     }
-
-    <span class="hljs-keyword">return</span> $html;
+    <span class="hljs-keyword">$this</span>-&gt;response = BriskAPI::staticResourceResponse();
+    <span class="hljs-keyword">$this</span>-&gt;setDevice($device);
   }
 
-  <span class="hljs-comment">/**
-   * 渲染页面成html
-   * <span class="hljs-doctag">@return</span> string
-   * <span class="hljs-doctag">@throws</span> Exception
-   */</span>
-  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderAsHTML</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> (string)hsprintf(
-      <span class="hljs-keyword">$this</span>-&gt;getTemplateString(),
-      phutil_escape_html(<span class="hljs-keyword">$this</span>-&gt;title),
-      <span class="hljs-keyword">$this</span>-&gt;response-&gt;renderResourcesOfType(<span class="hljs-string">'css'</span>),
-      <span class="hljs-keyword">new</span> PhutilSafeHTML(<span class="hljs-string">''</span>),
-      <span class="hljs-keyword">$this</span>-&gt;response-&gt;renderResourcesOfType(<span class="hljs-string">'js'</span>)
-    );
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addMetadata</span><span class="hljs-params">($metadata)</span> </span>{
+    <span class="hljs-keyword">$this</span>-&gt;response-&gt;addMetadata($metadata);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
   }
 
-  <span class="hljs-comment">/**
-   * 渲染页面成json
-   * <span class="hljs-doctag">@return</span> array
-   * <span class="hljs-doctag">@throws</span> Exception
-   */</span>
-  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderAsJSON</span><span class="hljs-params">()</span> </span>{
-    $res = <span class="hljs-keyword">array</span>(
-      <span class="hljs-string">'payload'</span> =&gt; <span class="hljs-keyword">array</span>()
-    );</pre></div></div>
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setMode</span><span class="hljs-params">($mode)</span> </span>{
+    <span class="hljs-keyword">if</span> ($mode === RENDER_AJAXPIPE) {
+      <span class="hljs-keyword">$this</span>-&gt;mode = $mode;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($mode === RENDER_BIGPIPE) {
+      <span class="hljs-keyword">$this</span>-&gt;mode = $mode;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">$this</span>-&gt;mode = RENDER_NORMAL;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getMode</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;mode;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setDevice</span><span class="hljs-params">($device)</span> </span>{
+    <span class="hljs-keyword">if</span> (in_array($device, <span class="hljs-keyword">array</span>(
+      DEVICE_PC, DEVICE_MOBILE
+    ))) {
+      <span class="hljs-keyword">$this</span>-&gt;device = $device;
+    }
+    <span class="hljs-keyword">$this</span>-&gt;response-&gt;setDeviceType($device);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getDevice</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;device;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setTitle</span><span class="hljs-params">($title)</span> </span>{
+    <span class="hljs-keyword">$this</span>-&gt;title = $title;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getTitle</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;title;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setPageletIds</span><span class="hljs-params">($ids)</span> </span>{
+    <span class="hljs-keyword">if</span> (!is_array($ids)) {
+      $ids = <span class="hljs-keyword">array</span>($ids);
+    }
+    <span class="hljs-keyword">foreach</span> ($ids <span class="hljs-keyword">as</span> $id) {
+      <span class="hljs-keyword">$this</span>-&gt;pageletIds[] = $id;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPageletIds</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;pageletIds;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setPrintType</span><span class="hljs-params">($type)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -436,27 +313,23 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>挑选需要渲染的部件</p>
+              <p>这个方法主要用于测试打印资源表的效果
+一般不需要手动调用</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;pagelets <span class="hljs-keyword">as</span> $pageletId) {
-      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;getWidgets()[$pageletId])) {
-        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
-          <span class="hljs-string">'No widget with id %s found in %s'</span>,
-          $pageletId,
-          <span class="hljs-keyword">__CLASS__</span>
-        ));
-      }
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;response)) {
+      <span class="hljs-keyword">$this</span>-&gt;response-&gt;setPrintType($type);
+    }
+  }
 
-      $widget = <span class="hljs-keyword">$this</span>-&gt;getWidgets()[$pageletId];
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPrintType</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;response)) {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;response-&gt;getPrintType();
+    }
+  }
 
-      $res[<span class="hljs-string">'payload'</span>][$pageletId] = $widget-&gt;renderAsJSON();
-      $res[<span class="hljs-string">'js'</span>] = <span class="hljs-keyword">$this</span>-&gt;response-&gt;renderResourcesOfType(<span class="hljs-string">'js'</span>);
-      $res[<span class="hljs-string">'css'</span>] = <span class="hljs-keyword">$this</span>-&gt;response-&gt;renderResourcesOfType(<span class="hljs-string">'css'</span>);
-      $res[<span class="hljs-string">'script'</span>] = <span class="hljs-keyword">$this</span>-&gt;response-&gt;produceScript();
-      $res[<span class="hljs-string">'style'</span>] = <span class="hljs-keyword">$this</span>-&gt;response-&gt;produceStyle();
-    }</pre></div></div>
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResponseObject</span><span class="hljs-params">()</span> </span>{</pre></div></div>
             
         </li>
         
@@ -466,6 +339,248 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>提供获取私有reponse的方法, 方便调用设置cdn等功能</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;response;
+  }
+
+  <span class="hljs-comment">/**
+   * Load pagelets during rendering.
+   * <span class="hljs-doctag">@param</span> BriskPagelet $pagelet
+   * <span class="hljs-doctag">@return</span> BriskSafeHTML|$this
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPagelet</span><span class="hljs-params">($pagelet)</span> </span>{
+    $pagelet-&gt;setParentView(<span class="hljs-keyword">$this</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;mode === RENDER_NORMAL) {
+      <span class="hljs-keyword">return</span> $pagelet-&gt;renderAsHTML();
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">$this</span>-&gt;pagelets[$pagelet-&gt;getId()] = $pagelet;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>;
+    }
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPagelets</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;pagelets;
+  }
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderResourcesOfType</span><span class="hljs-params">($type)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;response-&gt;renderResourcesOfType($type);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Render web page.
+If current request is a ajaxpipe request (which with Get parameter ajaxify equal 1),
+we return json mime-type. Otherwise we return a html.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span><span class="hljs-params">()</span> </span>{
+    $html = <span class="hljs-string">''</span>;
+    <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">$this</span>-&gt;mode) {
+      <span class="hljs-keyword">case</span> RENDER_AJAXPIPE:
+        <span class="hljs-keyword">$this</span>-&gt;emitHeader(<span class="hljs-string">'Content-Type'</span>, <span class="hljs-string">'application/json'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Not invoke <code>willRender</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $html = <span class="hljs-keyword">$this</span>-&gt;renderAsJSON();
+        <span class="hljs-keyword">break</span>;
+      <span class="hljs-keyword">case</span> RENDER_NORMAL:
+        <span class="hljs-keyword">$this</span>-&gt;emitHeader(<span class="hljs-string">'Content-Type'</span>, <span class="hljs-string">'text/html'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>We need to call <code>willRender</code> here because full-page
+resources should be included. But not in the case of
+ajaxpipe.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">$this</span>-&gt;willRender();
+        $html = <span class="hljs-keyword">$this</span>-&gt;renderAsHTML();
+        <span class="hljs-keyword">break</span>;
+    }
+
+    <span class="hljs-keyword">$this</span>-&gt;emitData($html);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>set attributes on body</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setDomAttributes</span><span class="hljs-params">($attributes)</span> </span>{}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>get attributes on body</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getDomAttributes</span><span class="hljs-params">()</span> </span>{}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>set the response header once a time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">emitHeader</span><span class="hljs-params">($name, $value)</span> </span>{
+    header(<span class="hljs-string">"{$name}: {$value}"</span>, $replace = <span class="hljs-keyword">false</span>);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>output the response content to client</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">emitData</span><span class="hljs-params">($data)</span> </span>{
+    <span class="hljs-keyword">echo</span> $data;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>NOTE: We don’t call flush() here because it breaks HTTPS under Apache.
+See T7620 for discussion. Even without an explicit flush, PHP appears to
+have reasonable behavior here: the echo will block if internal buffers
+are full, and data will be sent to the client once enough of it has
+been buffered.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  }
+
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderAsHTML</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>这个方法在正常请求的时候输出页面全部的html, 这个可被复写的方法.
+希望以此为接口实现不同的模板渲染, 或者直接由php输出.
+<code>getTemplateString</code>可以使用也可以不使用, 并不强制.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> (string)hsprintf(
+      <span class="hljs-keyword">$this</span>-&gt;getTemplateString(),
+      BriskDomProxy::escapeHtml(<span class="hljs-keyword">$this</span>-&gt;title),
+      <span class="hljs-keyword">$this</span>-&gt;renderResourcesOfType(<span class="hljs-string">'css'</span>),
+      <span class="hljs-keyword">new</span> BriskSafeHTML(<span class="hljs-string">''</span>),
+      <span class="hljs-keyword">$this</span>-&gt;renderResourcesOfType(<span class="hljs-string">'js'</span>)
+    );
+  }
+
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderAsJSON</span><span class="hljs-params">()</span> </span>{
+    $res = <span class="hljs-keyword">array</span>(<span class="hljs-string">'payload'</span> =&gt; <span class="hljs-keyword">array</span>());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>pick up pagelets</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;pageletIds <span class="hljs-keyword">as</span> $pagelet_id) {
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;getPagelets()[$pagelet_id])) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
+          <span class="hljs-string">'No widget with id %s found in %s'</span>,
+          $pagelet_id,
+          <span class="hljs-keyword">__CLASS__</span>
+        ));
+      }
+
+      $pagelet = id(<span class="hljs-keyword">$this</span>-&gt;getPagelets())[$pagelet_id];
+      $res[<span class="hljs-string">'payload'</span>][$pagelet_id] = $pagelet-&gt;renderAsHTML();
+      $res[<span class="hljs-string">'js'</span>] = <span class="hljs-keyword">$this</span>-&gt;response-&gt;renderResourcesOfType(<span class="hljs-string">'js'</span>);
+      $res[<span class="hljs-string">'css'</span>] = <span class="hljs-keyword">$this</span>-&gt;response-&gt;renderResourcesOfType(<span class="hljs-string">'css'</span>);
+      $res[<span class="hljs-string">'script'</span>] = <span class="hljs-keyword">$this</span>-&gt;response-&gt;produceScript();
+      $res[<span class="hljs-string">'style'</span>] = <span class="hljs-keyword">$this</span>-&gt;response-&gt;produceStyle();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>需要元数据但不需要behavior</p>
 
@@ -479,14 +594,10 @@
     <span class="hljs-keyword">return</span> json_encode($res);
   }
 
-  <span class="hljs-comment">/**
-   * 获取默认的页面模板,可在子类复写
-   * <span class="hljs-doctag">@return</span> string
-   */</span>
   <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getTemplateString</span><span class="hljs-params">()</span> </span>{
     <span class="hljs-keyword">return</span>
-      <span class="hljs-string">&lt;&lt;&lt;EOTEMPLATE
-      &lt;!DOCTYPE html&gt;
+<span class="hljs-string">&lt;&lt;&lt;EOTEMPLATE
+&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
     &lt;meta charset="UTF-8" /&gt;
@@ -502,33 +613,18 @@ EOTEMPLATE;</span>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>渲染前触发, 子类可重写</p>
+              <p>Triggered before rendering, overwritten by subclasses.
+require SR in this method, generally for global SR.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">willRender</span><span class="hljs-params">()</span> </span>{}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>全页面渲染的时候加载页面级别的资源</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadGlobalResources</span><span class="hljs-params">()</span></span>;
-
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">willRender</span><span class="hljs-params">()</span> </span>{}
 }</pre></div></div>
             
         </li>

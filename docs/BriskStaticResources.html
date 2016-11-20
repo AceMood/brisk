@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>BriskResources.php</title>
+  <title>BriskStaticResources.php</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -78,7 +78,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>BriskResources.php</h1>
+                  <h1>BriskStaticResources.php</h1>
               </div>
           </li>
         
@@ -96,7 +96,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-comment">/**
- * <span class="hljs-doctag">@file</span> 定义SR的基类.
+ * <span class="hljs-doctag">@class</span> 项目的静态资源
  * <span class="hljs-doctag">@author</span> AceMood
  * <span class="hljs-doctag">@email</span> zmike86<span class="hljs-doctag">@gmail</span>.com
  */</span></pre></div></div>
@@ -127,20 +127,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskResources</span> </span>{
-  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> $typeMap = <span class="hljs-keyword">array</span>(
-    <span class="hljs-string">'jsx'</span> =&gt; <span class="hljs-string">'js'</span>,
-    <span class="hljs-string">'js'</span> =&gt; <span class="hljs-string">'js'</span>,
-    <span class="hljs-string">'coffee'</span> =&gt; <span class="hljs-string">'js'</span>,
-    <span class="hljs-string">'ts'</span> =&gt; <span class="hljs-string">'js'</span>,
-    <span class="hljs-string">'less'</span> =&gt; <span class="hljs-string">'css'</span>,
-    <span class="hljs-string">'css'</span> =&gt; <span class="hljs-string">'css'</span>,
-    <span class="hljs-string">'scss'</span> =&gt; <span class="hljs-string">'css'</span>,
-    <span class="hljs-string">'png'</span> =&gt; <span class="hljs-string">'img'</span>,
-    <span class="hljs-string">'jpg'</span> =&gt; <span class="hljs-string">'img'</span>,
-    <span class="hljs-string">'jpeg'</span> =&gt; <span class="hljs-string">'img'</span>,
-    <span class="hljs-string">'webp'</span> =&gt; <span class="hljs-string">'img'</span>,
-    <span class="hljs-string">'bmp'</span> =&gt; <span class="hljs-string">'img'</span>,</pre></div></div>
+<span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BriskStaticResources</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BriskResourcesOnDisk</span> </span>{</pre></div></div>
             
         </li>
         
@@ -151,13 +138,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Windows和Mac系统最常用的字体格式, 它们比基于矢量的字体更容易处理,
-保证了屏幕与打印输出的一致性. 同时这类字体和矢量字体一样可以随意缩放,
-旋转而不必担心会出现锯齿</p>
+              <p>存放资源表文件的目录</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">'ttf'</span> =&gt; <span class="hljs-string">'font'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $mapDirectory = <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
@@ -168,20 +153,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>嵌入字体格式EOT是微软开发的一种技术, 允许OpenType字体嵌入到网页并
-可以下载至浏览器渲染. 浏览器根据CSS中@font-face 的定义,下载渲染这种字体文件.
-这些文件只在当前页活动的状态下, 临时安装在用户的系统中</p>
+              <p>编译后资源的存放目录, 对应编译时工具设置的<code>dir</code>属性.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">'eot'</span> =&gt; <span class="hljs-string">'font'</span>,
-
-    <span class="hljs-string">'otf'</span> =&gt; <span class="hljs-string">'font'</span>,
-
-    <span class="hljs-string">'woff'</span> =&gt; <span class="hljs-string">'font'</span>,
-
-    <span class="hljs-string">'svg'</span> =&gt; <span class="hljs-string">'font'</span>
-  );</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> $compileDirectory = <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
@@ -192,11 +168,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>项目名称作为命名空间</p>
+              <p>这个方法在原类库中取的是源码文件的目录, 请求时动态用一个php的工具对代码做压缩.
+觉得这样比较低效, 编译时产出了压缩后的代码, 所以这里应该加载最终代码的所处目录.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getProjectName</span><span class="hljs-params">()</span></span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToResources</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">empty</span>(<span class="hljs-keyword">$this</span>-&gt;compileDirectory)) {</pre></div></div>
             
         </li>
         
@@ -207,11 +185,27 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>获取文件内容</p>
+              <p>期望在程序中主动设置过<code>BRISK_COMPILE_DIRECTORY</code>这个常量, 作为加载文件
+的根目录. 如果没有设置过则读取编译工具的<code>root</code>属性, 但是此属性是编译时在
+编译机上的目录和最终线上的目录不一定对应, 所以可能引起找不到文件的错误.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceData</span><span class="hljs-params">($name)</span></span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (defined(<span class="hljs-string">'BRISK_COMPILE_DIRECTORY'</span>)) {
+        <span class="hljs-keyword">$this</span>-&gt;compileDirectory = BRISK_COMPILE_DIRECTORY;
+      } <span class="hljs-keyword">else</span> {
+        $map = <span class="hljs-keyword">$this</span>-&gt;loadResourceMap();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>($map[<span class="hljs-string">'root'</span>])) {
+          <span class="hljs-keyword">$this</span>-&gt;compileDirectory = $map[<span class="hljs-string">'root'</span>];
+        } <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
+            <span class="hljs-string">'Resource Map have no root property.'</span>
+          ));
+        }
+      }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;compileDirectory;
+  }</pre></div></div>
             
         </li>
         
@@ -222,12 +216,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>获取文件mtime</p>
+              <p>项目名用作命名空间</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceModifiedTime</span><span class="hljs-params">($name)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getProjectName</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'brisk'</span>;
   }</pre></div></div>
             
         </li>
@@ -239,12 +233,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>获取资源类型 如js,css,img</p>
+              <p>获取resource.json路径</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceType</span><span class="hljs-params">($path)</span> </span>{
-    $arr = explode(<span class="hljs-string">'.'</span>, $path);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToResourceMap</span><span class="hljs-params">()</span> </span>{
+    $dir = <span class="hljs-keyword">$this</span>-&gt;getProjectMapPath();
+    <span class="hljs-keyword">return</span> $dir . DIRECTORY_SEPARATOR . <span class="hljs-string">'resource.json'</span>;
+  }</pre></div></div>
             
         </li>
         
@@ -255,12 +251,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p><code>end</code>只能传变量</p>
+              <p>获取packages.json路径</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    $suffix = end($arr);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::$typeMap[$suffix];
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPathToPackageMap</span><span class="hljs-params">()</span> </span>{
+    $dir = <span class="hljs-keyword">$this</span>-&gt;getProjectMapPath();
+    <span class="hljs-keyword">return</span> $dir . DIRECTORY_SEPARATOR . <span class="hljs-string">'packages.json'</span>;
   }</pre></div></div>
             
         </li>
@@ -272,13 +269,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>加载资源表</p>
+              <p>获取工程目录下文件的路径</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadResourceMap</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>();
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getProjectMapPath</span><span class="hljs-params">()</span> </span>{</pre></div></div>
             
         </li>
         
@@ -289,12 +284,18 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>加载打包信息</p>
+              <p>期望在程序中主动设置过<code>BRISK_MAP_DIRECTORY</code>这个常量, 作为加载资源表的根目录</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPackages</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (defined(<span class="hljs-string">'BRISK_MAP_DIRECTORY'</span>)) {
+      <span class="hljs-keyword">$this</span>-&gt;mapDirectory = BRISK_MAP_DIRECTORY;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(pht(
+        <span class="hljs-string">'Not found global BRISK_MAP_DIRECTORY value.'</span>
+      ));
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;mapDirectory;
   }
 }</pre></div></div>
             
