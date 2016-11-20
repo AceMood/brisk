@@ -537,25 +537,26 @@ class BriskStaticResourceResponse {
       $symbolMap = $map->getSymbolMap();
 
       foreach ($symbolMap['js'] as $symbol => $js) {
-        unset($js['path']);
-        unset($js['within']);
-        $js['uri'] = self::getCDN() . $js['uri'];
+        $attr_deps = isset($js['deps']) ? $js['deps'] : array();
+        $attr_css = isset($js['css']) ? $js['css'] : array();
+        $res['resourceMap']['js'][$symbol] = array(
+          'type' => 'js',
+          'uri' => self::getCDN() . $js['uri'],
+          'deps' => $attr_deps,
+          'css' => $attr_css,
+          'version' => $js['version']
+        );
       }
 
       foreach ($symbolMap['css'] as $symbol => $css) {
-        unset($css['path']);
-        unset($css['within']);
-        $css['uri'] = self::getCDN() . $css['uri'];
+        $attr_css = isset($css['css']) ? $css['css'] : array();
+        $res['resourceMap']['css'][$symbol] = array(
+          'type' => 'css',
+          'uri' => self::getCDN() . $css['uri'],
+          'css' => $attr_css,
+          'version' => $css['version']
+        );
       }
-
-      $res['resourceMap']['js'] = array_merge(
-        $res['resourceMap']['js'],
-        $symbolMap['js']
-      );
-      $res['resourceMap']['css'] = array_merge(
-        $res['resourceMap']['css'],
-        $symbolMap['css']
-      );
     }
   }
 
@@ -593,7 +594,8 @@ class BriskStaticResourceResponse {
         'type' => 'js',
         'uri' => self::getCDN() . $required_js['uri'],
         'deps' => $deps,
-        'css' => $required_css
+        'css' => $required_css,
+        'version' => $required_js['version']
       );
 
       foreach ($required_css as $required_css_symbol) {
@@ -618,7 +620,8 @@ class BriskStaticResourceResponse {
       $res['resourceMap']['css'][$required_symbol] = array(
         'type' => 'css',
         'uri' => self::getCDN() . $required_css['uri'],
-        'css' => $required_css['css']
+        'css' => $required_css['css'],
+        'version' => $required_css['version']
       );
       // 加载$required_css的依赖
       foreach ($required_css['css'] as $required_css_symbol) {
