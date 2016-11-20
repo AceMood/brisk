@@ -226,8 +226,14 @@ abstract class BriskWebPage implements BriskWebPageInterface {
         $res['css'],
         $this->response->renderAjaxResponseResourcesOfType('css')
       );
-      $res['script'] = $this->response->produceAjaxScript();
-      $res['style'] = $this->response->produceAjaxStyle();
+      $res['script'] = array_merge(
+        $res['script'],
+        $this->response->produceAjaxScript()
+      );
+      $res['style'] = array_merge(
+        $res['style'],
+        $this->response->produceAjaxStyle()
+      );
     }
 
     $metadata = $this->response->getMetadata();
